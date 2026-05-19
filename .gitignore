@@ -1,0 +1,7 @@
+﻿node_modules/
+project/dist/
+project/.vite/
+*.local
+.env
+.env.*
+.claude/

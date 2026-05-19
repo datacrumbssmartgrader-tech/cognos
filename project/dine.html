@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>BURGERZ — Order</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Cinzel:wght@400;500;600&family=Noto+Nastaliq+Urdu:wght@400;600&family=Poppins:wght@300;400;500;600;700&family=Mulish:wght@300;400;500;600&family=Fredoka+One&family=Lilita+One&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/dine.css" />
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     APP SHELL
+════════════════════════════════════════════════ -->
+<div id="app">
+
+  <!-- ── SCREEN: DISABLED TABLE ─────────────────── -->
+  <div id="screen-disabled" class="screen" hidden>
+    <div class="disabled-wrap">
+      <div class="disabled-icon"><i class="ri-close-circle-line"></i></div>
+      <h2 class="disabled-title">Table Unavailable</h2>
+      <p class="disabled-msg">This table is currently not accepting orders. Please speak to a member of staff.</p>
+    </div>
+  </div>
+
+  <!-- ── SCREEN: WELCOME ────────────────────────── -->
+  <div id="screen-welcome" class="screen" hidden>
+
+    <span class="w-badge">Table: <span id="welcomeTableNum">—</span></span>
+
+    <h1 class="w-heading">WELCOME TO<br>BURGERZ</h1>
+
+    <div class="w-hero">
+      <img src="/bg-removebg-preview.png" alt="Burger" />
+    </div>
+
+    <div class="w-actions">
+      <button id="btnBrowse" class="w-btn w-btn-menu">Menu</button>
+      <button id="btnCallWaiterWelcome" class="w-btn w-btn-waiter">Call Waiter</button>
+    </div>
+
+  </div>
+
+  <!-- ── SCREEN: MENU BROWSER ───────────────────── -->
+  <div id="screen-menu" class="screen" hidden>
+
+    <!-- Dark hero top (header + search) -->
+    <div class="menu-top">
+      <!-- Top bar -->
+      <header class="app-header">
+        <div class="header-left">
+          <span class="header-logo">BURGERZ</span>
+          <span class="header-table" id="menuTableBadge">T01</span>
+        </div>
+        <div class="header-right">
+          <button class="icon-btn btn-call-waiter-header" aria-label="Call Waiter">
+            <i class="ri-service-line"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Search -->
+      <div class="search-wrap">
+        <i class="ri-search-line search-icon"></i>
+        <input type="text" id="menuSearch" class="search-input" placeholder="Search dishes…" autocomplete="off" />
+        <button class="search-clear" id="searchClear" hidden><i class="ri-close-line"></i></button>
+      </div>
+    </div>
+
+    <!-- Category tabs -->
+    <div class="cat-tabs-wrap">
+      <div class="cat-tabs" id="catTabs">
+        <button class="cat-tab active" data-cat="all">All</button>
+        <button class="cat-tab" data-cat="starters">Starters</button>
+        <button class="cat-tab" data-cat="grills">Grills</button>
+        <button class="cat-tab" data-cat="karahi">Karahi</button>
+        <button class="cat-tab" data-cat="biryani">Biryani</button>
+        <button class="cat-tab" data-cat="breads">Breads</button>
+        <button class="cat-tab" data-cat="desserts">Desserts</button>
+        <button class="cat-tab" data-cat="beverages">Beverages</button>
+        <button class="cat-tab" data-cat="platters">Platters</button>
+      </div>
+    </div>
+
+    <!-- Menu items grid -->
+    <div class="menu-scroll">
+      <div class="menu-grid" id="menuGrid">
+        <!-- Populated by dine.ts -->
+      </div>
+      <div class="no-results" id="noResults" hidden>
+        <i class="ri-search-eye-line"></i>
+        <p>No dishes found</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── SCREEN: ORDER TRACKER ──────────────────── -->
+  <div id="screen-tracker" class="screen" hidden>
+    <header class="app-header">
+      <div class="header-left">
+        <span class="header-logo">BURGERZ</span>
+        <span class="header-table" id="trackerTableBadge">T01</span>
+      </div>
+      <div class="header-right">
+        <button class="icon-btn btn-call-waiter-header" aria-label="Call Waiter">
+          <i class="ri-service-line"></i>
+        </button>
+      </div>
+    </header>
+    <div class="tracker-scroll">
+      <h2 class="section-title">Your Orders</h2>
+      <div id="trackerList" class="tracker-list">
+        <div class="tracker-empty" id="trackerEmpty">
+          <i class="ri-bowl-line"></i>
+          <p>No orders placed yet.</p>
+          <button class="btn-primary" id="btnTrackerToMenu">Browse Menu</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCREEN: CART ─────────────────────────────── -->
+  <div id="screen-cart" class="screen" hidden>
+    <header class="app-header">
+      <div class="header-left">
+        <span class="header-logo">BURGERZ</span>
+        <span class="header-table" id="cartTableBadge">T01</span>
+      </div>
+      <div class="header-right">
+        <button class="icon-btn btn-call-waiter-header" aria-label="Call Waiter">
+          <i class="ri-service-line"></i>
+        </button>
+      </div>
+    </header>
+    <div class="cart-scroll">
+      <h2 class="section-title">Your Cart</h2>
+      <div class="cart-screen-empty" id="cartScreenEmpty">
+        <i class="ri-shopping-bag-3-line"></i>
+        <p>Your cart is empty</p>
+        <button class="btn-primary" id="btnCartToMenu">Browse Menu</button>
+      </div>
+      <div id="cartScreenBody" hidden>
+        <div class="cart-items" id="cartItemsScreen"></div>
+        <div class="cart-divider"></div>
+        <div class="cart-subtotal-row">
+          <span>Subtotal</span>
+          <span id="cartSubtotalScreen">PKR 0</span>
+        </div>
+        <p class="cart-note"><i class="ri-information-line"></i> Payment collected by staff at your table.</p>
+        <button class="btn-primary btn-full" id="btnPlaceOrderScreen">
+          <i class="ri-check-double-line"></i> Place Order
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCREEN: MY BILL ────────────────────────── -->
+  <div id="screen-bill" class="screen" hidden>
+    <header class="app-header">
+      <div class="header-left">
+        <span class="header-logo">BURGERZ</span>
+        <span class="header-table" id="billTableBadge">T01</span>
+      </div>
+      <div class="header-right">
+        <button class="icon-btn btn-call-waiter-header" aria-label="Call Waiter">
+          <i class="ri-service-line"></i>
+        </button>
+      </div>
+    </header>
+    <div class="bill-scroll">
+      <h2 class="section-title">My Bill</h2>
+      <div class="bill-empty" id="billEmpty">
+        <i class="ri-receipt-line"></i>
+        <p>No orders yet — your bill will appear here.</p>
+      </div>
+      <div id="billContent" class="bill-content" hidden>
+        <div id="billRounds"></div>
+        <div id="billActions" class="bill-actions" hidden>
+          <button class="btn-primary btn-full" id="btnPayNow">
+            <i class="ri-bank-card-line"></i> Pay <span id="billPayAmount">PKR 0</span>
+          </button>
+          <button class="btn-ghost btn-full bill-ghost" id="btnRequestBill">
+            <i class="ri-receipt-line"></i> Request Bill
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── BOTTOM NAV (shown after welcome) ──────── -->
+  <nav class="bottom-nav" id="bottomNav" hidden>
+    <button class="nav-item active" data-screen="menu">
+      <i class="ri-restaurant-2-line"></i>
+      <span>Menu</span>
+    </button>
+    <button class="nav-item" data-screen="cart">
+      <i class="ri-shopping-bag-3-line"></i>
+      <span>Cart</span>
+      <span class="order-badge" id="cartBadge" hidden>0</span>
+    </button>
+    <button class="nav-item" data-screen="tracker">
+      <i class="ri-time-line"></i>
+      <span>Orders</span>
+      <span class="order-badge" id="orderBadge" hidden>0</span>
+    </button>
+    <button class="nav-item" data-screen="bill">
+      <i class="ri-receipt-line"></i>
+      <span>Bill</span>
+    </button>
+  </nav>
+
+</div><!-- /#app -->
+
+
+<!-- ═══════════════════════════════════════════════
+     BOTTOM SHEET: ITEM DETAIL
+════════════════════════════════════════════════ -->
+<div class="sheet-backdrop" id="itemBackdrop"></div>
+<div class="bottom-sheet" id="itemSheet" role="dialog" aria-modal="true" aria-label="Item detail">
+  <div class="sheet-handle"></div>
+  <div class="item-sheet-img-wrap">
+    <img id="itemSheetImg" src="" alt="" class="item-sheet-img" />
+    <button class="sheet-close" id="itemSheetClose" aria-label="Close"><i class="ri-close-line"></i></button>
+  </div>
+  <div class="item-sheet-body">
+    <div class="item-sheet-tags" id="itemSheetTags"></div>
+    <h2 class="item-sheet-name" id="itemSheetName"></h2>
+    <p class="item-sheet-desc" id="itemSheetDesc"></p>
+    <div class="item-sheet-price-row">
+      <span class="item-sheet-price" id="itemSheetPrice"></span>
+    </div>
+    <!-- Extras -->
+    <div class="item-sheet-section" id="extrasSection" hidden>
+      <h4 class="item-sheet-section-title">Add-ons</h4>
+      <div class="extras-list" id="extrasList"></div>
+    </div>
+    <!-- Special note -->
+    <div class="item-sheet-section">
+      <h4 class="item-sheet-section-title">Special Request <span class="optional">(optional)</span></h4>
+      <textarea class="note-input" id="itemNote" placeholder="E.g. extra spicy, no onions…" rows="2"></textarea>
+    </div>
+    <!-- Qty + Add to Cart -->
+    <div class="item-sheet-footer">
+      <div class="qty-ctrl">
+        <button class="qty-btn" id="qtyMinus"><i class="ri-subtract-line"></i></button>
+        <span class="qty-val" id="qtyVal">1</span>
+        <button class="qty-btn" id="qtyPlus"><i class="ri-add-line"></i></button>
+      </div>
+      <button class="btn-primary btn-add-cart" id="btnAddToCart">
+        Add to Cart — <span id="addToCartPrice">PKR 0</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- ═══════════════════════════════════════════════
+     BOTTOM SHEET: ORDER CONFIRMATION
+════════════════════════════════════════════════ -->
+<div class="sheet-backdrop" id="confirmBackdrop"></div>
+<div class="bottom-sheet confirm-sheet" id="confirmSheet" role="dialog" aria-modal="true" aria-label="Confirm order">
+  <div class="sheet-handle"></div>
+  <div class="confirm-body">
+    <div class="confirm-icon"><i class="ri-shield-check-line"></i></div>
+    <h3 class="confirm-title">Confirm Your Order?</h3>
+    <p class="confirm-sub">Once confirmed, your order goes straight to the kitchen and cannot be changed.</p>
+    <div class="confirm-summary" id="confirmSummary"></div>
+    <div class="confirm-actions">
+      <button class="btn-ghost btn-full" id="btnConfirmCancel">Go Back</button>
+      <button class="btn-primary btn-full" id="btnConfirmOrder">
+        <i class="ri-check-line"></i> Yes, Place Order
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     TOAST NOTIFICATIONS
+════════════════════════════════════════════════ -->
+<div class="toast-stack" id="toastStack"></div>
+
+
+<!-- ═══════════════════════════════════════════════
+     CALL WAITER MODAL
+════════════════════════════════════════════════ -->
+<div class="sheet-backdrop" id="waiterBackdrop"></div>
+<div class="bottom-sheet waiter-sheet" id="waiterSheet" role="dialog" aria-modal="true">
+  <div class="sheet-handle"></div>
+  <div class="waiter-body">
+    <div class="waiter-icon"><i class="ri-service-line"></i></div>
+    <h3 class="waiter-title">Calling Your Waiter</h3>
+    <p class="waiter-sub">A member of staff will be with you shortly.</p>
+    <button class="btn-primary btn-full" id="btnWaiterDone">Thank You</button>
+  </div>
+</div>
+
+<!-- Request Bill confirmation toast handled in JS -->
+
+<!-- ═══════════════════════════════════════════════
+     BOTTOM SHEET: PAYMENT
+════════════════════════════════════════════════ -->
+<div class="sheet-backdrop" id="payBackdrop"></div>
+<div class="bottom-sheet pay-sheet" id="paySheet" role="dialog" aria-modal="true" aria-label="Payment">
+  <div class="sheet-handle"></div>
+  <div class="pay-sheet-body">
+
+    <div class="pay-amount-card">
+      <span class="pay-amount-label">Amount Due</span>
+      <span class="pay-amount-val" id="payAmountVal">PKR 0</span>
+    </div>
+
+    <div class="pay-form">
+      <div class="card-field-wrap">
+        <input type="text" id="payCardNum" class="card-field" placeholder="Card number"
+               inputmode="numeric" maxlength="19" autocomplete="cc-number" />
+        <span class="card-network" id="payCardNetwork"></span>
+      </div>
+      <div class="card-row">
+        <input type="text" id="payExpiry" class="card-field" placeholder="MM / YY"
+               inputmode="numeric" maxlength="7" autocomplete="cc-exp" />
+        <input type="text" id="payCvv" class="card-field" placeholder="CVV"
+               inputmode="numeric" maxlength="3" autocomplete="cc-csc" />
+      </div>
+      <input type="text" id="payName" class="card-field" placeholder="Cardholder name" autocomplete="cc-name" />
+
+      <button class="btn-primary btn-full btn-pay" id="btnPay">
+        <i class="ri-bank-card-line"></i>
+        Pay <span id="btnPayLabel">PKR 0</span> Securely
+      </button>
+      <button class="btn-ghost btn-full pay-cancel" id="btnPayCancel">Cancel</button>
+    </div>
+
+  </div>
+</div>
+
+<script type="module" src="/src/dine.ts"></script>
+</body>
+</html>

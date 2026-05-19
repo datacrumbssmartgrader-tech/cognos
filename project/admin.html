@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Burgerz — Staff Dashboard</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Mulish:wght@400;500;600&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/admin.css" />
+</head>
+<body>
+
+<!-- ═══════════════════════════ LOGIN SCREEN ═══════════════════════════ -->
+<div id="login-screen">
+  <div class="login-bg"></div>
+  <div class="login-card">
+    <div class="login-logo">
+      <span class="login-logo-en">BURGERZ</span>
+      <span class="login-logo-ur">روایات</span>
+    </div>
+    <p class="login-subtitle">Staff Access</p>
+
+    <div class="pin-field">
+      <label class="pin-label">PIN</label>
+      <input id="pin-input" type="password" inputmode="numeric" maxlength="4"
+             placeholder="• • • •" autocomplete="off" />
+    </div>
+
+    <button id="btn-login" class="login-btn">
+      <i class="ri-login-circle-line"></i> Sign In
+    </button>
+    <p id="login-error" class="login-error" hidden>Incorrect PIN. Please try again.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ DASHBOARD ═══════════════════════════ -->
+<div id="dashboard" hidden>
+
+  <!-- Sidebar overlay (tablet) -->
+  <div id="sidebar-overlay"></div>
+
+  <!-- ── Sidebar ── -->
+  <aside id="sidebar">
+    <div class="sidebar-brand">
+      <span class="sb-logo-en">BURGERZ</span>
+      <span class="sb-logo-ur">روایات</span>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebar-nav">
+      <a class="nav-item active" data-section="orders">
+        <i class="ri-restaurant-line"></i>
+        <span>Live Orders</span>
+        <span class="nav-badge" id="nav-badge-orders" hidden></span>
+      </a>
+      <a class="nav-item" data-section="tables">
+        <i class="ri-layout-grid-line"></i>
+        <span>Tables</span>
+      </a>
+      <a class="nav-item" data-section="menu">
+        <i class="ri-book-open-line"></i>
+        <span>Menu</span>
+      </a>
+      <a class="nav-item" data-section="alerts">
+        <i class="ri-alarm-warning-line"></i>
+        <span>Alerts</span>
+        <span class="nav-badge" id="nav-badge-alerts" hidden></span>
+      </a>
+      <a class="nav-item" data-section="history">
+        <i class="ri-history-line"></i>
+        <span>Order History</span>
+      </a>
+      <a class="nav-item" data-section="payments">
+        <i class="ri-secure-payment-line"></i>
+        <span>Payments</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebar-avatar"></div>
+        <div class="sidebar-user-info">
+          <span class="sidebar-user-name" id="sidebar-user-name"></span>
+          <span class="sidebar-user-role" id="sidebar-user-role"></span>
+        </div>
+      </div>
+      <button id="btn-logout" class="logout-btn" title="Sign out">
+        <i class="ri-logout-box-r-line"></i>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ── Main ── -->
+  <div id="main">
+
+    <!-- Topbar (tablet / mobile) -->
+    <header id="topbar">
+      <button id="btn-hamburger" aria-label="Open menu">
+        <i class="ri-menu-line"></i>
+      </button>
+      <span class="topbar-title" id="topbar-title">Live Orders</span>
+      <div class="topbar-user">
+        <div class="topbar-avatar" id="topbar-avatar"></div>
+      </div>
+    </header>
+
+    <!-- ── Section: Live Orders ── -->
+    <section id="section-orders" class="section active">
+      <div class="section-header">
+        <div>
+          <h1 class="section-title">Live Orders</h1>
+          <p class="section-sub" id="orders-sub">All active table orders</p>
+        </div>
+        <div class="section-actions">
+          <select id="orders-filter" class="filter-select">
+            <option value="active">Active only</option>
+            <option value="all">Show all</option>
+          </select>
+        </div>
+      </div>
+      <div id="orders-grid" class="orders-grid"></div>
+    </section>
+
+    <!-- ── Section: Tables ── -->
+    <section id="section-tables" class="section">
+      <div class="section-header">
+        <div>
+          <h1 class="section-title">Tables</h1>
+          <p class="section-sub">12 tables — click any to view session</p>
+        </div>
+      </div>
+      <div id="tables-grid" class="tables-grid"></div>
+    </section>
+
+    <!-- ── Section: Menu Management ── -->
+    <section id="section-menu" class="section">
+      <div class="section-header">
+        <div>
+          <h1 class="section-title">Menu Management</h1>
+          <p class="section-sub">34 items across 7 categories</p>
+        </div>
+        <div class="section-actions">
+          <select id="menu-cat-filter" class="filter-select">
+            <option value="all">All Categories</option>
+            <option value="starters">Starters</option>
+            <option value="grills">Grills</option>
+            <option value="karahi">Karahi &amp; Curries</option>
+            <option value="biryani">Biryani &amp; Rice</option>
+            <option value="breads">Breads</option>
+            <option value="desserts">Desserts</option>
+            <option value="beverages">Beverages</option>
+          <option value="platters">Platters</option>
+          </select>
+          <button id="btn-add-item" class="btn-primary admin-only">
+            <i class="ri-add-line"></i> Add Item
+          </button>
+        </div>
+      </div>
+      <div class="menu-table-wrap">
+        <table id="menu-table" class="menu-table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Category</th>
+              <th class="text-right">Price (PKR)</th>
+              <th class="text-center">Status</th>
+              <th class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="menu-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── Section: Waiter Alerts ── -->
+    <section id="section-alerts" class="section">
+      <div class="section-header">
+        <div>
+          <h1 class="section-title">Waiter Alerts</h1>
+          <p class="section-sub" id="alerts-sub">Pending requests from tables</p>
+        </div>
+        <div class="section-actions">
+          <button id="btn-dismiss-all" class="btn-ghost">
+            <i class="ri-check-double-line"></i> Dismiss All
+          </button>
+        </div>
+      </div>
+      <div id="alerts-list" class="alerts-list"></div>
+    </section>
+
+    <!-- ── Section: Order History ── -->
+    <section id="section-history" class="section">
+      <div class="section-header">
+        <div>
+          <h1 class="section-title">Order History</h1>
+          <p class="section-sub" id="history-sub">All orders received</p>
+        </div>
+        <div class="section-actions history-filters">
+          <input id="history-search" type="text" class="filter-input history-search-input" placeholder="Search order or item…" />
+          <select id="history-table-filter" class="filter-select">
+            <option value="">All Tables</option>
+            <option value="T01">T01</option>
+            <option value="T02">T02</option>
+            <option value="T03">T03</option>
+            <option value="T04">T04</option>
+            <option value="T05">T05</option>
+            <option value="T06">T06</option>
+            <option value="T07">T07</option>
+            <option value="T08">T08</option>
+            <option value="T09">T09</option>
+            <option value="T10">T10</option>
+            <option value="T11">T11</option>
+            <option value="T12">T12</option>
+          </select>
+          <select id="history-status-filter" class="filter-select">
+            <option value="">All Statuses</option>
+            <option value="received">Received</option>
+            <option value="kitchen">In Kitchen</option>
+            <option value="ready">Ready</option>
+            <option value="served">Served</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+          <input id="history-date-from" type="date" class="filter-input" title="From date" />
+          <input id="history-date-to"   type="date" class="filter-input" title="To date" />
+        </div>
+      </div>
+      <div class="menu-table-wrap">
+        <table class="menu-table" id="history-table">
+          <thead>
+            <tr>
+              <th>Order</th>
+              <th>Table</th>
+              <th>Time</th>
+              <th>Items</th>
+              <th class="text-right">Total</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="history-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── Section: Payments ── -->
+    <section id="section-payments" class="section">
+      <div class="section-header">
+        <div>
+          <h1 class="section-title">Payments</h1>
+          <p class="section-sub" id="payments-sub">Today's payment overview</p>
+        </div>
+        <div class="section-actions">
+          <input id="payments-date-from" type="date" class="filter-input" />
+          <input id="payments-date-to"   type="date" class="filter-input" />
+        </div>
+      </div>
+
+      <!-- Tab bar -->
+      <div class="pay-tabs" id="pay-tabs">
+        <button class="pay-tab active" data-tab="overview">Overview</button>
+        <button class="pay-tab" data-tab="items">Items Sold</button>
+        <button class="pay-tab" data-tab="records">Payment Records</button>
+      </div>
+
+      <!-- Overview panel -->
+      <div class="pay-panel active" id="pay-panel-overview">
+        <div class="payments-stats" id="payments-stats"></div>
+        <div class="pay-chart-wrap" id="pay-chart-wrap"></div>
+      </div>
+
+      <!-- Items Sold panel -->
+      <div class="pay-panel" id="pay-panel-items">
+        <div class="menu-table-wrap">
+          <table class="menu-table">
+            <thead>
+              <tr>
+                <th class="text-center" style="width:3rem">#</th>
+                <th>Item</th>
+                <th>Category</th>
+                <th class="text-right">Qty Sold</th>
+                <th class="text-right">Revenue</th>
+              </tr>
+            </thead>
+            <tbody id="items-sold-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Payment Records panel -->
+      <div class="pay-panel" id="pay-panel-records">
+        <div class="menu-table-wrap">
+          <table class="menu-table">
+            <thead>
+              <tr>
+                <th>Table</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Duration</th>
+                <th>Orders</th>
+                <th class="text-right">Total</th>
+                <th>Status</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="payments-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /main -->
+</div><!-- /dashboard -->
+
+<!-- ═══════════════════════════ MODALS ═══════════════════════════ -->
+
+<!-- Cancel Order Modal -->
+<div id="modal-cancel" class="modal-backdrop" hidden>
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">Cancel Order</h2>
+      <button class="modal-close" data-modal="modal-cancel"><i class="ri-close-line"></i></button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-desc">Select a reason for cancellation:</p>
+      <select id="cancel-reason" class="modal-select">
+        <option value="item-unavailable">Item no longer available</option>
+        <option value="customer-request">Customer request</option>
+        <option value="kitchen-error">Kitchen error</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" data-modal="modal-cancel">Go Back</button>
+      <button id="btn-confirm-cancel" class="btn-danger">Cancel Order</button>
+    </div>
+  </div>
+</div>
+
+<!-- Table Bill Modal -->
+<div id="modal-table-bill" class="modal-backdrop" hidden>
+  <div class="modal modal-wide">
+    <div class="modal-header">
+      <h2 class="modal-title" id="table-bill-title">Table Bill</h2>
+      <button class="modal-close" data-modal="modal-table-bill"><i class="ri-close-line"></i></button>
+    </div>
+    <div class="modal-body" id="table-bill-body"></div>
+    <div class="modal-footer">
+      <button class="btn-ghost" data-modal="modal-table-bill">Close</button>
+      <button id="btn-mark-paid" class="btn-primary">
+        <i class="ri-secure-payment-line"></i> Mark as Paid
+      </button>
+      <button id="btn-reset-table" class="btn-danger">Reset Table</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit Menu Item Modal -->
+<div id="modal-menu-item" class="modal-backdrop" hidden>
+  <div class="modal modal-wide">
+    <div class="modal-header">
+      <h2 class="modal-title" id="menu-item-modal-title">Add Item</h2>
+      <button class="modal-close" data-modal="modal-menu-item"><i class="ri-close-line"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+
+        <!-- Item type toggle -->
+        <div class="form-group form-full">
+          <label class="form-label">Type</label>
+          <div class="type-tabs" id="item-type-tabs">
+            <button class="type-tab active" data-type="single">Single Item</button>
+            <button class="type-tab" data-type="platter">Platter</button>
+          </div>
+        </div>
+
+        <!-- Name -->
+        <div class="form-group form-full">
+          <label class="form-label">Name</label>
+          <input id="mi-name" type="text" class="form-input" placeholder="e.g. Chicken Karahi" />
+        </div>
+
+        <!-- Category + Price -->
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select id="mi-cat" class="form-input">
+            <option value="starters">Starters</option>
+            <option value="grills">Grills</option>
+            <option value="karahi">Karahi &amp; Curries</option>
+            <option value="biryani">Biryani &amp; Rice</option>
+            <option value="breads">Breads</option>
+            <option value="desserts">Desserts</option>
+            <option value="beverages">Beverages</option>
+            <option value="platters">Platters</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Price (PKR)</label>
+          <input id="mi-price" type="number" class="form-input" placeholder="1200" min="0" />
+        </div>
+
+        <!-- Description -->
+        <div class="form-group form-full">
+          <label class="form-label">Description</label>
+          <textarea id="mi-desc" class="form-input form-textarea" placeholder="Short description…" rows="2"></textarea>
+        </div>
+
+        <!-- Image upload -->
+        <div class="form-group form-full">
+          <label class="form-label">Image</label>
+          <div class="img-upload-area" id="img-upload-area">
+            <img id="img-preview" alt="preview" hidden />
+            <div class="upload-placeholder" id="upload-placeholder">
+              <i class="ri-image-add-line"></i>
+              <span>Click to upload image</span>
+              <small>JPG, PNG, WEBP</small>
+            </div>
+            <input id="mi-img-file" type="file" accept="image/*" hidden />
+          </div>
+        </div>
+
+        <!-- Platter components (shown when type = platter) -->
+        <div class="form-group form-full" id="platter-components-group" hidden>
+          <label class="form-label">Items in this Platter</label>
+          <div class="platter-items-list" id="platter-items-list"></div>
+        </div>
+
+        <!-- Discount -->
+        <div class="form-group">
+          <label class="form-label">Discount</label>
+          <select id="mi-discount-type" class="form-input">
+            <option value="none">No Discount</option>
+            <option value="percent">Percentage (%)</option>
+            <option value="flat">Flat Amount (PKR)</option>
+          </select>
+        </div>
+        <div class="form-group" id="discount-value-group" hidden>
+          <label class="form-label" id="discount-value-label">Value</label>
+          <input id="mi-discount-value" type="number" class="form-input" placeholder="0" min="0" />
+        </div>
+
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" data-modal="modal-menu-item">Cancel</button>
+      <button id="btn-save-item" class="btn-primary">Save Item</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast stack -->
+<div id="toastStack"></div>
+
+<script type="module" src="/src/admin.ts"></script>
+</body>
+</html>

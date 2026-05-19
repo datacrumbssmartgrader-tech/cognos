@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Burgerz — Fine Pakistani Cuisine. Experience the opulence of Mughal heritage through centuries of culinary tradition." />
+  <title>BURGERZ — Fine Pakistani Cuisine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Cinzel:wght@400;500;600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;500;600;700&family=Mulish:wght@300;400;500;600&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+
+  <!-- ══════════════════ NAVBAR ══════════════════ -->
+  <nav id="navbar" class="navbar">
+    <div class="nav-container">
+      <a href="#hero" class="nav-logo">
+        <span class="logo-gem">✦</span>
+        <span class="logo-text">BURGERZ</span>
+        <span class="logo-gem">✦</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#about" class="nav-link">Our Story</a></li>
+        <li><a href="#menu" class="nav-link">Menu</a></li>
+        <li><a href="#specials" class="nav-link">Specials</a></li>
+        <li><a href="#gallery" class="nav-link">Gallery</a></li>
+        <li><a href="#reserve" class="nav-link">Reserve</a></li>
+      </ul>
+      <a href="#reserve" class="btn-nav-cta">Book a Table</a>
+      <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <ul>
+        <li><a href="#about" class="mobile-nav-link">Our Story</a></li>
+        <li><a href="#menu" class="mobile-nav-link">Menu</a></li>
+        <li><a href="#specials" class="mobile-nav-link">Specials</a></li>
+        <li><a href="#gallery" class="mobile-nav-link">Gallery</a></li>
+        <li><a href="#reserve" class="mobile-nav-link">Reserve</a></li>
+        <li><a href="#reserve" class="mobile-nav-link mobile-cta">Book a Table</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ══════════════════ HERO ══════════════════ -->
+  <section id="hero" class="hero">
+    <div class="hero-bg" style="background-image:url('https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=1920&q=85')"></div>
+    <div class="hero-overlay"></div>
+    <div class="jali-overlay" aria-hidden="true"></div>
+    <div class="hero-content">
+      <div class="hero-urdu" aria-hidden="true">روایات</div>
+      <div class="hero-rule">
+        <span class="rule-line"></span>
+        <span class="rule-gem">✦</span>
+        <span class="rule-line"></span>
+      </div>
+      <h1 class="hero-title">BURGERZ</h1>
+      <p class="hero-subtitle">Fine Pakistani Cuisine</p>
+      <p class="hero-tagline">A Heritage of Flavour. A Tradition of Excellence.</p>
+      <div class="hero-actions">
+        <a href="#menu" class="btn-hero-primary">Explore Menu</a>
+        <a href="#reserve" class="btn-hero-outline">Reserve a Table</a>
+      </div>
+    </div>
+    <a href="#about" class="scroll-cue" aria-label="Scroll to content">
+      <span>Scroll</span>
+      <i class="ri-arrow-down-line"></i>
+    </a>
+  </section>
+
+  <!-- ══════════════════ ABOUT ══════════════════ -->
+  <section id="about" class="section about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-text reveal-left">
+          <span class="section-tag">Our Heritage</span>
+          <h2 class="section-title">A Legacy Rooted<br>in Tradition</h2>
+          <div class="gold-rule"></div>
+          <p>Born from the royal kitchens of the Mughal era, Burgerz brings centuries of culinary tradition to your table. Every dish is a story — of spice routes, of empire, of the warm hospitality that defines Pakistani culture.</p>
+          <p>Our master chefs spend years perfecting recipes passed down through generations, using hand-ground spices, slow-burning fires, and ingredients sourced from across Pakistan's diverse regions.</p>
+          <div class="about-stats">
+            <div class="stat">
+              <span class="stat-num">18+</span>
+              <span class="stat-label">Years of Excellence</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num">60+</span>
+              <span class="stat-label">Heritage Recipes</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num">4</span>
+              <span class="stat-label">Master Chefs</span>
+            </div>
+          </div>
+          <a href="#menu" class="btn-primary">Discover Our Menu</a>
+        </div>
+        <div class="about-visual reveal-right">
+          <div class="about-img-frame">
+            <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80" alt="Burgerz dining room" loading="lazy" />
+          </div>
+          <div class="about-badge">
+            <span class="badge-gem">✦</span>
+            <span class="badge-year">Est. 2006</span>
+          </div>
+          <div class="about-accent-line"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ SIGNATURE DISHES ══════════════════ -->
+  <section id="signature" class="section signature">
+    <div class="section-bg-pattern" aria-hidden="true"></div>
+    <div class="container">
+      <div class="section-header centered">
+        <span class="section-tag">Chef's Selection</span>
+        <h2 class="section-title">Signature Dishes</h2>
+        <div class="gold-rule center"></div>
+      </div>
+      <div class="sig-grid">
+
+        <div class="sig-card reveal-up">
+          <div class="sig-img">
+            <img src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=700&q=80" alt="Sindhi Mutton Biryani" loading="lazy" />
+            <span class="sig-badge">Chef's Pick</span>
+          </div>
+          <div class="sig-body">
+            <span class="sig-cat">Biryani & Rice</span>
+            <h3>Sindhi Mutton Biryani</h3>
+            <p>A regal layered biryani, slow-cooked with marinated mutton, saffron-infused basmati and whole Mughal spices. Served with raita and salad.</p>
+            <div class="sig-foot">
+              <span class="sig-price">PKR 1,800</span>
+              <a href="#menu" class="sig-link">View in Menu <i class="ri-arrow-right-line"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="sig-card reveal-up" style="--reveal-delay:0.15s">
+          <div class="sig-img">
+            <img src="https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=700&q=80" alt="Barra Lamb Chops" loading="lazy" />
+            <span class="sig-badge">Most Loved</span>
+          </div>
+          <div class="sig-body">
+            <span class="sig-cat">Signature Grills</span>
+            <h3>Barra Lamb Chops</h3>
+            <p>Baby lamb chops marinated for 24 hours in raw papaya, yoghurt and aromatic spices. Char-grilled to perfection in our clay tandoor.</p>
+            <div class="sig-foot">
+              <span class="sig-price">PKR 2,800</span>
+              <a href="#menu" class="sig-link">View in Menu <i class="ri-arrow-right-line"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="sig-card reveal-up" style="--reveal-delay:0.3s">
+          <div class="sig-img">
+            <img src="https://images.unsplash.com/photo-1547592180-85f173990554?w=700&q=80" alt="Mutton Karahi" loading="lazy" />
+            <span class="sig-badge">Seasonal</span>
+          </div>
+          <div class="sig-body">
+            <span class="sig-cat">Karahi & Curries</span>
+            <h3>Mutton Karahi</h3>
+            <p>Slow-braised mutton shoulder cooked in a traditional iron karahi with fresh tomatoes, green chillies and hand-ground garam masala.</p>
+            <div class="sig-foot">
+              <span class="sig-price">PKR 2,200</span>
+              <a href="#menu" class="sig-link">View in Menu <i class="ri-arrow-right-line"></i></a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ MENU ══════════════════ -->
+  <section id="menu" class="section menu-section">
+    <div class="container">
+      <div class="section-header centered">
+        <span class="section-tag">Our Culinary Journey</span>
+        <h2 class="section-title">The Menu</h2>
+        <div class="gold-rule center"></div>
+      </div>
+
+      <div class="menu-tabs-wrapper">
+        <div class="menu-tabs" id="menuTabs" role="tablist">
+          <button class="tab-btn active" data-tab="starters" role="tab">Starters</button>
+          <button class="tab-btn" data-tab="grills" role="tab">Grills</button>
+          <button class="tab-btn" data-tab="karahi" role="tab">Karahi</button>
+          <button class="tab-btn" data-tab="biryani" role="tab">Biryani</button>
+          <button class="tab-btn" data-tab="breads" role="tab">Breads</button>
+          <button class="tab-btn" data-tab="desserts" role="tab">Desserts</button>
+          <button class="tab-btn" data-tab="beverages" role="tab">Beverages</button>
+        </div>
+      </div>
+
+      <div class="menu-panels" id="menuPanels">
+
+        <!-- STARTERS -->
+        <div class="menu-panel active" id="panel-starters">
+          <div class="menu-grid">
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=120&q=80" alt="Seekh Kebab" loading="lazy" />
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Seekh Kebab</h4><span class="price">PKR 1,200</span></div>
+                <p>Minced lamb skewers with green herbs, spices and charcoal finish. Served with mint chutney.</p>
+                <div class="tags"><span class="tag spicy">🌶 Spicy</span></div>
+              </div>
+            </div>
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=120&q=80" alt="Chicken Malai Boti" loading="lazy" />
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Chicken Malai Boti</h4><span class="price">PKR 1,100</span></div>
+                <p>Tender chicken in cream, cardamom and cheese marinade. Delicate and mildly spiced.</p>
+                <div class="tags"><span class="tag mild">Mild</span></div>
+              </div>
+            </div>
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1512058564366-18510be2db19?w=120&q=80" alt="Nihari Shorba" loading="lazy" />
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Nihari Shorba</h4><span class="price">PKR 850</span></div>
+                <p>Rich slow-cooked bone broth with fresh ginger julienne and fried onions. A warming classic.</p>
+                <div class="tags"><span class="tag">Traditional</span></div>
+              </div>
+            </div>
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1626844571159-f5729c66d6ef?w=120&q=80" alt="Fish Tikka" loading="lazy" />
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Fish Tikka</h4><span class="price">PKR 1,350</span></div>
+                <p>Fresh river fish marinated in lime, carom seeds and spices. Cooked in the clay tandoor.</p>
+                <div class="tags"><span class="tag">Grilled</span></div>
+              </div>
+            </div>
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1600803907087-f56d462fd26b?w=120&q=80" alt="Shammi Kebab" loading="lazy" />
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Shammi Kebab</h4><span class="price">PKR 950</span></div>
+                <p>Soft minced lamb patties with Bengal gram and spice paste. Pan-fried to golden perfection.</p>
+                <div class="tags"><span class="tag mild">Mild</span></div>
+              </div>
+            </div>
+            <div class="menu-item">
+              <img src="https://images.unsplash.com/photo-1559847844-5315695dadae?w=120&q=80" alt="Dahi Bara Chaat" loading="lazy" />
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Dahi Bara Chaat</h4><span class="price">PKR 700</span></div>
+                <p>Lentil fritters soaked in spiced yoghurt, topped with tamarind chutney and chaat masala.</p>
+                <div class="tags"><span class="tag veg">🌿 Veg</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- GRILLS -->
+        <div class="menu-panel" id="panel-grills">
+          <div class="menu-grid">
+            <div class="menu-item no-img">
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Barra Lamb Chops</h4><span class="price">PKR 2,800</span></div>
+                <p>Baby lamb chops marinated 24 hours in raw papaya, yoghurt and aromatic spices. Char-grilled in clay tandoor.</p>
+                <div class="tags"><span class="tag signature">✦ Signature</span><span class="tag spicy">🌶 Spicy</span></div>
+              </div>
+            </div>
+            <div class="menu-item no-img">
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Chapli Kebab</h4><span class="price">PKR 1,400</span></div>
+                <p>Peshawar-style minced beef patties with pomegranate seeds, whole coriander and green chillies.</p>
+                <div class="tags"><span class="tag spicy">🌶 Spicy</span><span class="tag">NWFP Style</span></div>
+              </div>
+            </div>
+            <div class="menu-item no-img">
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Tandoori Prawns</h4><span class="price">PKR 1,800</span></div>
+                <p>Tiger prawns in a classic red tandoori marinade. Served with lime wedges and house dressing.</p>
+                <div class="tags"><span class="tag">Seafood</span><span class="tag mild">🌶 Medium</span></div>
+              </div>
+            </div>
+            <div class="menu-item no-img">
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Achari Murgh Tikka</h4><span class="price">PKR 1,300</span></div>
+                <p>Pickle-spiced chicken breast tikka with fenugreek and mango pickle marinade. Charcoal-finished.</p>
+                <div class="tags"><span class="tag">Chicken</span></div>
+              </div>
+            </div>
+            <div class="menu-item no-img">
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Reshmi Kebab</h4><span class="price">PKR 1,250</span></div>
+                <p>Silky minced chicken skewers with cream cheese, green chillies and cashew paste. Cooked over charcoal.</p>
+                <div class="tags"><span class="tag mild">Mild</span></div>
+              </div>
+            </div>
+            <div class="menu-item no-img">
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Mixed Grill Platter</h4><span class="price">PKR 3,500</span></div>
+                <p>A selection of our finest kebabs and tikkas — seekh, malai boti, reshmi and one lamb chop. Serves 2.</p>
+                <div class="tags"><span class="tag signature">✦ Signature</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- KARAHI -->
+        <div class="menu-panel" id="panel-karahi">
+          <div class="menu-grid">
+            <div class="menu-item no-img">
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Chicken Karahi</h4><span class="price">PKR 1,600</span></div>
+                <p>Bone-in chicken cooked in fresh tomatoes, ginger-garlic paste and whole spices in a traditional iron wok.</p>
+                <div class="tags"><span class="tag spicy">🌶 Spicy</span><span class="tag">Classic</span></div>
+              </div>
+            </div>
+            <div class="menu-item no-img">
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Mutton Karahi</h4><span class="price">PKR 2,200</span></div>
+                <p>Slow-cooked mutton shoulder in karahi masala, fresh tomatoes and green chillies. A timeless favourite.</p>
+                <div class="tags"><span class="tag signature">✦ Signature</span><span class="tag spicy">🌶 Spicy</span></div>
+              </div>
+            </div>
+            <div class="menu-item no-img">
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Rogan Josh</h4><span class="price">PKR 2,400</span></div>
+                <p>Kashmiri braised lamb in a rich aromatic sauce of Kashmiri chillies, whole spices and saffron.</p>
+                <div class="tags"><span class="tag">Kashmiri</span><span class="tag mild">🌶 Medium</span></div>
+              </div>
+            </div>
+            <div class="menu-item no-img">
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Saag Gosht</h4><span class="price">PKR 2,100</span></div>
+                <p>Tender lamb braised with creamed spinach, fresh methi and cumin. A hearty Punjabi classic.</p>
+                <div class="tags"><span class="tag">Punjabi</span></div>
+              </div>
+            </div>
+            <div class="menu-item no-img">
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Lahori Dal Makhani</h4><span class="price">PKR 1,100</span></div>
+                <p>Black lentils slow-cooked overnight with butter, cream and whole spices. Rich, smoky and satisfying.</p>
+                <div class="tags"><span class="tag veg">🌿 Veg</span></div>
+              </div>
+            </div>
+            <div class="menu-item no-img">
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Nihari</h4><span class="price">PKR 2,000</span></div>
+                <p>Slow-braised beef shank in a deeply spiced gravy, cooked overnight. Served with naan and condiments.</p>
+                <div class="tags"><span class="tag">Old City Recipe</span><span class="tag spicy">🌶 Spicy</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BIRYANI -->
+        <div class="menu-panel" id="panel-biryani">
+          <div class="menu-grid">
+            <div class="menu-item no-img">
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Sindhi Mutton Biryani</h4><span class="price">PKR 1,800</span></div>
+                <p>Traditional Sindhi-style layered biryani with marinated mutton, plums and whole spices. Rich and aromatic.</p>
+                <div class="tags"><span class="tag signature">✦ Chef's Pick</span><span class="tag spicy">🌶 Spicy</span></div>
+              </div>
+            </div>
+            <div class="menu-item no-img">
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Chicken Biryani</h4><span class="price">PKR 1,400</span></div>
+                <p>Fragrant basmati with whole spices, caramelised onions and tender chicken. Served with raita.</p>
+                <div class="tags"><span class="tag mild">🌶 Medium</span></div>
+              </div>
+            </div>
+            <div class="menu-item no-img">
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Zafrani Pulao</h4><span class="price">PKR 900</span></div>
+                <p>Saffron-infused basmati with fried almonds, raisins and whole cardamom. Elegantly mild.</p>
+                <div class="tags"><span class="tag mild">Mild</span><span class="tag veg">🌿 Veg</span></div>
+              </div>
+            </div>
+            <div class="menu-item no-img">
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Prawn Biryani</h4><span class="price">PKR 2,000</span></div>
+                <p>Coastal-style tiger prawn biryani with raw mango, kokum and fresh curry leaves.</p>
+                <div class="tags"><span class="tag">Seafood</span><span class="tag spicy">🌶 Medium</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BREADS -->
+        <div class="menu-panel" id="panel-breads">
+          <div class="menu-grid">
+            <div class="menu-item no-img">
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Tandoori Roti</h4><span class="price">PKR 120</span></div>
+                <p>Whole wheat flatbread baked fresh in our clay tandoor. Served with butter on request.</p>
+                <div class="tags"><span class="tag veg">🌿 Veg</span></div>
+              </div>
+            </div>
+            <div class="menu-item no-img">
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Garlic Naan</h4><span class="price">PKR 180</span></div>
+                <p>Soft leavened bread brushed with garlic butter and fresh coriander. Cooked in the tandoor.</p>
+                <div class="tags"><span class="tag veg">🌿 Veg</span></div>
+              </div>
+            </div>
+            <div class="menu-item no-img">
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Peshwari Naan</h4><span class="price">PKR 250</span></div>
+                <p>Sweet naan stuffed with coconut, almonds and sultanas. A Peshawar-style favourite.</p>
+                <div class="tags"><span class="tag mild">Mild</span><span class="tag veg">🌿 Veg</span></div>
+              </div>
+            </div>
+            <div class="menu-item no-img">
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Laccha Paratha</h4><span class="price">PKR 200</span></div>
+                <p>Multi-layered flaky whole wheat flatbread, pan-fried in clarified butter. Crispy on edges, soft inside.</p>
+                <div class="tags"><span class="tag veg">🌿 Veg</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DESSERTS -->
+        <div class="menu-panel" id="panel-desserts">
+          <div class="menu-grid">
+            <div class="menu-item no-img">
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Gulab Jamun</h4><span class="price">PKR 650</span></div>
+                <p>Soft khoya milk solids soaked in rose-cardamom sugar syrup. Served warm with vanilla kulfi.</p>
+                <div class="tags"><span class="tag veg">🌿 Veg</span><span class="tag">Traditional</span></div>
+              </div>
+            </div>
+            <div class="menu-item no-img">
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Shahi Tukra</h4><span class="price">PKR 750</span></div>
+                <p>Royal bread pudding soaked in saffron milk, topped with thickened rabri and pistachio shavings.</p>
+                <div class="tags"><span class="tag signature">✦ Royal</span><span class="tag veg">🌿 Veg</span></div>
+              </div>
+            </div>
+            <div class="menu-item no-img">
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Pistachio Kulfi</h4><span class="price">PKR 550</span></div>
+                <p>Traditional slow-churned ice cream with pistachio and cardamom. Served on a wooden stick.</p>
+                <div class="tags"><span class="tag veg">🌿 Veg</span></div>
+              </div>
+            </div>
+            <div class="menu-item no-img">
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Kheer</h4><span class="price">PKR 600</span></div>
+                <p>Creamy slow-cooked rice pudding with green cardamom, rose water and crushed almonds.</p>
+                <div class="tags"><span class="tag veg">🌿 Veg</span><span class="tag mild">Mild</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BEVERAGES -->
+        <div class="menu-panel" id="panel-beverages">
+          <div class="menu-grid">
+            <div class="menu-item no-img">
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Kashmiri Chai</h4><span class="price">PKR 400</span></div>
+                <p>The iconic pink tea — green tea brewed with milk, cardamom and salt. Topped with crushed pistachios.</p>
+                <div class="tags"><span class="tag signature">✦ House Special</span><span class="tag veg">🌿 Veg</span></div>
+              </div>
+            </div>
+            <div class="menu-item no-img">
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Mango Lassi</h4><span class="price">PKR 450</span></div>
+                <p>Fresh Chaunsa mango blended with yoghurt, a hint of cardamom and a rose water finish.</p>
+                <div class="tags"><span class="tag veg">🌿 Veg</span><span class="tag mild">Mild</span></div>
+              </div>
+            </div>
+            <div class="menu-item no-img">
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Rooh Afza Sharbat</h4><span class="price">PKR 350</span></div>
+                <p>Classic rose and herb sharbat with chilled milk and a squeeze of lime. A nostalgic Pakistani favourite.</p>
+                <div class="tags"><span class="tag veg">🌿 Veg</span></div>
+              </div>
+            </div>
+            <div class="menu-item no-img">
+              <div class="menu-item-body">
+                <div class="menu-item-head"><h4>Fresh Lime Soda</h4><span class="price">PKR 300</span></div>
+                <p>Hand-squeezed lime with fresh mint, black salt and sparkling water. Sweet or salted.</p>
+                <div class="tags"><span class="tag veg">🌿 Veg</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ SPECIALS ══════════════════ -->
+  <section id="specials" class="section specials">
+    <div class="section-bg-dark" aria-hidden="true"></div>
+    <div class="container">
+      <div class="section-header centered">
+        <span class="section-tag light">Limited Time</span>
+        <h2 class="section-title light">Specials &amp; Offers</h2>
+        <div class="gold-rule center"></div>
+      </div>
+      <div class="specials-grid">
+
+        <div class="special-card reveal-up">
+          <div class="special-icon"><i class="ri-moon-line"></i></div>
+          <span class="special-badge">Weekend Only</span>
+          <h3>Weekend Feast</h3>
+          <p>Every Friday &amp; Saturday — enjoy our 5-course Mughal Banquet for two. Includes unlimited Kashmiri Chai and one dessert each.</p>
+          <p class="special-price">PKR 6,500 <span>for 2</span></p>
+          <a href="#reserve" class="btn-gold-sm">Reserve Now</a>
+        </div>
+
+        <div class="special-card featured reveal-up" style="--reveal-delay:0.12s">
+          <div class="special-icon"><i class="ri-star-line"></i></div>
+          <span class="special-badge gold">Chef's Seasonal</span>
+          <h3>Saffron Raan</h3>
+          <p>This month only — whole roasted leg of lamb in saffron, dry fruits and royal spices. Pre-booking only, serves 4–6 guests.</p>
+          <p class="special-price">PKR 8,500</p>
+          <a href="#reserve" class="btn-primary-sm">Pre-order</a>
+        </div>
+
+        <div class="special-card reveal-up" style="--reveal-delay:0.24s">
+          <div class="special-icon"><i class="ri-gift-line"></i></div>
+          <span class="special-badge">Occasion</span>
+          <h3>Celebration Package</h3>
+          <p>Birthday, anniversary or corporate dinner — let us curate a custom menu. Complimentary cake, dedicated waiter and floral arrangement.</p>
+          <p class="special-price">From PKR 2,500 <span>per head</span></p>
+          <a href="#reserve" class="btn-gold-sm">Enquire</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ GALLERY ══════════════════ -->
+  <section id="gallery" class="section gallery">
+    <div class="container">
+      <div class="section-header centered">
+        <span class="section-tag">The Experience</span>
+        <h2 class="section-title">Gallery</h2>
+        <div class="gold-rule center"></div>
+      </div>
+      <div class="gallery-grid">
+        <div class="g-item span-2 reveal-up" data-src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&q=85" data-caption="Dining Room">
+          <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&q=80" alt="Dining Room" loading="lazy" />
+          <div class="g-overlay"><span>Dining Room</span></div>
+        </div>
+        <div class="g-item reveal-up" style="--reveal-delay:0.05s" data-src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=800&q=85" data-caption="Signature Biryani">
+          <img src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=600&q=80" alt="Biryani" loading="lazy" />
+          <div class="g-overlay"><span>Signature Biryani</span></div>
+        </div>
+        <div class="g-item reveal-up" style="--reveal-delay:0.1s" data-src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=800&q=85" data-caption="Tandoor Kebabs">
+          <img src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=600&q=80" alt="Kebabs" loading="lazy" />
+          <div class="g-overlay"><span>Tandoor Kebabs</span></div>
+        </div>
+        <div class="g-item reveal-up" style="--reveal-delay:0.15s" data-src="https://images.unsplash.com/photo-1547592180-85f173990554?w=800&q=85" data-caption="Iron Wok Karahi">
+          <img src="https://images.unsplash.com/photo-1547592180-85f173990554?w=600&q=80" alt="Karahi" loading="lazy" />
+          <div class="g-overlay"><span>Iron Wok Karahi</span></div>
+        </div>
+        <div class="g-item span-2 tall reveal-up" style="--reveal-delay:0.2s" data-src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=1200&q=85" data-caption="Banquet Spread">
+          <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=900&q=80" alt="Banquet Spread" loading="lazy" />
+          <div class="g-overlay"><span>Banquet Spread</span></div>
+        </div>
+        <div class="g-item reveal-up" style="--reveal-delay:0.25s" data-src="https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=800&q=85" data-caption="Barra Lamb Chops">
+          <img src="https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=600&q=80" alt="Lamb Chops" loading="lazy" />
+          <div class="g-overlay"><span>Barra Lamb Chops</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="lightbox" id="lightbox" aria-hidden="true">
+      <button class="lb-close" id="lbClose" aria-label="Close"><i class="ri-close-line"></i></button>
+      <button class="lb-nav lb-prev" id="lbPrev" aria-label="Previous"><i class="ri-arrow-left-line"></i></button>
+      <button class="lb-nav lb-next" id="lbNext" aria-label="Next"><i class="ri-arrow-right-line"></i></button>
+      <div class="lb-content">
+        <img src="" alt="" id="lbImg" />
+        <p class="lb-caption" id="lbCaption"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ TESTIMONIALS ══════════════════ -->
+  <section id="testimonials" class="section testimonials">
+    <div class="section-bg-pattern" aria-hidden="true"></div>
+    <div class="container">
+      <div class="section-header centered">
+        <span class="section-tag">Guest Voices</span>
+        <h2 class="section-title">What Our Guests Say</h2>
+        <div class="gold-rule center"></div>
+      </div>
+      <div class="testimonials-outer">
+        <div class="testimonials-track" id="testimonialsTrack">
+          <div class="testimonial">
+            <div class="t-stars">★★★★★</div>
+            <blockquote>"The Barra Lamb Chops were unlike anything I've tasted. The marinade had incredible depth — clearly a recipe perfected over years. The Kashmiri Chai was the perfect finish to an extraordinary meal."</blockquote>
+            <div class="t-author">
+              <div class="t-avatar">SM</div>
+              <div><strong>Sana Mirza</strong><span>Anniversary Dinner</span></div>
+            </div>
+          </div>
+          <div class="testimonial">
+            <div class="t-stars">★★★★★</div>
+            <blockquote>"Burgerz set a new standard for fine Pakistani dining. The ambiance feels like stepping into a Mughal palace — warm, opulent and deeply Pakistani. The Mutton Biryani brought tears to my eyes."</blockquote>
+            <div class="t-author">
+              <div class="t-avatar">IS</div>
+              <div><strong>Imran Shah</strong><span>Corporate Dinner</span></div>
+            </div>
+          </div>
+          <div class="testimonial">
+            <div class="t-stars">★★★★★</div>
+            <blockquote>"We booked the celebration package for my mother's birthday and it exceeded every expectation. The staff were attentive without being intrusive. The Shahi Tukra was simply divine."</blockquote>
+            <div class="t-author">
+              <div class="t-avatar">NH</div>
+              <div><strong>Nadia Hussain</strong><span>Birthday Celebration</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="t-controls">
+          <button class="t-btn" id="tPrev" aria-label="Previous"><i class="ri-arrow-left-line"></i></button>
+          <div class="t-dots" id="tDots">
+            <button class="t-dot active" data-idx="0"></button>
+            <button class="t-dot" data-idx="1"></button>
+            <button class="t-dot" data-idx="2"></button>
+          </div>
+          <button class="t-btn" id="tNext" aria-label="Next"><i class="ri-arrow-right-line"></i></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ RESERVATION ══════════════════ -->
+  <section id="reserve" class="section reserve">
+    <div class="container">
+      <div class="reserve-grid">
+        <div class="reserve-info reveal-left">
+          <span class="section-tag">Book Your Table</span>
+          <h2 class="section-title">Reserve a<br>Dining Experience</h2>
+          <div class="gold-rule"></div>
+          <p>Every meal at Burgerz is crafted with care and intention. Reserve your table to ensure we can prepare the finest experience for your occasion.</p>
+          <div class="reserve-contact-list">
+            <div class="r-contact">
+              <i class="ri-time-line"></i>
+              <div>
+                <strong>Opening Hours</strong>
+                <span>Mon–Thu: 12pm – 11pm</span>
+                <span>Fri–Sun: 12pm – 12am</span>
+              </div>
+            </div>
+            <div class="r-contact">
+              <i class="ri-whatsapp-line"></i>
+              <div>
+                <strong>WhatsApp / Phone</strong>
+                <span>+92 300 123 4567</span>
+              </div>
+            </div>
+            <div class="r-contact">
+              <i class="ri-map-pin-line"></i>
+              <div>
+                <strong>Location</strong>
+                <span>123 Gulberg III, Lahore</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reserve-form-wrap reveal-right">
+          <form class="reserve-form" id="reserveForm" novalidate>
+            <div class="form-row">
+              <div class="form-field">
+                <label for="fname">Full Name</label>
+                <input type="text" id="fname" name="name" placeholder="Your name" autocomplete="name" />
+                <span class="field-err" id="fnameErr"></span>
+              </div>
+              <div class="form-field">
+                <label for="fphone">Phone Number</label>
+                <input type="tel" id="fphone" name="phone" placeholder="+92 3XX XXXXXXX" autocomplete="tel" />
+                <span class="field-err" id="fphoneErr"></span>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label for="fdate">Date</label>
+                <input type="date" id="fdate" name="date" />
+                <span class="field-err" id="fdateErr"></span>
+              </div>
+              <div class="form-field">
+                <label for="ftime">Preferred Time</label>
+                <select id="ftime" name="time">
+                  <option value="">Select time</option>
+                  <option>12:00 PM</option><option>1:00 PM</option>
+                  <option>2:00 PM</option><option>3:00 PM</option>
+                  <option>7:00 PM</option><option>8:00 PM</option>
+                  <option>9:00 PM</option><option>10:00 PM</option>
+                </select>
+                <span class="field-err" id="ftimeErr"></span>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label for="fguests">Number of Guests</label>
+                <select id="fguests" name="guests">
+                  <option value="">Select</option>
+                  <option>1 Guest</option><option>2 Guests</option>
+                  <option>3 Guests</option><option>4 Guests</option>
+                  <option>5–6 Guests</option><option>7–10 Guests</option>
+                  <option>10+ Guests</option>
+                </select>
+                <span class="field-err" id="fguestsErr"></span>
+              </div>
+              <div class="form-field">
+                <label for="foccasion">Occasion <span class="opt">(Optional)</span></label>
+                <select id="foccasion" name="occasion">
+                  <option value="">Select</option>
+                  <option>Birthday</option><option>Anniversary</option>
+                  <option>Business Dinner</option><option>Family Gathering</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-field full">
+              <label for="fnotes">Special Requests <span class="opt">(Optional)</span></label>
+              <textarea id="fnotes" name="notes" rows="3" placeholder="Dietary requirements, seating preferences, special arrangements..."></textarea>
+            </div>
+            <button type="submit" class="btn-submit" id="submitBtn">
+              <span>Request Reservation</span>
+              <i class="ri-send-plane-line"></i>
+            </button>
+          </form>
+          <!-- Step 2: Payment deposit (shown after form submits) -->
+          <div class="payment-step" id="paymentStep">
+            <div class="payment-confirmed">
+              <i class="ri-checkbox-circle-line"></i>
+              <h3>Reservation Received!</h3>
+              <p>We'll confirm via WhatsApp within 2 hours.</p>
+            </div>
+            <div class="payment-deposit-card">
+              <div class="deposit-header">
+                <div>
+                  <p class="deposit-label">Optional: Secure Your Table</p>
+                  <h4 class="deposit-amount">PKR 1,000 <span>deposit</span></h4>
+                </div>
+                <span class="deposit-badge"><i class="ri-shield-check-line"></i> Stripe</span>
+              </div>
+              <p class="deposit-note">Fully refundable if cancelled 48 hrs before your booking. Deducted from your final bill.</p>
+              <form class="card-form" id="cardForm" novalidate>
+                <div class="card-field-wrap">
+                  <label class="card-label">Card Number</label>
+                  <div class="card-input-wrap">
+                    <i class="ri-bank-card-line card-icon"></i>
+                    <input type="text" id="cardNum" class="card-input" placeholder="1234 5678 9012 3456" maxlength="19" inputmode="numeric" autocomplete="cc-number" />
+                    <span class="card-network" id="cardNetwork"></span>
+                  </div>
+                </div>
+                <div class="card-row">
+                  <div class="card-field-wrap">
+                    <label class="card-label">Expiry</label>
+                    <input type="text" id="cardExpiry" class="card-input" placeholder="MM / YY" maxlength="7" inputmode="numeric" autocomplete="cc-exp" />
+                  </div>
+                  <div class="card-field-wrap">
+                    <label class="card-label">CVV</label>
+                    <div class="card-input-wrap">
+                      <input type="text" id="cardCvv" class="card-input" placeholder="•••" maxlength="3" inputmode="numeric" autocomplete="cc-csc" />
+                      <i class="ri-question-line card-cvv-hint" title="3 digits on the back of your card"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-field-wrap">
+                  <label class="card-label">Cardholder Name</label>
+                  <input type="text" id="cardName" class="card-input" placeholder="Name as on card" autocomplete="cc-name" />
+                </div>
+                <button type="submit" class="btn-pay" id="btnPay">
+                  <i class="ri-lock-2-line"></i>
+                  Pay PKR 1,000 Securely
+                </button>
+              </form>
+              <button class="btn-skip" id="btnSkipPayment">Skip — I'll pay at the venue</button>
+            </div>
+          </div>
+
+          <!-- Step 3: Final confirmation (after pay or skip) -->
+          <div class="form-success" id="formSuccess">
+            <i class="ri-checkbox-circle-line"></i>
+            <h3>You're All Set!</h3>
+            <p id="formSuccessMsg">We'll confirm your booking via WhatsApp or phone within 2 hours.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ LOCATION ══════════════════ -->
+  <section id="location" class="section location">
+    <div class="container">
+      <div class="location-grid">
+        <div class="location-info reveal-left">
+          <span class="section-tag">Find Us</span>
+          <h2 class="section-title">Where to<br>Find Burgerz</h2>
+          <div class="gold-rule"></div>
+          <address>
+            <i class="ri-map-pin-2-line"></i>
+            123 Gulberg III, Main Boulevard,<br>Lahore, Punjab, Pakistan
+          </address>
+          <table class="hours-table">
+            <tr><td>Monday – Thursday</td><td>12:00 PM – 11:00 PM</td></tr>
+            <tr><td>Friday – Saturday</td><td>12:00 PM – 12:00 AM</td></tr>
+            <tr><td>Sunday</td><td>1:00 PM – 10:00 PM</td></tr>
+          </table>
+          <div class="loc-actions">
+            <a href="https://wa.me/923001234567" class="btn-primary" target="_blank" rel="noopener noreferrer">
+              <i class="ri-whatsapp-line"></i> WhatsApp Us
+            </a>
+            <a href="tel:+923001234567" class="btn-outline">
+              <i class="ri-phone-line"></i> Call Us
+            </a>
+          </div>
+        </div>
+        <div class="location-map reveal-right">
+          <div class="map-shell">
+            <div class="map-pin-icon"><i class="ri-map-pin-fill"></i></div>
+            <p class="map-label">Gulberg III, Lahore</p>
+            <a href="https://maps.google.com/?q=Gulberg+III+Lahore" class="btn-outline-sm" target="_blank" rel="noopener noreferrer">
+              Open in Google Maps <i class="ri-external-link-line"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════ FOOTER ══════════════════ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">✦ BURGERZ ✦</div>
+          <p>Fine Pakistani Cuisine. A heritage of flavour, a tradition of excellence — since 2006.</p>
+          <div class="socials">
+            <a href="#" aria-label="Instagram"><i class="ri-instagram-line"></i></a>
+            <a href="#" aria-label="Facebook"><i class="ri-facebook-line"></i></a>
+            <a href="#" aria-label="TikTok"><i class="ri-tiktok-line"></i></a>
+            <a href="#" aria-label="WhatsApp"><i class="ri-whatsapp-line"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h5>Explore</h5>
+          <ul>
+            <li><a href="#about">Our Story</a></li>
+            <li><a href="#menu">Menu</a></li>
+            <li><a href="#specials">Specials</a></li>
+            <li><a href="#gallery">Gallery</a></li>
+            <li><a href="#reserve">Reservations</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Dining</h5>
+          <ul>
+            <li><a href="#signature">Signature Dishes</a></li>
+            <li><a href="#specials">Weekend Feast</a></li>
+            <li><a href="#specials">Private Events</a></li>
+            <li><a href="#reserve">Book a Table</a></li>
+          </ul>
+        </div>
+        <div class="footer-newsletter">
+          <h5>Stay in Touch</h5>
+          <p>Get exclusive offers and seasonal updates.</p>
+          <form class="newsletter-form" id="newsletterForm">
+            <input type="email" placeholder="Your email address" required aria-label="Email address" />
+            <button type="submit" aria-label="Subscribe"><i class="ri-send-plane-fill"></i></button>
+          </form>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Burgerz Fine Pakistani Cuisine. All rights reserved.</p>
+        <div class="footer-legal">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <a href="https://wa.me/923001234567" class="wa-float" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+    <i class="ri-whatsapp-line"></i>
+  </a>
+  <button class="back-top" id="backTop" aria-label="Back to top">
+    <i class="ri-arrow-up-line"></i>
+  </button>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
