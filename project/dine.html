@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>BURGERZ — Order</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>ROOSTER'S DEN — Order</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Cinzel:wght@400;500;600&family=Noto+Nastaliq+Urdu:wght@400;600&family=Poppins:wght@300;400;500;600;700&family=Mulish:wght@300;400;500;600&family=Fredoka+One&family=Lilita+One&display=swap" rel="stylesheet" />
@@ -29,17 +29,16 @@
   <!-- ── SCREEN: WELCOME ────────────────────────── -->
   <div id="screen-welcome" class="screen" hidden>
 
-    <span class="w-badge">Table: <span id="welcomeTableNum">—</span></span>
+    <div class="w-foreground">
+      <h1 class="w-heading">ROOSTER'S DEN</h1>
 
-    <h1 class="w-heading">WELCOME TO<br>BURGERZ</h1>
-
-    <div class="w-hero">
-      <img src="/bg-removebg-preview.png" alt="Burger" />
-    </div>
-
-    <div class="w-actions">
-      <button id="btnBrowse" class="w-btn w-btn-menu">Menu</button>
-      <button id="btnCallWaiterWelcome" class="w-btn w-btn-waiter">Call Waiter</button>
+      <div class="w-actions">
+        <span class="w-badge">Table: <span id="welcomeTableNum">—</span></span>
+        <div class="w-row-menu">
+          <button id="btnBrowse" class="w-btn w-btn-menu">Menu</button>
+          <button id="btnCallWaiterWelcome" class="w-btn w-btn-waiter">Call Waiter</button>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -47,42 +46,47 @@
   <!-- ── SCREEN: MENU BROWSER ───────────────────── -->
   <div id="screen-menu" class="screen" hidden>
 
-    <!-- Dark hero top (header + search) -->
-    <div class="menu-top">
-      <!-- Top bar -->
-      <header class="app-header">
-        <div class="header-left">
-          <span class="header-logo">BURGERZ</span>
-          <span class="header-table" id="menuTableBadge">T01</span>
-        </div>
-        <div class="header-right">
-          <button class="icon-btn btn-call-waiter-header" aria-label="Call Waiter">
-            <i class="ri-service-line"></i>
-          </button>
-        </div>
-      </header>
+    <!-- Sticky header block -->
+    <div class="menu-header-block">
 
-      <!-- Search -->
-      <div class="search-wrap">
-        <i class="ri-search-line search-icon"></i>
-        <input type="text" id="menuSearch" class="search-input" placeholder="Search dishes…" autocomplete="off" />
-        <button class="search-clear" id="searchClear" hidden><i class="ri-close-line"></i></button>
-      </div>
-    </div>
+      <!-- Dark hero top (header + search) -->
+      <div class="menu-top">
+        <!-- Top bar -->
+        <header class="app-header">
+          <div class="header-left">
+            <span class="header-logo">ROOSTER'S DEN</span>
+            <span class="header-table" id="menuTableBadge">T01</span>
+          </div>
+          <div class="header-right">
+            <button class="icon-btn btn-call-waiter-header" aria-label="Call Waiter">
+              <i class="ri-service-line"></i>
+            </button>
+          </div>
+        </header>
 
-    <!-- Category tabs -->
-    <div class="cat-tabs-wrap">
-      <div class="cat-tabs" id="catTabs">
-        <button class="cat-tab active" data-cat="all">All</button>
-        <button class="cat-tab" data-cat="starters">Starters</button>
-        <button class="cat-tab" data-cat="grills">Grills</button>
-        <button class="cat-tab" data-cat="karahi">Karahi</button>
-        <button class="cat-tab" data-cat="biryani">Biryani</button>
-        <button class="cat-tab" data-cat="breads">Breads</button>
-        <button class="cat-tab" data-cat="desserts">Desserts</button>
-        <button class="cat-tab" data-cat="beverages">Beverages</button>
-        <button class="cat-tab" data-cat="platters">Platters</button>
+        <!-- Search -->
+        <div class="search-wrap">
+          <i class="ri-search-line search-icon"></i>
+          <input type="text" id="menuSearch" class="search-input" placeholder="Search dishes…" autocomplete="off" />
+          <button class="search-clear" id="searchClear" hidden><i class="ri-close-line"></i></button>
+        </div>
       </div>
+
+      <!-- Category tabs -->
+      <div class="cat-tabs-wrap">
+        <div class="cat-tabs" id="catTabs">
+          <button class="cat-tab active" data-cat="all">All</button>
+          <button class="cat-tab" data-cat="starters">Starters</button>
+          <button class="cat-tab" data-cat="grills">Grills</button>
+          <button class="cat-tab" data-cat="karahi">Karahi</button>
+          <button class="cat-tab" data-cat="biryani">Biryani</button>
+          <button class="cat-tab" data-cat="breads">Breads</button>
+          <button class="cat-tab" data-cat="desserts">Desserts</button>
+          <button class="cat-tab" data-cat="beverages">Beverages</button>
+          <button class="cat-tab" data-cat="platters">Platters</button>
+        </div>
+      </div>
+
     </div>
 
     <!-- Menu items grid -->
@@ -102,7 +106,7 @@
   <div id="screen-tracker" class="screen" hidden>
     <header class="app-header">
       <div class="header-left">
-        <span class="header-logo">BURGERZ</span>
+        <span class="header-logo">ROOSTER'S DEN</span>
         <span class="header-table" id="trackerTableBadge">T01</span>
       </div>
       <div class="header-right">
@@ -127,7 +131,7 @@
   <div id="screen-cart" class="screen" hidden>
     <header class="app-header">
       <div class="header-left">
-        <span class="header-logo">BURGERZ</span>
+        <span class="header-logo">ROOSTER'S DEN</span>
         <span class="header-table" id="cartTableBadge">T01</span>
       </div>
       <div class="header-right">
@@ -162,7 +166,7 @@
   <div id="screen-bill" class="screen" hidden>
     <header class="app-header">
       <div class="header-left">
-        <span class="header-logo">BURGERZ</span>
+        <span class="header-logo">ROOSTER'S DEN</span>
         <span class="header-table" id="billTableBadge">T01</span>
       </div>
       <div class="header-right">

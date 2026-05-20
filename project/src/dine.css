@@ -102,26 +102,33 @@ html, body {
    WELCOME SCREEN
 ════════════════════════════════════════════════ */
 #screen-welcome {
-  background-color: #CC0000;
-  background-image: repeating-conic-gradient(
-    rgba(255,255,255,0.09) 0deg 9deg,
-    transparent 9deg 18deg
-  );
+  background-image: url('/bg-removebg-preview.png');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
   align-items: center;
 }
+.w-foreground {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
 .w-badge {
-  position: absolute;
-  top: 18px;
-  left: 18px;
-  z-index: 10;
-  background: #f2d3be;
-  border: 2.5px solid #69160e;
-  border-radius: 100px;
-  padding: 6px 20px;
   font-family: 'Fredoka One', cursive;
   font-size: 0.95rem;
-  color: #69160e;
+  color: #ffffff;
   letter-spacing: 0.02em;
+  align-self: center;
+}
+.w-row-menu {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.w-row-menu .w-btn {
+  flex: 1;
 }
 .w-heading {
   margin-top: 62px;
@@ -137,19 +144,7 @@ html, body {
   padding: 0 20px;
   z-index: 2;
 }
-.w-hero {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 4px;
-}
-.w-hero img {
-  width: 94%;
-  max-width: 340px;
-  object-fit: contain;
-  filter: drop-shadow(0 16px 40px rgba(0,0,0,0.4));
-}
+
 .w-actions {
   margin-top: auto;
   width: 100%;
@@ -157,6 +152,8 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 14px;
+  position: relative;
+  z-index: 1;
 }
 .w-btn {
   width: 100%;
@@ -174,12 +171,12 @@ html, body {
 }
 .w-btn:active { opacity: 0.82; transform: scale(0.975); }
 .w-btn-menu {
-  background: #bc0301;
+  background: #00bf62;
   border: 2.5px solid rgba(255,255,255,0.5);
   box-shadow: 0 3px 14px rgba(0,0,0,0.35);
 }
 .w-btn-waiter {
-  background: #f8ac01;
+  background: #d15000;
   border: 2.5px solid rgba(255,255,255,0.4);
   box-shadow: 0 3px 14px rgba(0,0,0,0.25);
 }
@@ -226,19 +223,27 @@ html, body {
 }
 
 /* ═══════════════════════════════════════════════
+   MENU HEADER BLOCK (menu-top + cat-tabs)
+════════════════════════════════════════════════ */
+.menu-header-block {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ═══════════════════════════════════════════════
    MENU TOP — dark hero (header + search)
 ════════════════════════════════════════════════ */
 .menu-top {
   position: relative;
   flex-shrink: 0;
   background-color: #1C1018;
-  background-image:
-    linear-gradient(150deg, rgba(107,26,42,0.82) 0%, rgba(28,16,24,0.70) 50%, rgba(28,16,24,0.90) 100%),
-    url('/bg.jpeg');
+  background-image: url('/bg.jpeg');
   background-size: cover;
   background-position: center;
   overflow: hidden;
   height: 75vh;
+  min-height: 170px;
   max-height: 300px;
   display: flex;
   flex-direction: column;
@@ -688,13 +693,13 @@ html, body {
 .bottom-nav {
   position: absolute;
   bottom: 0; left: 0; right: 0;
-  height: var(--nav-bottom);
+  height: calc(var(--nav-bottom) * 2 - 20px + env(safe-area-inset-bottom, 16px));
   background: var(--clr-surface);
   border-top: 1px solid var(--clr-border);
   display: flex;
-  align-items: stretch;
+  align-items: flex-start;
   z-index: 20;
-  padding-bottom: env(safe-area-inset-bottom, 0);
+  padding-bottom: calc(var(--nav-bottom) - 20px + env(safe-area-inset-bottom, 16px));
 }
 .bottom-nav[hidden] { display: none; }
 .nav-item {
@@ -746,7 +751,7 @@ html, body {
 ════════════════════════════════════════════════ */
 .waiter-float {
   position: absolute;
-  bottom: calc(var(--nav-bottom) + .75rem);
+  bottom: calc(var(--nav-bottom) * 2 + env(safe-area-inset-bottom, 16px) + .75rem);
   right: .85rem;
   width: 50px; height: 50px;
   background: var(--clr-gold);
@@ -1155,7 +1160,7 @@ html, body {
 ════════════════════════════════════════════════ */
 .toast-stack {
   position: fixed;
-  bottom: calc(var(--nav-bottom) + 1rem);
+  bottom: calc(var(--nav-bottom) * 2 + env(safe-area-inset-bottom, 16px) + 1rem);
   left: 50%;
   transform: translateX(-50%);
   width: calc(100% - 2rem);

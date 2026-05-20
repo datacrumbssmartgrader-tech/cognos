@@ -79,7 +79,7 @@ textarea { resize: vertical; }
   padding: 0 24px;
 }
 .section {
-  padding: 100px 0;
+  padding: 120px 0;
   position: relative;
 }
 .section-header.centered { text-align: center; margin-bottom: 60px; }
@@ -1529,7 +1529,7 @@ address i { color: var(--clr-gold); font-size: 1.1rem; margin-top: 3px; flex-shr
 
 @media (max-width: 768px) {
   :root { --nav-h: 68px; }
-  .section { padding: 72px 0; }
+  .section { padding: 92px 0; }
   .sig-grid { grid-template-columns: 1fr; }
   .specials-grid { grid-template-columns: 1fr; }
   .gallery-grid {
@@ -1548,7 +1548,7 @@ address i { color: var(--clr-gold); font-size: 1.1rem; margin-top: 3px; flex-shr
 }
 
 @media (max-width: 480px) {
-  .section { padding: 56px 0; }
+  .section { padding: 76px 0; }
   .container { padding: 0 16px; }
   .hero-title { letter-spacing: 0.18em; }
   .tab-btn { padding: 12px 14px; font-size: 0.72rem; }
