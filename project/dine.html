@@ -29,6 +29,8 @@
   <!-- ── SCREEN: WELCOME ────────────────────────── -->
   <div id="screen-welcome" class="screen" hidden>
 
+    <div style="height:15dvh;"></div>
+
     <div class="w-foreground">
       <h1 class="w-heading">ROOSTER'S DEN</h1>
 
@@ -41,6 +43,8 @@
       </div>
     </div>
 
+    <div style="height:15dvh;"></div>
+
   </div>
 
   <!-- ── SCREEN: MENU BROWSER ───────────────────── -->
@@ -51,24 +55,27 @@
 
       <!-- Dark hero top (header + search) -->
       <div class="menu-top">
-        <!-- Top bar -->
-        <header class="app-header">
-          <div class="header-left">
-            <span class="header-logo">ROOSTER'S DEN</span>
-            <span class="header-table" id="menuTableBadge">T01</span>
-          </div>
-          <div class="header-right">
-            <button class="icon-btn btn-call-waiter-header" aria-label="Call Waiter">
-              <i class="ri-service-line"></i>
-            </button>
-          </div>
-        </header>
+        <div style="height:15dvh;"></div>
+        <div>
+          <!-- Top bar -->
+          <header class="app-header">
+            <div class="header-left">
+              <span class="header-logo">ROOSTER'S DEN</span>
+              <span class="header-table" id="menuTableBadge">T01</span>
+            </div>
+            <div class="header-right">
+              <button class="icon-btn btn-call-waiter-header" aria-label="Call Waiter">
+                <i class="ri-service-line"></i>
+              </button>
+            </div>
+          </header>
 
-        <!-- Search -->
-        <div class="search-wrap">
-          <i class="ri-search-line search-icon"></i>
-          <input type="text" id="menuSearch" class="search-input" placeholder="Search dishes…" autocomplete="off" />
-          <button class="search-clear" id="searchClear" hidden><i class="ri-close-line"></i></button>
+          <!-- Search -->
+          <div class="search-wrap">
+            <i class="ri-search-line search-icon"></i>
+            <input type="text" id="menuSearch" class="search-input" placeholder="Search dishes…" autocomplete="off" />
+            <button class="search-clear" id="searchClear" hidden><i class="ri-close-line"></i></button>
+          </div>
         </div>
       </div>
 
@@ -104,15 +111,18 @@
 
   <!-- ── SCREEN: ORDER TRACKER ──────────────────── -->
   <div id="screen-tracker" class="screen" hidden>
-    <header class="app-header">
-      <div class="header-left">
-        <span class="header-logo">ROOSTER'S DEN</span>
-        <span class="header-table" id="trackerTableBadge">T01</span>
-      </div>
-      <div class="header-right">
-        <button class="icon-btn btn-call-waiter-header" aria-label="Call Waiter">
-          <i class="ri-service-line"></i>
-        </button>
+    <header class="app-header" style="flex-direction: column; align-items: stretch;">
+      <div style="height: 10dvh;"></div>
+      <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+        <div class="header-left">
+          <span class="header-logo">ROOSTER'S DEN</span>
+          <span class="header-table" id="trackerTableBadge">T01</span>
+        </div>
+        <div class="header-right">
+          <button class="icon-btn btn-call-waiter-header" aria-label="Call Waiter">
+            <i class="ri-service-line"></i>
+          </button>
+        </div>
       </div>
     </header>
     <div class="tracker-scroll">
@@ -129,15 +139,18 @@
 
   <!-- ── SCREEN: CART ─────────────────────────────── -->
   <div id="screen-cart" class="screen" hidden>
-    <header class="app-header">
-      <div class="header-left">
-        <span class="header-logo">ROOSTER'S DEN</span>
-        <span class="header-table" id="cartTableBadge">T01</span>
-      </div>
-      <div class="header-right">
-        <button class="icon-btn btn-call-waiter-header" aria-label="Call Waiter">
-          <i class="ri-service-line"></i>
-        </button>
+    <header class="app-header" style="flex-direction: column; align-items: stretch;">
+      <div style="height: 10dvh;"></div>
+      <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+        <div class="header-left">
+          <span class="header-logo">ROOSTER'S DEN</span>
+          <span class="header-table" id="cartTableBadge">T01</span>
+        </div>
+        <div class="header-right">
+          <button class="icon-btn btn-call-waiter-header" aria-label="Call Waiter">
+            <i class="ri-service-line"></i>
+          </button>
+        </div>
       </div>
     </header>
     <div class="cart-scroll">
@@ -164,15 +177,18 @@
 
   <!-- ── SCREEN: MY BILL ────────────────────────── -->
   <div id="screen-bill" class="screen" hidden>
-    <header class="app-header">
-      <div class="header-left">
-        <span class="header-logo">ROOSTER'S DEN</span>
-        <span class="header-table" id="billTableBadge">T01</span>
-      </div>
-      <div class="header-right">
-        <button class="icon-btn btn-call-waiter-header" aria-label="Call Waiter">
-          <i class="ri-service-line"></i>
-        </button>
+    <header class="app-header" style="flex-direction: column; align-items: stretch;">
+      <div style="height: 10dvh;"></div>
+      <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+        <div class="header-left">
+          <span class="header-logo">ROOSTER'S DEN</span>
+          <span class="header-table" id="billTableBadge">T01</span>
+        </div>
+        <div class="header-right">
+          <button class="icon-btn btn-call-waiter-header" aria-label="Call Waiter">
+            <i class="ri-service-line"></i>
+          </button>
+        </div>
       </div>
     </header>
     <div class="bill-scroll">
@@ -197,24 +213,27 @@
 
   <!-- ── BOTTOM NAV (shown after welcome) ──────── -->
   <nav class="bottom-nav" id="bottomNav" hidden>
-    <button class="nav-item active" data-screen="menu">
-      <i class="ri-restaurant-2-line"></i>
-      <span>Menu</span>
-    </button>
-    <button class="nav-item" data-screen="cart">
-      <i class="ri-shopping-bag-3-line"></i>
-      <span>Cart</span>
-      <span class="order-badge" id="cartBadge" hidden>0</span>
-    </button>
-    <button class="nav-item" data-screen="tracker">
-      <i class="ri-time-line"></i>
-      <span>Orders</span>
-      <span class="order-badge" id="orderBadge" hidden>0</span>
-    </button>
-    <button class="nav-item" data-screen="bill">
-      <i class="ri-receipt-line"></i>
-      <span>Bill</span>
-    </button>
+    <div class="nav-buttons">
+      <button class="nav-item active" data-screen="menu">
+        <i class="ri-restaurant-2-line"></i>
+        <span>Menu</span>
+      </button>
+      <button class="nav-item" data-screen="cart">
+        <i class="ri-shopping-bag-3-line"></i>
+        <span>Cart</span>
+        <span class="order-badge" id="cartBadge" hidden>0</span>
+      </button>
+      <button class="nav-item" data-screen="tracker">
+        <i class="ri-time-line"></i>
+        <span>Orders</span>
+        <span class="order-badge" id="orderBadge" hidden>0</span>
+      </button>
+      <button class="nav-item" data-screen="bill">
+        <i class="ri-receipt-line"></i>
+        <span>Bill</span>
+      </button>
+    </div>
+    <div style="height: 10dvh;"></div>
   </nav>
 
 </div><!-- /#app -->
@@ -259,6 +278,7 @@
       </button>
     </div>
   </div>
+  <div style="height: 10dvh; flex-shrink: 0;"></div>
 </div>
 
 
@@ -281,6 +301,7 @@
       </button>
     </div>
   </div>
+  <div style="height: 10dvh; flex-shrink: 0;"></div>
 </div>
 
 
@@ -302,6 +323,7 @@
     <p class="waiter-sub">A member of staff will be with you shortly.</p>
     <button class="btn-primary btn-full" id="btnWaiterDone">Thank You</button>
   </div>
+  <div style="height: 10dvh; flex-shrink: 0;"></div>
 </div>
 
 <!-- Request Bill confirmation toast handled in JS -->
@@ -341,6 +363,7 @@
     </div>
 
   </div>
+  <div style="height: 10dvh; flex-shrink: 0;"></div>
 </div>
 
 <script type="module" src="/src/dine.ts"></script>

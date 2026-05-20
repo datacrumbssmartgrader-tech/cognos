@@ -195,6 +195,15 @@ function init(): void {
     return;
   }
 
+  const previewScreen = params.get('screen');
+  if (previewScreen === 'menu') {
+    bottomNav.hidden = false;
+    resetMenuTop();
+    showScreen('menu');
+    buildMenuGrid('all');
+    return;
+  }
+
   screenWelcome.hidden = false;
 }
 
