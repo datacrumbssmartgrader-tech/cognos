@@ -441,7 +441,7 @@ img { display: block; }
 }
 .toggle-chip.on { @apply border-transparent; }
 .toggle-chip.sold-out.on { @apply bg-[rgba(192,57,43,.12)] text-[#c0392b] border-[rgba(192,57,43,.2)]; }
-.toggle-chip.hidden.on { @apply bg-[rgba(138,114,101,.12)] text-muted border-[rgba(138,114,101,.2)]; }
+.toggle-chip.toggle-hide.on { @apply bg-[rgba(138,114,101,.12)] text-muted border-[rgba(138,114,101,.2)]; }
 .actions-cell {
   @apply flex gap-[.3rem] justify-center;
 }

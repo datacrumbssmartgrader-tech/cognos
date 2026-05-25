@@ -27,9 +27,8 @@
   </div>
 
   <!-- ── SCREEN: USER DETAILS ───────────────────── -->
-  <div id="screen-user-details" class="screen" hidden>
-    <div style="height:10dvh;"></div>
-    <div class="w-foreground" style="max-width:400px; padding:2rem; background:var(--clr-surface); border-radius:1rem; box-shadow:0 10px 30px rgba(0,0,0,0.5);">
+  <div id="screen-user-details" class="screen" hidden style="background:var(--clr-bg); display:flex; flex-direction:column; justify-content:center; align-items:center;">
+    <div class="w-foreground" style="width:100%; max-width:100%; min-height:100dvh; display:flex; flex-direction:column; justify-content:center; padding:2rem;">
       <h2 style="font-family:var(--font-display); font-size:1.5rem; text-align:center; margin-bottom:1.5rem; color:var(--clr-gold);">Welcome!</h2>
       <p style="text-align:center; color:var(--clr-muted); margin-bottom:1.5rem; font-size:0.9rem;">Please enter your details to proceed.</p>
       
@@ -49,7 +48,6 @@
         <button id="btn-submit-details" class="btn-primary" style="margin-top:1rem; padding:0.85rem;">Continue</button>
       </div>
     </div>
-    <div style="height:10dvh;"></div>
   </div>
 
   <!-- ── SCREEN: WELCOME ────────────────────────── -->
@@ -345,16 +343,20 @@
   <div class="sheet-handle"></div>
   <div class="waiter-body">
     <div class="waiter-icon"><i class="ri-service-line"></i></div>
-    <h3 class="waiter-title">Call Waiter</h3>
-    <p class="waiter-sub" style="margin-bottom:1rem;">Request assistance or submit a complaint.</p>
+    <h3 class="waiter-title">At Your Service</h3>
+    <p class="waiter-sub" style="margin-bottom:1.5rem;">How can we help you today?</p>
     
-    <div style="display:flex; flex-direction:column; gap:0.75rem; margin-bottom:1.5rem; text-align:left;">
-      <textarea id="waiter-complaint-msg" class="form-input" style="background:var(--clr-dark); border:1px solid var(--clr-border); border-radius:0.5rem; padding:0.75rem; color:white; resize:none; font-family:inherit; min-height:80px;" placeholder="Optional: Enter your complaint or request here..."></textarea>
+    <div id="waiter-action-buttons" style="display:flex; flex-direction:column; gap:0.75rem; margin-bottom:1rem;">
+      <button class="btn-primary btn-full" id="btnJustCallWaiter">Call Waiter</button>
+      <button class="btn-ghost btn-full" id="btnShowComplaintForm">File a Complaint</button>
     </div>
 
-    <div style="display:flex; gap:0.5rem;">
-      <button class="btn-ghost btn-full" id="btnWaiterDone" style="flex:1;">Cancel</button>
-      <button class="btn-primary btn-full" id="btnWaiterSubmit" style="flex:1;">Submit</button>
+    <div id="waiter-complaint-form" style="display:none; flex-direction:column; gap:0.75rem; margin-bottom:1.5rem; text-align:left;">
+      <textarea id="waiter-complaint-msg" class="form-input" style="background:var(--clr-dark); border:1px solid var(--clr-border); border-radius:0.5rem; padding:0.75rem; color:white; resize:none; font-family:inherit; min-height:80px;" placeholder="Enter your complaint or request here..."></textarea>
+      <div style="display:flex; gap:0.5rem;">
+        <button class="btn-ghost btn-full" id="btnWaiterCancel" style="flex:1;">Cancel</button>
+        <button class="btn-primary btn-full" id="btnWaiterSubmit" style="flex:1;">Submit</button>
+      </div>
     </div>
   </div>
   <div style="height: 10dvh; flex-shrink: 0;"></div>

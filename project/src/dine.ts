@@ -91,6 +91,7 @@ interface OrderBatch {
   total: number;
   status: 'received' | 'kitchen' | 'on-its-way' | 'served';
   placedAt: number;
+  servedAt?: number;
   billingRound: number;
 }
 
@@ -355,7 +356,9 @@ function openItemSheet(item: MenuItem): void {
   itemNote.value = '';
   qtyVal.textContent = '1';
 
-  itemSheetTags.innerHTML = (item.tags || []).map(t => `<span class="item-sheet-tag">${t}</span>`).join('');
+  const tagsHtml = (item.tags || []).map(t => `<span class="item-sheet-tag">${t}</span>`).join('');
+  const prepHtml = item.prepTime ? `<span class="item-sheet-tag" style="background:var(--clr-primary);color:var(--clr-dark);border-color:var(--clr-primary)"><i class="ri-timer-line"></i> ${item.prepTime} mins</span>` : '';
+  itemSheetTags.innerHTML = prepHtml + tagsHtml;
 
   if (item.extras?.length) {
     extrasSection.hidden = false;
@@ -707,20 +710,25 @@ const waiterBackdrop = document.getElementById('waiterBackdrop')!;
 const waiterSheet    = document.getElementById('waiterSheet')!;
 
 function openWaiterSheet(): void {
+  document.getElementById('waiter-action-buttons')!.style.display = 'flex';
+  document.getElementById('waiter-complaint-form')!.style.display = 'none';
   openSheet(waiterBackdrop, waiterSheet);
 }
 
 document.querySelectorAll('.btn-call-waiter-header').forEach(btn => btn.addEventListener('click', openWaiterSheet));
 document.getElementById('btnCallWaiterWelcome')?.addEventListener('click', openWaiterSheet);
-document.getElementById('btnWaiterDone')?.addEventListener('click', () => closeSheet(waiterBackdrop, waiterSheet));
-waiterBackdrop.addEventListener('click', () => closeSheet(waiterBackdrop, waiterSheet));
 
-document.getElementById('btnWaiterSubmit')?.addEventListener('click', () => {
-  const msgEl = document.getElementById('waiter-complaint-msg') as HTMLTextAreaElement;
-  const msg = msgEl?.value.trim() || '';
+waiterBackdrop.addEventListener('click', () => closeSheet(waiterBackdrop, waiterSheet));
+document.getElementById('btnWaiterCancel')?.addEventListener('click', () => closeSheet(waiterBackdrop, waiterSheet));
+
+document.getElementById('btnShowComplaintForm')?.addEventListener('click', () => {
+  document.getElementById('waiter-action-buttons')!.style.display = 'none';
+  document.getElementById('waiter-complaint-form')!.style.display = 'flex';
+});
+
+function sendWaiterAlert(msg: string, isComplaint: boolean) {
   const user = window.userDetails ? `${window.userDetails.name} (${window.userDetails.phone})` : 'Guest';
   const table = document.getElementById('welcomeTableNum')?.textContent || 'T?';
-  
   const text = msg ? `Complaint from ${user}: ${msg}` : 'Waiter requested';
   
   const stored = localStorage.getItem('riwayat_alerts');
@@ -728,7 +736,7 @@ document.getElementById('btnWaiterSubmit')?.addEventListener('click', () => {
   alerts.unshift({
     id: 'a-' + Date.now(),
     tableId: table,
-    type: msg ? 'complaint' : 'service',
+    type: isComplaint ? 'complaint' : 'service',
     time: Date.now(),
     text: text,
     dismissed: false
@@ -736,7 +744,17 @@ document.getElementById('btnWaiterSubmit')?.addEventListener('click', () => {
   localStorage.setItem('riwayat_alerts', JSON.stringify(alerts));
   
   closeSheet(waiterBackdrop, waiterSheet);
-  showToast(msg ? 'Message submitted' : 'Waiter called', 'success');
+  showToast(isComplaint ? 'Message submitted' : 'Waiter called', 'success');
+}
+
+document.getElementById('btnJustCallWaiter')?.addEventListener('click', () => {
+  sendWaiterAlert('', false);
+});
+
+document.getElementById('btnWaiterSubmit')?.addEventListener('click', () => {
+  const msgEl = document.getElementById('waiter-complaint-msg') as HTMLTextAreaElement;
+  const msg = msgEl?.value.trim() || '';
+  sendWaiterAlert(msg, true);
   if (msgEl) msgEl.value = '';
 });
 
@@ -792,6 +810,7 @@ function startOrderSimulation(batch: OrderBatch): void {
   SIM_STEPS.forEach(({ delay, status, msg }) => {
     setTimeout(() => {
       batch.status = status;
+      if (status === 'served') batch.servedAt = Date.now();
       updateOrderBadge();
       if (!screenTracker.hidden) renderTracker();
       showToast(msg, 'info');

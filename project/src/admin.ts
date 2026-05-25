@@ -11,7 +11,7 @@ type ItemType    = 'single' | 'platter';
 type DiscountType = 'none' | 'percent' | 'flat';
 
 interface OrderItem  { name: string; qty: number; price: number; note?: string; extras?: string; }
-interface AdminOrder { id: string; tableId: string; placedAt: number; items: OrderItem[]; total: number; status: OrderStatus; cancelReason?: string; }
+interface AdminOrder { id: string; tableId: string; placedAt: number; servedAt?: number; items: OrderItem[]; total: number; status: OrderStatus; cancelReason?: string; }
 interface TableData  { id: string; status: TableStatus; sessionStart: number | null; paid: boolean; }
 interface Alert      { id: string; tableId: string; type: AlertType; time: number; dismissed: boolean; }
 
@@ -378,12 +378,14 @@ function renderOrders() {
     grid.innerHTML = `<div class="orders-empty"><i class="ri-restaurant-line"></i>No orders to show</div>`;
     return;
   }
-  grid.innerHTML = visible.map(o => `
+  grid.innerHTML = visible.map(o => {
+    const maxPrep = Math.max(0, ...o.items.map(it => menuItems.find(m => m.name === it.name)?.prepTime || 0));
+    return `
     <div class="order-card">
       <div class="order-card-head">
         <span class="order-table-badge">${o.tableId}</span>
         <span class="order-id">#${o.id}</span>
-        <span class="order-time">${timeAgo(o.placedAt)}</span>
+        <span class="order-time">${timeAgo(o.placedAt)}${maxPrep > 0 ? ` &middot; ⏱️ ${maxPrep}m` : ''}</span>
       </div>
       <div class="order-card-body">
         <div class="order-items">
@@ -410,7 +412,7 @@ function renderOrders() {
         </div>
       </div>
     </div>
-  `).join('');
+  `}).join('');
   const count = orders.filter(o => active.includes(o.status)).length;
   document.getElementById('orders-sub')!.textContent = count > 0 ? `${count} active order${count > 1 ? 's' : ''} across tables` : 'No active orders right now';
   updateBadges();
@@ -429,6 +431,7 @@ function advanceOrder(id: string) {
   const next = nextStatus(o.status);
   if (!next) return;
   o.status = next;
+  if (o.status === 'served') o.servedAt = Date.now();
   showToast(`Order #${id} → ${statusLabel(next)}`, 'success');
   renderOrders();
   if (activeSection === 'tables') renderTables();
@@ -609,7 +612,7 @@ function renderMenu() {
       <td class="price-cell">${priceHtml}</td>
       <td>
         <div class="status-toggles">
-          <span class="toggle-chip hidden   ${m.hidden  ? 'on' : ''}" data-toggle="hidden"  data-id="${m.id}">Hide</span>
+          <span class="toggle-chip toggle-hide ${m.hidden  ? 'on' : ''}" data-toggle="hidden"  data-id="${m.id}">Hide</span>
         </div>
       </td>
       <td>
@@ -870,6 +873,10 @@ function renderHistory() {
 
   tbody.innerHTML = filtered.map(o => {
     const totalQty = o.items.reduce((s, i) => s + i.qty, 0);
+    const maxPrep = Math.max(0, ...o.items.map(it => menuItems.find(m => m.name === it.name)?.prepTime || 0));
+    const servedHtml = (o.status === 'served' && o.servedAt) 
+      ? `<br><span style="color:var(--clr-primary)">Served: ${new Date(o.servedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>` 
+      : '';
     return `
       <tr class="history-row" data-order-id="${o.id}">
         <td>
@@ -880,6 +887,8 @@ function renderHistory() {
         <td style="white-space:nowrap;font-family:var(--ff-ui);font-size:.8rem;color:var(--clr-muted)">
           ${new Date(o.placedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           <span style="margin-left:.35rem">${timeAgo(o.placedAt)}</span>
+          ${maxPrep > 0 ? `<br><i class="ri-timer-line" style="margin-right:2px;vertical-align:middle"></i>Prep: ${maxPrep}m` : ''}
+          ${servedHtml}
         </td>
         <td style="font-family:var(--ff-ui);font-size:.82rem;color:var(--clr-muted)">${totalQty} item${totalQty !== 1 ? 's' : ''}</td>
         <td class="text-right" style="font-family:var(--ff-ui);font-weight:700;color:var(--clr-primary)">${fmt(o.total)}</td>
@@ -933,16 +942,13 @@ document.getElementById('pay-tabs')!.addEventListener('click', e => {
 document.getElementById('payments-date-from')!.addEventListener('change', renderPayments);
 document.getElementById('payments-date-to')!.addEventListener('change', renderPayments);
 
-document.getElementById('btn-export-excel')?.addEventListener('click', () => {
-  const startStr = (document.getElementById('payments-date-from') as HTMLInputElement).value;
-  const endStr   = (document.getElementById('payments-date-to') as HTMLInputElement).value;
-  const todayStart = (() => { const d = new Date(); d.setHours(0,0,0,0); return d.getTime(); })();
-  const todayEnd   = (() => { const d = new Date(); d.setHours(23,59,59,999); return d.getTime(); })();
-  const start = startStr ? new Date(startStr + 'T00:00:00').getTime() : todayStart;
-  const end   = endStr ? new Date(endStr + 'T23:59:59').getTime() : todayEnd;
+function getFilteredOrdersForExport() {
+  const { start, end } = getPayDateRange();
+  return orders.filter(o => o.status !== 'cancelled' && o.placedAt >= start && o.placedAt <= end);
+}
 
-  const ro = orders.filter(o => o.status !== 'cancelled' && o.placedAt >= start && o.placedAt <= end);
-  
+document.getElementById('btn-export-items')?.addEventListener('click', () => {
+  const ro = getFilteredOrdersForExport();
   const itemMap = new Map<string, { name: string; cat: string; qty: number; revenue: number }>();
   ro.forEach(o => o.items.forEach(it => {
     const e = itemMap.get(it.name);
@@ -955,15 +961,37 @@ document.getElementById('btn-export-excel')?.addEventListener('click', () => {
   itemsSorted.forEach(it => {
     csv += `"${it.name}","${it.cat}",${it.qty},${it.revenue}\n`;
   });
+  downloadCsv(csv, `items_sold_${new Date().toISOString().split('T')[0]}.csv`);
+});
 
+document.getElementById('btn-export-payments')?.addEventListener('click', () => {
+  const { start, end } = getPayDateRange();
+  let csv = 'Table,Date,Time,Duration (mins),Orders,Total (PKR),Status\n';
+  
+  const tablesInRange = tables.filter(t => 
+    t.sessionStart !== null && t.sessionStart >= start && t.sessionStart <= end
+  );
+  
+  tablesInRange.forEach(t => {
+    const rangeTotal = orders.filter(o => o.tableId === t.id && o.status !== 'cancelled' && o.placedAt >= start && o.placedAt <= end).reduce((s, o) => s + o.total, 0);
+    const orderCount = orders.filter(o => o.tableId === t.id && o.status !== 'cancelled' && o.placedAt >= start && o.placedAt <= end).length;
+    const sessionDate = new Date(t.sessionStart!).toLocaleDateString();
+    const sessionTime = new Date(t.sessionStart!).toLocaleTimeString();
+    
+    csv += `"${t.id}","${sessionDate}","${sessionTime}","${sessionDuration(t.sessionStart)}",${orderCount},${rangeTotal},"${t.paid ? 'Paid' : 'Outstanding'}"\n`;
+  });
+  downloadCsv(csv, `payments_${new Date().toISOString().split('T')[0]}.csv`);
+});
+
+function downloadCsv(csv: string, filename: string) {
   const blob = new Blob([csv], { type: 'text/csv' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `payments_${new Date().toISOString().split('T')[0]}.csv`;
+  a.download = filename;
   a.click();
   URL.revokeObjectURL(url);
-});
+}
 
 function getPayDateRange(): { start: number; end: number; isOneDay: boolean } {
   const t = new Date();
@@ -1234,8 +1262,11 @@ document.getElementById('btn-dismiss-all')!.addEventListener('click', () => {
 
 function closeModal(id: string) { document.getElementById(id)!.hidden = true; }
 
-document.querySelectorAll<HTMLElement>('[data-modal]').forEach(btn => {
-  btn.addEventListener('click', () => closeModal(btn.dataset.modal!));
+document.body.addEventListener('click', e => {
+  const btn = (e.target as HTMLElement).closest('[data-modal]') as HTMLElement;
+  if (btn) {
+    closeModal(btn.dataset.modal!);
+  }
 });
 document.querySelectorAll<HTMLElement>('.modal-backdrop').forEach(backdrop => {
   backdrop.addEventListener('click', e => { if (e.target === backdrop) backdrop.hidden = true; });
