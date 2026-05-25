@@ -251,8 +251,6 @@
     </div>
 
     <div class="section-actions">
-      <button id="btn-export-items" class="btn-ghost" style="margin-right: 0.5rem;"><i class="ri-file-excel-line"></i> Export Items</button>
-      <button id="btn-export-payments" class="btn-primary" style="margin-right: 1rem;"><i class="ri-file-excel-line"></i> Export Payments</button>
       <input id="payments-date-from" type="date" class="filter-input" />
       <input id="payments-date-to" type="date" class="filter-input" />
     </div>
@@ -268,9 +266,17 @@
     <div class="pay-chart-wrap" id="pay-chart-wrap"></div>
 
     <!-- Items Sold Table -->
-    <div class="menu-table-wrap" style="margin-top:1.5rem;">
-      <h3 style="margin-bottom:1rem;">Items Sold</h3>
+    <div class="section-header" style="margin-top:1.5rem; padding:0;">
+      <div>
+        <h1 class="section-title">Items Sold</h1>
+        <p class="section-sub">Most sold items this period</p>
+      </div>
+      <div class="section-actions">
+        <button id="btn-export-items" class="btn-primary"><i class="ri-file-excel-line"></i> Export Items</button>
+      </div>
+    </div>
 
+    <div class="menu-table-wrap">
       <table class="menu-table">
         <thead>
           <tr>
@@ -286,10 +292,19 @@
       </table>
     </div>
 
-    <!-- Payment Records Table -->
-    <div class="menu-table-wrap" style="margin-top:2rem;">
-      <h3 style="margin-bottom:1rem;">Payment Records</h3>
+    <!-- Payment Records Heading with Export Button -->
+    <div class="section-header" style="margin-top:2rem; padding:0;">
+      <div>
+        <h1 class="section-title">Payment Records</h1>
+        <p class="section-sub">All payments received</p>
+      </div>
+      <div class="section-actions">
+        <button id="btn-export-payments" class="btn-primary"><i class="ri-file-excel-line"></i> Export Payments</button>
+      </div>
+    </div>
 
+    <!-- Payment Records Table -->
+    <div class="menu-table-wrap">
       <table class="menu-table">
         <thead>
           <tr>

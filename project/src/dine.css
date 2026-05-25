@@ -461,7 +461,10 @@ html, body {
 .item-sheet-body::-webkit-scrollbar { display: none; }
 .item-sheet-tags { @apply flex gap-[.4rem] flex-wrap; }
 .item-sheet-tag {
-  @apply font-ui text-[.65rem] font-bold uppercase tracking-[.06em] px-[.55rem] py-[.2rem] rounded-[4px] bg-emerald/12 text-emerald;
+  @apply font-ui text-[.65rem] font-bold uppercase tracking-[.06em] px-[.55rem] py-[.2rem] rounded-[4px] bg-gold/12 text-gold;
+}
+.item-sheet-tag.prep-time {
+  @apply bg-gold text-dark border border-gold/40;
 }
 .item-sheet-name {
   @apply font-display text-[1.5rem] font-semibold text-text leading-[1.2];
@@ -600,8 +603,34 @@ html, body {
 .waiter-sub {
   @apply font-body text-[.85rem] text-muted text-center;
 }
-.waiter-sheet .btn-primary { @apply bg-gold text-dark w-full; }
-.waiter-sheet .btn-primary:active { @apply bg-gold-d; }
+.waiter-sheet .btn-primary { @apply text-dark w-full flex; background: #10b981; }
+.waiter-sheet .btn-primary:active { background: #0f9f6f; }
+.waiter-sheet .btn-ghost { @apply w-full flex; background: #374151; color: #fff; border: none; }
+.waiter-sheet .btn-ghost:active { @apply border-gold; color: #fff; }
+
+/* Waiter action buttons */
+#waiter-action-buttons {
+  @apply w-full flex flex-col gap-[.75rem];
+}
+
+/* Waiter complaint form */
+#waiter-complaint-form {
+  @apply w-full flex flex-col gap-[.75rem];
+}
+/* Center action buttons and restyle inputs for better visibility */
+#waiter-complaint-form > div {
+  justify-content: center;
+}
+#waiter-complaint-form .btn-ghost { flex: 0 0 auto; width: auto; }
+#btnWaiterSubmit { flex: 0 0 52%; }
+#waiter-complaint-msg {
+  @apply w-full border border-border rounded px-3 py-2 text-sm resize-none;
+  background: rgba(255, 255, 255, 0.95);
+  background-color: rgba(255, 255, 255, 0.95);
+  border-color: var(--clr-border);
+  color: var(--clr-text);
+  min-height: 120px;
+}
 
 /* ═══════════════════════════════════════════════
    TOAST NOTIFICATIONS

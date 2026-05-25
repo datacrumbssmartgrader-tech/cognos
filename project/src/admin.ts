@@ -930,7 +930,8 @@ document.getElementById('history-tbody')!.addEventListener('click', e => {
 
 let activePayTab = 'overview';
 
-document.getElementById('pay-tabs')!.addEventListener('click', e => {
+// `pay-tabs` may not exist in all layouts; guard the listener to avoid runtime errors
+document.getElementById('pay-tabs')?.addEventListener('click', e => {
   const tab = (e.target as HTMLElement).closest<HTMLElement>('.pay-tab');
   if (!tab?.dataset.tab) return;
   activePayTab = tab.dataset.tab;
