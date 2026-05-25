@@ -15,6 +15,7 @@ interface MenuItem {
   tags?: string[];
   extras?: Extra[];
   hidden?: boolean;
+  prepTime?: number;
 }
 
 const MENU: MenuItem[] = [

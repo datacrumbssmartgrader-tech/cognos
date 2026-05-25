@@ -629,7 +629,7 @@ document.getElementById('menu-tbody')!.addEventListener('click', e => {
     if (btn.dataset.action === 'edit-item')   openMenuItemModal(btn.dataset.id!);
     if (btn.dataset.action === 'delete-item') deleteMenuItem(btn.dataset.id!);
   }
-  if (chip) toggleMenuField(chip.dataset.id!, chip.dataset.toggle as 'soldOut' | 'hidden');
+  if (chip) toggleMenuField(chip.dataset.id!, chip.dataset.toggle as 'hidden');
 });
 
 function toggleMenuField(id: string, field: 'hidden') {
@@ -936,8 +936,10 @@ document.getElementById('payments-date-to')!.addEventListener('change', renderPa
 document.getElementById('btn-export-excel')?.addEventListener('click', () => {
   const startStr = (document.getElementById('payments-date-from') as HTMLInputElement).value;
   const endStr   = (document.getElementById('payments-date-to') as HTMLInputElement).value;
-  const start = startStr ? new Date(startStr + 'T00:00:00').getTime() : getTodayStart();
-  const end   = endStr ? new Date(endStr + 'T23:59:59').getTime() : getTodayEnd();
+  const todayStart = (() => { const d = new Date(); d.setHours(0,0,0,0); return d.getTime(); })();
+  const todayEnd   = (() => { const d = new Date(); d.setHours(23,59,59,999); return d.getTime(); })();
+  const start = startStr ? new Date(startStr + 'T00:00:00').getTime() : todayStart;
+  const end   = endStr ? new Date(endStr + 'T23:59:59').getTime() : todayEnd;
 
   const ro = orders.filter(o => o.status !== 'cancelled' && o.placedAt >= start && o.placedAt <= end);
   
