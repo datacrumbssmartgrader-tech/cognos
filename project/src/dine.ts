@@ -14,7 +14,7 @@ interface MenuItem {
   img: string;
   tags?: string[];
   extras?: Extra[];
-  available?: boolean;
+  hidden?: boolean;
 }
 
 const MENU: MenuItem[] = [
@@ -80,6 +80,8 @@ interface CartItem {
   qty: number;
   note: string;
   img: string;
+  cat: string;
+  prepTime: number;
 }
 
 interface OrderBatch {
@@ -103,6 +105,7 @@ const paidRounds = new Set<number>();
 // ═══════════════════════════════════════════════
 
 const screenWelcome  = document.getElementById('screen-welcome')!;
+const screenUserDetails = document.getElementById('screen-user-details')!;
 const screenMenu     = document.getElementById('screen-menu')!;
 const screenCart     = document.getElementById('screen-cart')!;
 const screenTracker  = document.getElementById('screen-tracker')!;
@@ -204,8 +207,36 @@ function init(): void {
     return;
   }
 
-  screenWelcome.hidden = false;
+  const userDetailsStr = sessionStorage.getItem('riwayat_user');
+  if (!userDetailsStr) {
+    screenUserDetails.hidden = false;
+  } else {
+    window.userDetails = JSON.parse(userDetailsStr);
+    screenWelcome.hidden = false;
+  }
 }
+
+// Global user details
+declare global {
+  interface Window { userDetails: any; }
+}
+
+document.getElementById('btn-submit-details')?.addEventListener('click', () => {
+  const name = (document.getElementById('ud-name') as HTMLInputElement).value.trim();
+  const email = (document.getElementById('ud-email') as HTMLInputElement).value.trim();
+  const phone = (document.getElementById('ud-phone') as HTMLInputElement).value.trim();
+  
+  if (!name || !phone) {
+    showToast('Name and Phone are required.', 'error');
+    return;
+  }
+  
+  window.userDetails = { name, email, phone };
+  sessionStorage.setItem('riwayat_user', JSON.stringify(window.userDetails));
+  
+  screenUserDetails.hidden = true;
+  screenWelcome.hidden = false;
+});
 
 document.getElementById('btnBrowse')?.addEventListener('click', () => {
   screenWelcome.hidden = true;
@@ -233,6 +264,7 @@ let searchQuery = '';
 function buildMenuGrid(cat: string): void {
   activecat = cat;
   let items = cat === 'all' ? MENU : MENU.filter(m => m.cat === cat);
+  items = items.filter(m => !m.hidden);
   if (searchQuery) {
     const q = searchQuery.toLowerCase();
     items = items.filter(m => m.name.toLowerCase().includes(q) || m.desc.toLowerCase().includes(q));
@@ -243,12 +275,11 @@ function buildMenuGrid(cat: string): void {
 
   items.forEach(item => {
     const card = document.createElement('div');
-    card.className = 'item-card' + (item.available === false ? ' unavailable' : '');
+    card.className = 'item-card';
     card.innerHTML = `
       <div class="item-card-img-wrap">
         <img class="item-card-img" src="${item.img}" alt="${item.name}" loading="lazy" />
         ${item.tags?.[0] ? `<span class="item-card-tag">${item.tags[0]}</span>` : ''}
-        ${item.available === false ? '<span class="item-card-tag sold-out">Sold Out</span>' : ''}
       </div>
       <div class="item-card-body">
         <div class="item-card-name">${item.name}</div>
@@ -383,7 +414,7 @@ document.getElementById('btnAddToCart')?.addEventListener('click', () => {
   if (existing) {
     existing.qty += currentQty;
   } else {
-    cart.push({ id: String(nextCartId++), menuId: currentItem.id, name: currentItem.name, price: unitPrice, qty: currentQty, note, img: currentItem.img });
+    cart.push({ id: String(nextCartId++), menuId: currentItem.id, name: currentItem.name, price: unitPrice, qty: currentQty, note, img: currentItem.img, cat: currentItem.cat, prepTime: currentItem.prepTime || 15 });
   }
 
   updateCartBadge();
@@ -403,7 +434,7 @@ function quickAddToCart(item: MenuItem): void {
   if (existing) {
     existing.qty++;
   } else {
-    cart.push({ id: String(nextCartId++), menuId: item.id, name: item.name, price: item.price, qty: 1, note: '', img: item.img });
+    cart.push({ id: String(nextCartId++), menuId: item.id, name: item.name, price: item.price, qty: 1, note: '', img: item.img, cat: item.cat, prepTime: item.prepTime || 15 });
   }
   updateCartBadge();
   showToast(`${item.name} added`, 'success');
@@ -541,22 +572,52 @@ function renderTracker(): void {
     return;
   }
   trackerEmpty.hidden = true;
-  trackerList.innerHTML = orders.map(batch => `
+  
+  const now = Date.now();
+  
+  trackerList.innerHTML = orders.map(batch => {
+    const groups = {
+      Starters: batch.items.filter(i => i.cat === 'starters'),
+      'Main Course': batch.items.filter(i => i.cat !== 'starters' && i.cat !== 'desserts'),
+      Desserts: batch.items.filter(i => i.cat === 'desserts')
+    };
+    
+    let itemsHtml = '';
+    for (const [gName, gItems] of Object.entries(groups)) {
+      if (gItems.length === 0) continue;
+      const maxPrep = Math.max(...gItems.map(i => i.prepTime || 15));
+      const finishTime = batch.placedAt + maxPrep * 60000;
+      const remainingMs = Math.max(0, finishTime - now);
+      const remainingMins = Math.ceil(remainingMs / 60000);
+      const timerText = batch.status === 'served' ? 'Served' : (remainingMins > 0 ? `${remainingMins}m remaining` : 'Almost ready');
+      
+      itemsHtml += `
+        <div class="order-batch-group" style="margin-top:0.5rem; padding-top:0.5rem; border-top:1px dashed var(--clr-border);">
+          <div style="display:flex; justify-content:space-between; margin-bottom:0.4rem;">
+            <strong style="color:var(--clr-gold); font-size:0.85rem;">${gName}</strong>
+            <span class="badge" style="background:var(--clr-surface); color:white;">${timerText}</span>
+          </div>
+          ${gItems.map(it => `
+            <div class="order-batch-item">
+              <span>${it.qty}× ${it.name}</span>
+              <span class="order-batch-item-price">PKR ${(it.price * it.qty).toLocaleString()}</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+    
+    return `
     <div class="order-batch">
       <div class="order-batch-header">
         <span class="order-batch-num">Order #${batch.id} · ${formatTime(batch.placedAt)}</span>
         <span class="order-status-badge ${STATUS_CLASS[batch.status]}">${STATUS_LABELS[batch.status]}</span>
       </div>
       <div class="order-batch-items">
-        ${batch.items.map(it => `
-          <div class="order-batch-item">
-            <span>${it.qty}× ${it.name}</span>
-            <span class="order-batch-item-price">PKR ${(it.price * it.qty).toLocaleString()}</span>
-          </div>
-        `).join('')}
+        ${itemsHtml}
       </div>
     </div>
-  `).join('') + (orders.length ? `<div style="padding:.2rem 0"><div class="order-batch-header" style="border:none;padding-bottom:0"><span class="order-batch-num" id="trackerTotal"></span></div></div>` : '');
+  `}).join('') + (orders.length ? `<div style="padding:.2rem 0"><div class="order-batch-header" style="border:none;padding-bottom:0"><span class="order-batch-num" id="trackerTotal"></span></div></div>` : '');
 
   const totalEl = document.getElementById('trackerTotal');
   if (totalEl) {
@@ -568,6 +629,10 @@ function renderTracker(): void {
 function formatTime(ts: number): string {
   return new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
+
+setInterval(() => {
+  if (!screenTracker.hidden) renderTracker();
+}, 30000);
 
 // ═══════════════════════════════════════════════
 //  BILL RENDER
@@ -649,6 +714,31 @@ document.getElementById('btnCallWaiterWelcome')?.addEventListener('click', openW
 document.getElementById('btnWaiterDone')?.addEventListener('click', () => closeSheet(waiterBackdrop, waiterSheet));
 waiterBackdrop.addEventListener('click', () => closeSheet(waiterBackdrop, waiterSheet));
 
+document.getElementById('btnWaiterSubmit')?.addEventListener('click', () => {
+  const msgEl = document.getElementById('waiter-complaint-msg') as HTMLTextAreaElement;
+  const msg = msgEl?.value.trim() || '';
+  const user = window.userDetails ? `${window.userDetails.name} (${window.userDetails.phone})` : 'Guest';
+  const table = document.getElementById('welcomeTableNum')?.textContent || 'T?';
+  
+  const text = msg ? `Complaint from ${user}: ${msg}` : 'Waiter requested';
+  
+  const stored = localStorage.getItem('riwayat_alerts');
+  const alerts = stored ? JSON.parse(stored) : [];
+  alerts.unshift({
+    id: 'a-' + Date.now(),
+    tableId: table,
+    type: msg ? 'complaint' : 'service',
+    time: Date.now(),
+    text: text,
+    dismissed: false
+  });
+  localStorage.setItem('riwayat_alerts', JSON.stringify(alerts));
+  
+  closeSheet(waiterBackdrop, waiterSheet);
+  showToast(msg ? 'Message submitted' : 'Waiter called', 'success');
+  if (msgEl) msgEl.value = '';
+});
+
 // ═══════════════════════════════════════════════
 //  SHEET UTILS
 // ═══════════════════════════════════════════════
@@ -708,8 +798,8 @@ function startOrderSimulation(batch: OrderBatch): void {
   });
 }
 
-function showToast(msg: string, type: 'success' | 'info' = 'success'): void {
-  const icon = type === 'success' ? 'ri-checkbox-circle-line' : 'ri-information-line';
+function showToast(msg: string, type: 'success' | 'info' | 'error' = 'success'): void {
+  const icon = type === 'success' ? 'ri-checkbox-circle-line' : type === 'error' ? 'ri-error-warning-line' : 'ri-information-line';
   const el = document.createElement('div');
   el.className = `toast toast-${type}`;
   el.innerHTML = `<i class="${icon}"></i><span>${msg}</span>`;

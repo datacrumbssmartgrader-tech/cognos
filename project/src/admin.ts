@@ -23,12 +23,12 @@ interface MenuItem {
   cat: string;
   img: string;
   tags?: string[];
-  soldOut: boolean;
   hidden: boolean;
   type: ItemType;
   components: string[];   // item IDs included in a platter
   discountType: DiscountType;
   discountValue: number;
+  prepTime: number;
 }
 
 // ═══════════════════════════════════════════════
@@ -101,40 +101,40 @@ const ALERTS: Alert[] = [
 
 // Base menu data — new fields added via map below
 const BASE_MENU = [
-  { id: 's1',  cat: 'starters',  name: 'Seekh Kebab',           price: 1200, desc: 'Minced lamb with aromatic spices, grilled over charcoal.',         img: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=80&q=70', soldOut: false, hidden: false },
-  { id: 's2',  cat: 'starters',  name: 'Chicken Malai Boti',    price: 1100, desc: 'Tender chicken in cream and mild spice marinade.',                  img: 'https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=80&q=70', soldOut: false, hidden: false },
-  { id: 's3',  cat: 'starters',  name: 'Fish Tikka',            price: 1350, desc: 'Fresh fish marinated in carom and citrus, char-grilled.',           img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=80&q=70', soldOut: false, hidden: false },
-  { id: 's4',  cat: 'starters',  name: 'Nihari Shorba',         price: 850,  desc: 'Rich slow-cooked broth with slow-braised beef, served with naan.',  img: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=80&q=70', soldOut: false, hidden: false },
-  { id: 's5',  cat: 'starters',  name: 'Shammi Kebab',          price: 950,  desc: 'Minced beef and lentil patties, pan-fried crisp.',                  img: 'https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=80&q=70', soldOut: false, hidden: false },
-  { id: 's6',  cat: 'starters',  name: 'Dahi Bara Chaat',       price: 700,  desc: 'Lentil dumplings in yoghurt with tamarind and mint chutney.',       img: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=80&q=70', soldOut: false, hidden: false },
-  { id: 'g1',  cat: 'grills',    name: 'Barra Lamb Chops',      price: 2800, desc: 'Raan chops in Kashmiri spice rub, grilled to perfection.',          img: 'https://images.unsplash.com/photo-1432139555190-58524dae6a55?w=80&q=70', soldOut: false, hidden: false },
-  { id: 'g2',  cat: 'grills',    name: 'Chapli Kebab',          price: 1400, desc: 'Peshawar-style spiced mince patties on the griddle.',               img: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=80&q=70', soldOut: false, hidden: false },
-  { id: 'g3',  cat: 'grills',    name: 'Tandoori Prawns',       price: 1800, desc: 'Tiger prawns in a turmeric-citrus marinade, clay oven fired.',      img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=80&q=70', soldOut: false, hidden: false },
-  { id: 'g4',  cat: 'grills',    name: 'Achari Murgh Tikka',    price: 1300, desc: 'Chicken in pickle-spiced yoghurt, smoky and tangy.',                img: 'https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=80&q=70', soldOut: false, hidden: false },
-  { id: 'g5',  cat: 'grills',    name: 'Reshmi Kebab',          price: 1250, desc: 'Silky chicken mince kebabs with rose water and saffron.',           img: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=80&q=70', soldOut: false, hidden: false },
-  { id: 'g6',  cat: 'grills',    name: 'Mixed Grill Platter',   price: 3500, desc: 'Assortment of our signature kebabs — ideal for sharing.',           img: 'https://images.unsplash.com/photo-1432139555190-58524dae6a55?w=80&q=70', soldOut: false, hidden: false },
-  { id: 'k1',  cat: 'karahi',    name: 'Chicken Karahi',        price: 1600, desc: 'Wok-tossed chicken in tomatoes, ginger and green chilli.',          img: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=80&q=70', soldOut: false, hidden: false },
-  { id: 'k2',  cat: 'karahi',    name: 'Mutton Karahi',         price: 2200, desc: 'Slow-cooked tender mutton, rich karahi gravy.',                     img: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=80&q=70', soldOut: false, hidden: false },
-  { id: 'k3',  cat: 'karahi',    name: 'Rogan Josh',            price: 2400, desc: 'Kashmiri lamb curry, bloomed spices, scarlet colour.',              img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=80&q=70', soldOut: false, hidden: false },
-  { id: 'k4',  cat: 'karahi',    name: 'Saag Gosht',            price: 2100, desc: 'Lamb simmered in spiced mustard greens.',                           img: 'https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=80&q=70', soldOut: false, hidden: false },
-  { id: 'k5',  cat: 'karahi',    name: 'Lahori Dal Makhani',    price: 1100, desc: 'Black lentils slow-cooked overnight with butter and cream.',        img: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=80&q=70', soldOut: false, hidden: false },
-  { id: 'k6',  cat: 'karahi',    name: 'Nihari',                price: 2000, desc: 'Braised beef shank in deep, slow-cooked spiced gravy.',             img: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=80&q=70', soldOut: false, hidden: false },
-  { id: 'b1',  cat: 'biryani',   name: 'Sindhi Mutton Biryani', price: 1800, desc: 'Dum-cooked mutton with saffron-scented Sindhi spices.',             img: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=80&q=70', soldOut: false, hidden: false },
-  { id: 'b2',  cat: 'biryani',   name: 'Chicken Biryani',       price: 1400, desc: 'Classic layered biryani with whole spices and fried onions.',       img: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=80&q=70', soldOut: false, hidden: false },
-  { id: 'b3',  cat: 'biryani',   name: 'Zafrani Pulao',         price: 900,  desc: 'Fragrant saffron rice with whole spices and golden raisins.',       img: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=80&q=70', soldOut: false, hidden: false },
-  { id: 'b4',  cat: 'biryani',   name: 'Prawn Biryani',         price: 2000, desc: 'Tiger prawns layered with spiced basmati, slow-steamed.',           img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=80&q=70', soldOut: false, hidden: false },
-  { id: 'br1', cat: 'breads',    name: 'Tandoori Roti',         price: 120,  desc: 'Wholemeal flatbread, freshly baked in the clay oven.',              img: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=80&q=70', soldOut: false, hidden: false },
-  { id: 'br2', cat: 'breads',    name: 'Garlic Naan',           price: 180,  desc: 'Leavened bread brushed with garlic butter and coriander.',          img: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=80&q=70', soldOut: false, hidden: false },
-  { id: 'br3', cat: 'breads',    name: 'Peshwari Naan',         price: 250,  desc: 'Stuffed with almonds, coconut and sultanas.',                       img: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=80&q=70', soldOut: false, hidden: false },
-  { id: 'br4', cat: 'breads',    name: 'Laccha Paratha',        price: 200,  desc: 'Multi-layered flaky flatbread from the griddle.',                   img: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=80&q=70', soldOut: false, hidden: false },
-  { id: 'd1',  cat: 'desserts',  name: 'Gulab Jamun',           price: 650,  desc: 'Soft milk dumplings soaked in rose and cardamom syrup.',            img: 'https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=80&q=70', soldOut: false, hidden: false },
-  { id: 'd2',  cat: 'desserts',  name: 'Shahi Tukra',           price: 750,  desc: 'Royal bread pudding with condensed milk and pistachios.',           img: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=80&q=70', soldOut: false, hidden: false },
-  { id: 'd3',  cat: 'desserts',  name: 'Pistachio Kulfi',       price: 550,  desc: 'Frozen milk ice cream set on a stick, dense and creamy.',           img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=80&q=70', soldOut: false, hidden: false },
-  { id: 'd4',  cat: 'desserts',  name: 'Kheer',                 price: 600,  desc: 'Rice pudding slow-cooked with cardamom and rose water.',            img: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=80&q=70', soldOut: false, hidden: false },
-  { id: 'bv1', cat: 'beverages', name: 'Kashmiri Chai',         price: 400,  desc: 'Pink salt tea brewed with pistachios and almonds.',                 img: 'https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=80&q=70', soldOut: false, hidden: false },
-  { id: 'bv2', cat: 'beverages', name: 'Mango Lassi',           price: 450,  desc: 'Chilled yoghurt blended with Sindhri mango pulp.',                 img: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=80&q=70', soldOut: false, hidden: false },
-  { id: 'bv3', cat: 'beverages', name: 'Rooh Afza Sharbat',     price: 350,  desc: 'Classic rose syrup drink with basil seeds and ice.',                img: 'https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=80&q=70', soldOut: false, hidden: false },
-  { id: 'bv4', cat: 'beverages', name: 'Fresh Lime Soda',       price: 300,  desc: 'Freshly squeezed lime with sparkling water and mint.',              img: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=80&q=70', soldOut: false, hidden: false },
+  { id: 's1',  cat: 'starters',  name: 'Seekh Kebab',           price: 1200, desc: 'Minced lamb with aromatic spices, grilled over charcoal.',         img: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=80&q=70', hidden: false },
+  { id: 's2',  cat: 'starters',  name: 'Chicken Malai Boti',    price: 1100, desc: 'Tender chicken in cream and mild spice marinade.',                  img: 'https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=80&q=70', hidden: false },
+  { id: 's3',  cat: 'starters',  name: 'Fish Tikka',            price: 1350, desc: 'Fresh fish marinated in carom and citrus, char-grilled.',           img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=80&q=70', hidden: false },
+  { id: 's4',  cat: 'starters',  name: 'Nihari Shorba',         price: 850,  desc: 'Rich slow-cooked broth with slow-braised beef, served with naan.',  img: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=80&q=70', hidden: false },
+  { id: 's5',  cat: 'starters',  name: 'Shammi Kebab',          price: 950,  desc: 'Minced beef and lentil patties, pan-fried crisp.',                  img: 'https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=80&q=70', hidden: false },
+  { id: 's6',  cat: 'starters',  name: 'Dahi Bara Chaat',       price: 700,  desc: 'Lentil dumplings in yoghurt with tamarind and mint chutney.',       img: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=80&q=70', hidden: false },
+  { id: 'g1',  cat: 'grills',    name: 'Barra Lamb Chops',      price: 2800, desc: 'Raan chops in Kashmiri spice rub, grilled to perfection.',          img: 'https://images.unsplash.com/photo-1432139555190-58524dae6a55?w=80&q=70', hidden: false },
+  { id: 'g2',  cat: 'grills',    name: 'Chapli Kebab',          price: 1400, desc: 'Peshawar-style spiced mince patties on the griddle.',               img: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=80&q=70', hidden: false },
+  { id: 'g3',  cat: 'grills',    name: 'Tandoori Prawns',       price: 1800, desc: 'Tiger prawns in a turmeric-citrus marinade, clay oven fired.',      img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=80&q=70', hidden: false },
+  { id: 'g4',  cat: 'grills',    name: 'Achari Murgh Tikka',    price: 1300, desc: 'Chicken in pickle-spiced yoghurt, smoky and tangy.',                img: 'https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=80&q=70', hidden: false },
+  { id: 'g5',  cat: 'grills',    name: 'Reshmi Kebab',          price: 1250, desc: 'Silky chicken mince kebabs with rose water and saffron.',           img: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=80&q=70', hidden: false },
+  { id: 'g6',  cat: 'grills',    name: 'Mixed Grill Platter',   price: 3500, desc: 'Assortment of our signature kebabs — ideal for sharing.',           img: 'https://images.unsplash.com/photo-1432139555190-58524dae6a55?w=80&q=70', hidden: false },
+  { id: 'k1',  cat: 'karahi',    name: 'Chicken Karahi',        price: 1600, desc: 'Wok-tossed chicken in tomatoes, ginger and green chilli.',          img: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=80&q=70', hidden: false },
+  { id: 'k2',  cat: 'karahi',    name: 'Mutton Karahi',         price: 2200, desc: 'Slow-cooked tender mutton, rich karahi gravy.',                     img: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=80&q=70', hidden: false },
+  { id: 'k3',  cat: 'karahi',    name: 'Rogan Josh',            price: 2400, desc: 'Kashmiri lamb curry, bloomed spices, scarlet colour.',              img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=80&q=70', hidden: false },
+  { id: 'k4',  cat: 'karahi',    name: 'Saag Gosht',            price: 2100, desc: 'Lamb simmered in spiced mustard greens.',                           img: 'https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=80&q=70', hidden: false },
+  { id: 'k5',  cat: 'karahi',    name: 'Lahori Dal Makhani',    price: 1100, desc: 'Black lentils slow-cooked overnight with butter and cream.',        img: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=80&q=70', hidden: false },
+  { id: 'k6',  cat: 'karahi',    name: 'Nihari',                price: 2000, desc: 'Braised beef shank in deep, slow-cooked spiced gravy.',             img: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=80&q=70', hidden: false },
+  { id: 'b1',  cat: 'biryani',   name: 'Sindhi Mutton Biryani', price: 1800, desc: 'Dum-cooked mutton with saffron-scented Sindhi spices.',             img: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=80&q=70', hidden: false },
+  { id: 'b2',  cat: 'biryani',   name: 'Chicken Biryani',       price: 1400, desc: 'Classic layered biryani with whole spices and fried onions.',       img: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=80&q=70', hidden: false },
+  { id: 'b3',  cat: 'biryani',   name: 'Zafrani Pulao',         price: 900,  desc: 'Fragrant saffron rice with whole spices and golden raisins.',       img: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=80&q=70', hidden: false },
+  { id: 'b4',  cat: 'biryani',   name: 'Prawn Biryani',         price: 2000, desc: 'Tiger prawns layered with spiced basmati, slow-steamed.',           img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=80&q=70', hidden: false },
+  { id: 'br1', cat: 'breads',    name: 'Tandoori Roti',         price: 120,  desc: 'Wholemeal flatbread, freshly baked in the clay oven.',              img: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=80&q=70', hidden: false },
+  { id: 'br2', cat: 'breads',    name: 'Garlic Naan',           price: 180,  desc: 'Leavened bread brushed with garlic butter and coriander.',          img: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=80&q=70', hidden: false },
+  { id: 'br3', cat: 'breads',    name: 'Peshwari Naan',         price: 250,  desc: 'Stuffed with almonds, coconut and sultanas.',                       img: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=80&q=70', hidden: false },
+  { id: 'br4', cat: 'breads',    name: 'Laccha Paratha',        price: 200,  desc: 'Multi-layered flaky flatbread from the griddle.',                   img: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=80&q=70', hidden: false },
+  { id: 'd1',  cat: 'desserts',  name: 'Gulab Jamun',           price: 650,  desc: 'Soft milk dumplings soaked in rose and cardamom syrup.',            img: 'https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=80&q=70', hidden: false },
+  { id: 'd2',  cat: 'desserts',  name: 'Shahi Tukra',           price: 750,  desc: 'Royal bread pudding with condensed milk and pistachios.',           img: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=80&q=70', hidden: false },
+  { id: 'd3',  cat: 'desserts',  name: 'Pistachio Kulfi',       price: 550,  desc: 'Frozen milk ice cream set on a stick, dense and creamy.',           img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=80&q=70', hidden: false },
+  { id: 'd4',  cat: 'desserts',  name: 'Kheer',                 price: 600,  desc: 'Rice pudding slow-cooked with cardamom and rose water.',            img: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=80&q=70', hidden: false },
+  { id: 'bv1', cat: 'beverages', name: 'Kashmiri Chai',         price: 400,  desc: 'Pink salt tea brewed with pistachios and almonds.',                 img: 'https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=80&q=70', hidden: false },
+  { id: 'bv2', cat: 'beverages', name: 'Mango Lassi',           price: 450,  desc: 'Chilled yoghurt blended with Sindhri mango pulp.',                 img: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=80&q=70', hidden: false },
+  { id: 'bv3', cat: 'beverages', name: 'Rooh Afza Sharbat',     price: 350,  desc: 'Classic rose syrup drink with basil seeds and ice.',                img: 'https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=80&q=70', hidden: false },
+  { id: 'bv4', cat: 'beverages', name: 'Fresh Lime Soda',       price: 300,  desc: 'Freshly squeezed lime with sparkling water and mint.',              img: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=80&q=70', hidden: false },
 ];
 
 // ═══════════════════════════════════════════════
@@ -151,6 +151,24 @@ let nextItemId           = 100;
 
 let orders     = [...ORDERS];
 let alerts     = [...ALERTS];
+const storedAlerts = localStorage.getItem('riwayat_alerts');
+if (storedAlerts) {
+  alerts = JSON.parse(storedAlerts);
+} else {
+  localStorage.setItem('riwayat_alerts', JSON.stringify(alerts));
+}
+
+setInterval(() => {
+  const sa = localStorage.getItem('riwayat_alerts');
+  if (sa) {
+    const parsed = JSON.parse(sa);
+    if (JSON.stringify(parsed) !== JSON.stringify(alerts)) {
+      alerts = parsed;
+      updateBadges();
+      if (document.getElementById('section-alerts') && !document.getElementById('section-alerts')!.hidden) renderAlerts();
+    }
+  }
+}, 2000);
 let tables     = [...TABLES];
 let menuItems: MenuItem[] = BASE_MENU.map(b => ({
   ...b,
@@ -158,6 +176,7 @@ let menuItems: MenuItem[] = BASE_MENU.map(b => ({
   components: [] as string[],
   discountType: 'none' as DiscountType,
   discountValue: 0,
+  prepTime: 15,
 }));
 
 // ═══════════════════════════════════════════════
@@ -590,8 +609,7 @@ function renderMenu() {
       <td class="price-cell">${priceHtml}</td>
       <td>
         <div class="status-toggles">
-          <span class="toggle-chip sold-out ${m.soldOut ? 'on' : ''}" data-toggle="soldOut" data-id="${m.id}">Sold Out</span>
-          <span class="toggle-chip hidden   ${m.hidden  ? 'on' : ''}" data-toggle="hidden"  data-id="${m.id}">Hidden</span>
+          <span class="toggle-chip hidden   ${m.hidden  ? 'on' : ''}" data-toggle="hidden"  data-id="${m.id}">Hide</span>
         </div>
       </td>
       <td>
@@ -614,11 +632,11 @@ document.getElementById('menu-tbody')!.addEventListener('click', e => {
   if (chip) toggleMenuField(chip.dataset.id!, chip.dataset.toggle as 'soldOut' | 'hidden');
 });
 
-function toggleMenuField(id: string, field: 'soldOut' | 'hidden') {
+function toggleMenuField(id: string, field: 'hidden') {
   const item = menuItems.find(m => m.id === id);
   if (!item) return;
   item[field] = !item[field];
-  const label = field === 'soldOut' ? (item.soldOut ? 'marked sold out' : 'back in stock') : (item.hidden ? 'hidden' : 'visible');
+  const label = item.hidden ? 'hidden' : 'visible';
   showToast(`${item.name} — ${label}`, 'info');
   renderMenu();
 }
@@ -727,6 +745,7 @@ function openMenuItemModal(id: string | null) {
     (document.getElementById('mi-name')  as HTMLInputElement).value    = item.name;
     (document.getElementById('mi-cat')   as HTMLSelectElement).value   = item.cat;
     (document.getElementById('mi-price') as HTMLInputElement).value    = String(item.price);
+    (document.getElementById('mi-prep-time') as HTMLInputElement).value = String(item.prepTime || 15);
     (document.getElementById('mi-desc')  as HTMLTextAreaElement).value = item.desc;
 
     // Image
@@ -761,6 +780,7 @@ function openMenuItemModal(id: string | null) {
     (document.getElementById('mi-name')  as HTMLInputElement).value    = '';
     (document.getElementById('mi-cat')   as HTMLSelectElement).value   = 'starters';
     (document.getElementById('mi-price') as HTMLInputElement).value    = '';
+    (document.getElementById('mi-prep-time') as HTMLInputElement).value = '15';
     (document.getElementById('mi-desc')  as HTMLTextAreaElement).value = '';
     renderPlatterList([]);
   }
@@ -772,6 +792,7 @@ document.getElementById('btn-save-item')!.addEventListener('click', () => {
   const name          = (document.getElementById('mi-name')           as HTMLInputElement).value.trim();
   const cat           = (document.getElementById('mi-cat')            as HTMLSelectElement).value;
   const price         = parseInt((document.getElementById('mi-price') as HTMLInputElement).value) || 0;
+  const prepTime      = parseInt((document.getElementById('mi-prep-time') as HTMLInputElement).value) || 15;
   const desc          = (document.getElementById('mi-desc')           as HTMLTextAreaElement).value.trim();
   const discountType  = (document.getElementById('mi-discount-type')  as HTMLSelectElement).value as DiscountType;
   const discountValue = parseFloat((document.getElementById('mi-discount-value') as HTMLInputElement).value) || 0;
@@ -787,10 +808,10 @@ document.getElementById('btn-save-item')!.addEventListener('click', () => {
 
   if (editingMenuItemId) {
     const item = menuItems.find(m => m.id === editingMenuItemId);
-    if (item) Object.assign(item, { name, cat, price, desc, img: finalImg, type: currentItemType, components, discountType, discountValue });
+    if (item) Object.assign(item, { name, cat, price, desc, img: finalImg, type: currentItemType, components, discountType, discountValue, prepTime });
     showToast(`${name} updated`, 'success');
   } else {
-    menuItems.push({ id: `item-${nextItemId++}`, name, cat, price, desc, img: finalImg, soldOut: false, hidden: false, type: currentItemType, components, discountType, discountValue });
+    menuItems.push({ id: `item-${nextItemId++}`, name, cat, price, desc, img: finalImg, hidden: false, type: currentItemType, components, discountType, discountValue, prepTime });
     showToast(`${name} added`, 'success');
   }
   renderMenu();
@@ -911,6 +932,36 @@ document.getElementById('pay-tabs')!.addEventListener('click', e => {
 
 document.getElementById('payments-date-from')!.addEventListener('change', renderPayments);
 document.getElementById('payments-date-to')!.addEventListener('change', renderPayments);
+
+document.getElementById('btn-export-excel')?.addEventListener('click', () => {
+  const startStr = (document.getElementById('payments-date-from') as HTMLInputElement).value;
+  const endStr   = (document.getElementById('payments-date-to') as HTMLInputElement).value;
+  const start = startStr ? new Date(startStr + 'T00:00:00').getTime() : getTodayStart();
+  const end   = endStr ? new Date(endStr + 'T23:59:59').getTime() : getTodayEnd();
+
+  const ro = orders.filter(o => o.status !== 'cancelled' && o.placedAt >= start && o.placedAt <= end);
+  
+  const itemMap = new Map<string, { name: string; cat: string; qty: number; revenue: number }>();
+  ro.forEach(o => o.items.forEach(it => {
+    const e = itemMap.get(it.name);
+    if (e) { e.qty += it.qty; e.revenue += it.price * it.qty; }
+    else    itemMap.set(it.name, { name: it.name, cat: menuItems.find(m => m.name === it.name)?.cat ?? '—', qty: it.qty, revenue: it.price * it.qty });
+  }));
+  const itemsSorted = [...itemMap.values()].sort((a, b) => b.qty - a.qty);
+
+  let csv = 'Item,Category,Qty Sold,Revenue\n';
+  itemsSorted.forEach(it => {
+    csv += `"${it.name}","${it.cat}",${it.qty},${it.revenue}\n`;
+  });
+
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `payments_${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+});
 
 function getPayDateRange(): { start: number; end: number; isOneDay: boolean } {
   const t = new Date();
@@ -1052,7 +1103,7 @@ function renderPaymentsItems(start: number, end: number) {
     else    itemMap.set(it.name, { name: it.name, cat: menuItems.find(m => m.name === it.name)?.cat ?? '—', qty: it.qty, revenue: it.price * it.qty });
   }));
 
-  const sorted = [...itemMap.values()].sort((a, b) => b.qty - a.qty);
+  const sorted = [...itemMap.values()].sort((a, b) => b.qty - a.qty).slice(0, 3);
   tbody.innerHTML = sorted.map((item, i) => {
     const rank  = i + 1;
     const badge = rank === 1 ? '<span class="badge badge-received" style="margin-left:.5rem">Bestseller</span>'
@@ -1071,7 +1122,11 @@ function renderPaymentsItems(start: number, end: number) {
 function renderPaymentsRecords(start: number, end: number) {
   const tablesInRange = tables.filter(t =>
     orders.some(o => o.tableId === t.id && o.status !== 'cancelled' && o.placedAt >= start && o.placedAt <= end)
-  );
+  ).map(t => {
+    const rangeTotal = orders.filter(o => o.tableId === t.id && o.status !== 'cancelled' && o.placedAt >= start && o.placedAt <= end).reduce((s, o) => s + o.total, 0);
+    const orderCount = orders.filter(o => o.tableId === t.id && o.status !== 'cancelled' && o.placedAt >= start && o.placedAt <= end).length;
+    return { ...t, rangeTotal, orderCount };
+  }).sort((a, b) => b.rangeTotal - a.rangeTotal).slice(0, 3);
   const tbody = document.getElementById('payments-tbody')!;
 
   if (tablesInRange.length === 0) {
@@ -1080,8 +1135,8 @@ function renderPaymentsRecords(start: number, end: number) {
   }
 
   tbody.innerHTML = tablesInRange.map(t => {
-    const rangeTotal = orders.filter(o => o.tableId === t.id && o.status !== 'cancelled' && o.placedAt >= start && o.placedAt <= end).reduce((s, o) => s + o.total, 0);
-    const orderCount = orders.filter(o => o.tableId === t.id && o.status !== 'cancelled' && o.placedAt >= start && o.placedAt <= end).length;
+    const rangeTotal = t.rangeTotal;
+    const orderCount = t.orderCount;
     const sessionDate = t.sessionStart ? new Date(t.sessionStart).toLocaleDateString('en-PK', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
     const sessionTime = t.sessionStart ? new Date(t.sessionStart).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—';
     const statusBadge = t.paid ? '<span class="badge badge-paid">Paid</span>' : '<span class="badge badge-received">Outstanding</span>';
@@ -1156,13 +1211,17 @@ document.getElementById('alerts-list')!.addEventListener('click', e => {
   const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-action]');
   if (!btn) return;
   const a = alerts.find(x => x.id === btn.dataset.id);
-  if (a) a.dismissed = true;
+  if (a) { 
+    a.dismissed = true; 
+    localStorage.setItem('riwayat_alerts', JSON.stringify(alerts));
+  }
   renderAlerts();
   if (activeSection === 'tables') renderTables();
 });
 
 document.getElementById('btn-dismiss-all')!.addEventListener('click', () => {
   alerts.forEach(a => a.dismissed = true);
+  localStorage.setItem('riwayat_alerts', JSON.stringify(alerts));
   renderAlerts();
   showToast('All alerts dismissed', 'success');
 });

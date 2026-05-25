@@ -242,73 +242,73 @@
         </table>
       </div>
     </section>
+<!-- ── Section: Payments ── -->
+<section id="section-payments" class="section">
+  <div class="section-header">
+    <div>
+      <h1 class="section-title">Payments</h1>
+      <p class="section-sub" id="payments-sub">Today's payment overview</p>
+    </div>
 
-    <!-- ── Section: Payments ── -->
-    <section id="section-payments" class="section">
-      <div class="section-header">
-        <div>
-          <h1 class="section-title">Payments</h1>
-          <p class="section-sub" id="payments-sub">Today's payment overview</p>
-        </div>
-        <div class="section-actions">
-          <input id="payments-date-from" type="date" class="filter-input" />
-          <input id="payments-date-to"   type="date" class="filter-input" />
-        </div>
-      </div>
+    <div class="section-actions">
+      <button id="btn-export-excel" class="btn-primary" style="margin-right: 1rem;"><i class="ri-file-excel-line"></i> Export CSV</button>
+      <input id="payments-date-from" type="date" class="filter-input" />
+      <input id="payments-date-to" type="date" class="filter-input" />
+    </div>
+  </div>
 
-      <!-- Tab bar -->
-      <div class="pay-tabs" id="pay-tabs">
-        <button class="pay-tab active" data-tab="overview">Overview</button>
-        <button class="pay-tab" data-tab="items">Items Sold</button>
-        <button class="pay-tab" data-tab="records">Payment Records</button>
-      </div>
+  <!-- Overview + Orders + Payments in same tab -->
+  <div class="pay-panel active" id="pay-panel-overview">
 
-      <!-- Overview panel -->
-      <div class="pay-panel active" id="pay-panel-overview">
-        <div class="payments-stats" id="payments-stats"></div>
-        <div class="pay-chart-wrap" id="pay-chart-wrap"></div>
-      </div>
+    <!-- Stats -->
+    <div class="payments-stats" id="payments-stats"></div>
 
-      <!-- Items Sold panel -->
-      <div class="pay-panel" id="pay-panel-items">
-        <div class="menu-table-wrap">
-          <table class="menu-table">
-            <thead>
-              <tr>
-                <th class="text-center" style="width:3rem">#</th>
-                <th>Item</th>
-                <th>Category</th>
-                <th class="text-right">Qty Sold</th>
-                <th class="text-right">Revenue</th>
-              </tr>
-            </thead>
-            <tbody id="items-sold-tbody"></tbody>
-          </table>
-        </div>
-      </div>
+    <!-- Graph -->
+    <div class="pay-chart-wrap" id="pay-chart-wrap"></div>
 
-      <!-- Payment Records panel -->
-      <div class="pay-panel" id="pay-panel-records">
-        <div class="menu-table-wrap">
-          <table class="menu-table">
-            <thead>
-              <tr>
-                <th>Table</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Duration</th>
-                <th>Orders</th>
-                <th class="text-right">Total</th>
-                <th>Status</th>
-                <th class="text-center">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="payments-tbody"></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
+    <!-- Items Sold Table -->
+    <div class="menu-table-wrap" style="margin-top:1.5rem;">
+      <h3 style="margin-bottom:1rem;">Items Sold</h3>
 
+      <table class="menu-table">
+        <thead>
+          <tr>
+            <th class="text-center" style="width:3rem">#</th>
+            <th>Item</th>
+            <th>Category</th>
+            <th class="text-right">Qty Sold</th>
+            <th class="text-right">Revenue</th>
+          </tr>
+        </thead>
+
+        <tbody id="items-sold-tbody"></tbody>
+      </table>
+    </div>
+
+    <!-- Payment Records Table -->
+    <div class="menu-table-wrap" style="margin-top:2rem;">
+      <h3 style="margin-bottom:1rem;">Payment Records</h3>
+
+      <table class="menu-table">
+        <thead>
+          <tr>
+            <th>Table</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Duration</th>
+            <th>Orders</th>
+            <th class="text-right">Total</th>
+            <th>Status</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody id="payments-tbody"></tbody>
+      </table>
+    </div>
+
+  </div>
+</section>
   </div><!-- /main -->
 </div><!-- /dashboard -->
 
@@ -397,6 +397,10 @@
         <div class="form-group">
           <label class="form-label">Price (PKR)</label>
           <input id="mi-price" type="number" class="form-input" placeholder="1200" min="0" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Prep Time (mins)</label>
+          <input id="mi-prep-time" type="number" class="form-input" placeholder="15" min="0" />
         </div>
 
         <!-- Description -->
