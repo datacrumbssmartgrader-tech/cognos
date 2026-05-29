@@ -272,6 +272,16 @@ function init(): void {
     return;
   }
 
+  // Hide all screens first
+  screenDisabled.hidden = true;
+  screenUserDetails.hidden = true;
+  screenWelcome.hidden = true;
+  screenMenu.hidden = true;
+  screenCart.hidden = true;
+  screenTracker.hidden = true;
+  screenBill.hidden = true;
+  bottomNav.hidden = true;
+
   const previewScreen = params.get('screen');
   const userDetailsStr = sessionStorage.getItem('riwayat_user');
   let userDetails: any = null;
@@ -286,11 +296,6 @@ function init(): void {
 
   if (!userDetails || !userDetails.name || !userDetails.phone) {
     screenUserDetails.hidden = false;
-    screenWelcome.hidden = true;
-    screenMenu.hidden = true;
-    screenCart.hidden = true;
-    screenTracker.hidden = true;
-    screenBill.hidden = true;
     return;
   }
 
