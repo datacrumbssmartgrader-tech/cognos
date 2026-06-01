@@ -584,11 +584,11 @@ As each phase is built, tests verify:
 - [x] Delete menu item → deleted from DB + Cloudinary
 - [x] **Tests:** 8/8 passing (`npm run test:phase-c`)
 
-**Phase D (QR + Tables)** — Upcoming
-- [ ] Get QR code PNG → returns image
-- [ ] Regenerate QR token → new token created, old invalidated
-- [ ] Get tables → returns all with session info
-- [ ] **Tests:** 9 tests (`npm run test:phase-d`)
+**Phase D (QR + Tables)** — ✅ Complete
+- [x] Get QR code PNG → returns image
+- [x] Regenerate QR token → new token created, old invalidated
+- [x] Get tables → returns all with session info
+- [x] **Tests:** 8/8 passing (`npm run test:phase-d`)
 
 **Phase E (Orders + Sessions)** — Upcoming
 - [ ] Create session → customer matched/created
