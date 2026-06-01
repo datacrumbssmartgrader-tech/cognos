@@ -22,11 +22,20 @@ export async function POST(request: NextRequest) {
     }
 
     // Find table by QR token
-    const tableResult = await sql`
-      SELECT id, label, status 
-      FROM restaurant_tables 
-      WHERE qr_token = ${qr_token}::uuid
-    `;
+    let tableResult;
+    try {
+      tableResult = await sql`
+        SELECT id, label, status 
+        FROM restaurant_tables 
+        WHERE qr_token = ${qr_token}::uuid
+      `;
+    } catch (error: any) {
+      // Invalid UUID format
+      if (error.message && error.message.includes('invalid input syntax for type uuid')) {
+        return NextResponse.json({ error: 'Invalid or expired QR token' }, { status: 404 });
+      }
+      throw error;
+    }
 
     if (tableResult.length === 0) {
       return NextResponse.json({ error: 'Invalid or expired QR token' }, { status: 404 });

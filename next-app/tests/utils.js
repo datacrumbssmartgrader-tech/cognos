@@ -36,7 +36,7 @@ function expectIn(actual, ...expected) {
 /**
  * Make HTTP request
  */
-async function request(method, path, { body = null, headers = {}, cookies = {} } = {}) {
+async function request(method, path, { body = null, headers = {}, cookies = null } = {}) {
   const url = `${BASE_URL}${path}`;
   const options = {
     method,
@@ -47,7 +47,7 @@ async function request(method, path, { body = null, headers = {}, cookies = {} }
   };
 
   // Add cookies to headers if provided
-  if (Object.keys(cookies).length > 0) {
+  if (cookies && Object.keys(cookies).length > 0) {
     const cookieString = Object.entries(cookies)
       .map(([key, value]) => `${key}=${value}`)
       .join("; ");

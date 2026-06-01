@@ -1,9 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sql } from '@/lib/db';
+import { verifyTokenEdge } from '@/lib/auth';
 import { eventManager } from '@/lib/events';
 
 export async function GET(req: NextRequest) {
   try {
+    // Verify authentication
+    const token = req.headers.get('cookie')?.split('rw_session=')[1]?.split(';')[0];
+    if (!token) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    const payload = await verifyTokenEdge(token);
+    if (!payload) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     const items = await sql`
       SELECT id, name, category, price, description, image_url, image_public_id, available, hidden, created_at
       FROM menu_items ORDER BY category, name
@@ -25,6 +43,23 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    // Verify authentication
+    const token = req.headers.get('cookie')?.split('rw_session=')[1]?.split(';')[0];
+    if (!token) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    const payload = await verifyTokenEdge(token);
+    if (!payload) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     const body = await req.json();
     const { name, category, price, description, image_url, image_public_id } = body;
 
@@ -36,9 +71,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Validate price is a number
+    const priceNum = Number(price);
+    if (isNaN(priceNum) || priceNum < 0) {
+      return NextResponse.json(
+        { error: 'Price must be a valid non-negative number' },
+        { status: 400 }
+      );
+    }
+
     const result = await sql`
       INSERT INTO menu_items (name, category, price, description, image_url, image_public_id, available, hidden)
-      VALUES (${name}, ${category}, ${price}, ${description || null}, ${image_url}, ${image_public_id}, true, false)
+      VALUES (${name}, ${category}, ${priceNum}::numeric, ${description || null}, ${image_url}, ${image_public_id}, true, false)
       RETURNING id, name, category, price, description, image_url, image_public_id, available, hidden, created_at
     `;
 

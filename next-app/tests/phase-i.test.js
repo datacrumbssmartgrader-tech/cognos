@@ -211,7 +211,7 @@ suite.test('Verify database connection is healthy', async () => {
   const response = await request('GET', '/api/menu', {});
   
   if (response.status !== 200) throw new Error('Database connection failed');
-  if (!Array.isArray(response.data)) throw new Error('Invalid response format');
+  if (typeof response.data !== 'object' || !Array.isArray(response.data.items)) throw new Error('Invalid response format');
 });
 
 // Deployment Readiness Checklist

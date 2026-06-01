@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sql } from '@/lib/db';
 import { v2 as cloudinary } from 'cloudinary';
+import { verifyTokenEdge } from '@/lib/auth';
 import { eventManager } from '@/lib/events';
 
 cloudinary.config({
@@ -14,6 +15,23 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Verify authentication
+    const token = req.headers.get('cookie')?.split('rw_session=')[1]?.split(';')[0];
+    if (!token) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    const payload = await verifyTokenEdge(token);
+    if (!payload) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     const { id: itemId } = await params;
     const body = await req.json();
     const { name, category, price, description, image_url, image_public_id } = body;
@@ -22,6 +40,15 @@ export async function PUT(
     if (!name || !category || price === undefined || !image_url || !image_public_id) {
       return NextResponse.json(
         { error: 'Missing required fields: name, category, price, image_url, image_public_id' },
+        { status: 400 }
+      );
+    }
+
+    // Validate price is a number
+    const priceNum = Number(price);
+    if (isNaN(priceNum) || priceNum < 0) {
+      return NextResponse.json(
+        { error: 'Price must be a valid non-negative number' },
         { status: 400 }
       );
     }
@@ -49,7 +76,7 @@ export async function PUT(
 
     const result = await sql`
       UPDATE menu_items 
-      SET name = ${name}, category = ${category}, price = ${price}, description = ${description || null}, image_url = ${image_url}, image_public_id = ${image_public_id}
+      SET name = ${name}, category = ${category}, price = ${priceNum}::numeric, description = ${description || null}, image_url = ${image_url}, image_public_id = ${image_public_id}
       WHERE id = ${itemId}
       RETURNING id, name, category, price, description, image_url, image_public_id, available, hidden, created_at
     `;
@@ -82,6 +109,23 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Verify authentication
+    const token = req.headers.get('cookie')?.split('rw_session=')[1]?.split(';')[0];
+    if (!token) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    const payload = await verifyTokenEdge(token);
+    if (!payload) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     const { id: itemId } = await params;
     const body = await req.json();
     const { field, value } = body;
@@ -137,6 +181,23 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Verify authentication
+    const token = req.headers.get('cookie')?.split('rw_session=')[1]?.split(';')[0];
+    if (!token) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    const payload = await verifyTokenEdge(token);
+    if (!payload) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     const { id: itemId } = await params;
 
     // Get item to get image_public_id
