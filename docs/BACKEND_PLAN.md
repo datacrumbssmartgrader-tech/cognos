@@ -539,12 +539,13 @@ NEXT_PUBLIC_BASE_URL=https://yourapp.vercel.app   # used for QR code URL generat
 ## 11. Implementation Phases
 
 ### Phase A — Database & Connection
-- [ ] Create NeonDB project + database
-- [ ] Write migration SQL (all tables above)
-- [ ] Set up `src/lib/db.ts`
-- [ ] Seed menu data from `menuData.ts`
-- [ ] Seed initial admin staff record with bcrypt-hashed PIN
-- [ ] Seed 12 tables (T01–T12) with initial `qr_token`s
+- [x] Create NeonDB project + database
+- [x] Write migration SQL (all tables above)
+- [x] Set up `src/lib/db.ts` (using `@neondatabase/serverless`)
+- [x] Seed menu data from `menuData.ts` (34 items seeded)
+- [x] Seed initial admin staff record with bcrypt-hashed PIN (PIN: 1234)
+- [x] Seed 12 tables (T01–T12) with initial `qr_token`s
+**Status: ✅ COMPLETE** — Database migrated, tables created, admin account ready, 34 menu items + 12 tables seeded
 
 ### Phase B — Auth
 - [ ] `npm install bcryptjs jsonwebtoken`
