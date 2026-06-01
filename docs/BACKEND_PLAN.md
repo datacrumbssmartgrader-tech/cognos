@@ -604,12 +604,12 @@ As each phase is built, tests verify:
 - [x] Export payments to Excel → .xlsx file generated
 - [x] **Tests:** 7/7 passing (`npm run test:phase-f`)
 
-**Phase G (Alerts + Payments)** — Upcoming
-- [ ] Create alert → alert saved
-- [ ] Record payment → payment + session updated
-- [ ] Mark alert as resolved → status changes
-- [ ] Update payment status → changes reflected
-- [ ] **Tests:** 9 tests (`npm run test:phase-g`)
+**Phase G (Alerts + Payments)** — ✅ Complete
+- [x] Create alert → alert saved
+- [x] Record payment → payment + session updated
+- [x] Mark alert as resolved → status changes
+- [x] Update payment status → changes reflected
+- [x] **Tests:** 10/10 passing (`npm run test:phase-g`)
 
 **Phase H (Real-Time SSE)** — Upcoming
 - [ ] Admin stream → emits events on changes
@@ -657,7 +657,7 @@ npm run test
 # Phase E: 8 tests (orders + sessions + customers) ✅ Complete
 # Phase E: 8 tests (orders + sessions + customers) ✅ Complete
 # Phase F: 7 tests (customers tab + Excel export) ✅ Complete
-# Phase G: 9 tests (alerts + payments)
+# Phase G: 10 tests (alerts + payments) ✅ Complete
 # Phase H: 7 tests (real-time SSE)
 # Phase I: 13 tests (error handling + security + performance)
 ```
@@ -765,10 +765,10 @@ NEXT_PUBLIC_BASE_URL=https://yourapp.vercel.app   # used for QR code URL generat
 - [ ] Build `GET /api/admin/customers/export` (Excel)
 - [ ] Build Customers section in admin sidebar + UI
 
-### Phase G — Alerts + Payments
-- [ ] Build alerts routes
-- [ ] Build payments routes + stats
-- [ ] Wire all admin sections
+### Phase G — Alerts + Payments ✅ COMPLETE (10/10 tests)
+- [x] Build alerts routes
+- [x] Build payments routes + stats
+- [x] Wire all admin sections
 
 ### Phase H — Real-Time SSE
 - [ ] Build `GET /api/admin/stream`
