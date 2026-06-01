@@ -597,12 +597,12 @@ As each phase is built, tests verify:
 - [x] Update order status → status changes
 - [x] **Tests:** 8/8 passing (`npm run test:phase-e`)
 
-**Phase F (Customers Tab)** — Upcoming
-- [ ] List customers → all users returned
-- [ ] Export to Excel → .xlsx file generated
-- [ ] Export orders to Excel → .xlsx file generated
-- [ ] Export payments to Excel → .xlsx file generated
-- [ ] **Tests:** 7 tests (`npm run test:phase-f`)
+**Phase F (Customers Tab)** — ✅ Complete
+- [x] List customers → all users returned
+- [x] Export to Excel → .xlsx file generated
+- [x] Export orders to Excel → .xlsx file generated
+- [x] Export payments to Excel → .xlsx file generated
+- [x] **Tests:** 7/7 passing (`npm run test:phase-f`)
 
 **Phase G (Alerts + Payments)** — Upcoming
 - [ ] Create alert → alert saved
@@ -655,7 +655,8 @@ npm run test
 # Phase D: 9 tests (QR codes + tables)
 # Phase D: 8 tests (QR + tables) ✅ Complete
 # Phase E: 8 tests (orders + sessions + customers) ✅ Complete
-# Phase F: 7 tests (customers tab + Excel export)
+# Phase E: 8 tests (orders + sessions + customers) ✅ Complete
+# Phase F: 7 tests (customers tab + Excel export) ✅ Complete
 # Phase G: 9 tests (alerts + payments)
 # Phase H: 7 tests (real-time SSE)
 # Phase I: 13 tests (error handling + security + performance)
