@@ -518,7 +518,112 @@ SSE streams from the server to the browser — no WebSockets needed.
 
 ---
 
-## 10. Environment Variables
+## 14. Testing Strategy
+
+### 14.1 Test Framework & Setup
+
+We use a simple **HTTP-based testing approach** with Node.js `fetch` API (no external test framework required during dev). Each phase includes a `tests/phase-*.test.js` file.
+
+**Run tests:**
+```bash
+cd next-app
+npm run test:phase-a
+npm run test:phase-b
+npm run test:phase-c
+# etc.
+```
+
+**Or run all tests:**
+```bash
+npm run test
+```
+
+### 14.2 Test Structure
+
+Each test file:
+1. Starts the dev server (or assumes it's running)
+2. Creates a session/auth token if needed
+3. Tests each API endpoint (happy path + error cases)
+4. Logs results in a clear format
+5. Exit code 0 on success, 1 on failure
+
+### 14.3 Test Utilities
+
+Helper functions in `tests/utils.js`:
+- `login(pin)` — Returns auth session with token
+- `request(method, path, body, session)` — HTTP helper
+- `expect(actual, expected)` — Simple assertion
+- `describe(name, fn)` — Test grouping
+- `test(name, fn)` — Individual test
+
+### 14.4 Phase Testing Checklist
+
+As each phase is built, tests verify:
+
+**Phase A (Database)** — ✅ Complete
+- [ ] Database connects (no errors)
+- [ ] Admin user created with PIN 1234
+- [ ] 12 tables seeded (T01-T12)
+- [ ] 34 menu items seeded
+
+**Phase B (Auth)** — ✅ Complete  
+- [ ] Login with correct PIN → returns user + JWT
+- [ ] Login with wrong PIN → 401 error
+- [ ] Me endpoint with valid token → returns user
+- [ ] Me endpoint without token → 401 error
+- [ ] Logout clears cookie
+
+**Phase C (Menu + Cloudinary)** — In Progress
+- [ ] Upload image → returns { url, public_id }
+- [ ] Create menu item → inserted in DB
+- [ ] Get all menu (admin) → includes hidden items
+- [ ] Get public menu → excludes hidden items
+- [ ] Update menu item → changes reflected
+- [ ] Toggle available → status flips
+- [ ] Delete menu item → deleted from DB + Cloudinary
+
+**Phase D (QR + Tables)** — Upcoming
+- [ ] Get QR code PNG → returns image
+- [ ] Regenerate QR token → new token created, old invalidated
+- [ ] Get tables → returns all with session info
+
+**Phase E (Orders + Sessions)** — Upcoming
+- [ ] Create session → customer matched/created
+- [ ] Place order → inserted in orders + order_items
+- [ ] Get orders for session → returns all
+- [ ] Update order status → status changes
+
+**Phase F (Customers Tab)** — Upcoming
+- [ ] List customers → all users returned
+- [ ] Export to Excel → .xlsx file generated
+
+**Phase G (Alerts + Payments)** — Upcoming
+- [ ] Create alert → alert saved
+- [ ] Record payment → payment + session updated
+
+**Phase H (Real-Time SSE)** — Upcoming
+- [ ] Admin stream → emits events on changes
+- [ ] Dine stream → emits order updates
+
+**Phase I (Polish & Deploy)** — Upcoming
+- [ ] All endpoints secured behind auth
+- [ ] Error handling consistent
+- [ ] Performance benchmarks met
+
+### 14.5 Test Output Example
+
+```
+✅ Phase B — Auth Tests
+  ✓ Login with PIN 1234 → user returned
+  ✓ Login with wrong PIN → 401 error
+  ✓ Me endpoint with token → user data
+  ✓ Me endpoint without token → 401 error
+  ✓ Logout → session cleared
+
+Summary: 5/5 passed
+```
+
+---
 
 ```bash
 # next-app/.env.local

@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "seed": "node scripts/seed.js"
+    "seed": "node scripts/seed.js",
+    "test": "npm run test:phase-b && npm run test:phase-c",
+    "test:phase-a": "node tests/phase-a.test.js",
+    "test:phase-b": "node tests/phase-b.test.js",
+    "test:phase-c": "node tests/phase-c.test.js"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
