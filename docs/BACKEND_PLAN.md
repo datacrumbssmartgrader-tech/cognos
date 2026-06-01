@@ -574,14 +574,15 @@ As each phase is built, tests verify:
 - [x] Logout clears cookie
 - [x] **Tests:** 7/7 passing (`npm run test:phase-b`)
 
-**Phase C (Menu + Cloudinary)** — In Progress
-- [ ] Upload image → returns { url, public_id }
-- [ ] Create menu item → inserted in DB
-- [ ] Get all menu (admin) → includes hidden items
-- [ ] Get public menu → excludes hidden items
-- [ ] Update menu item → changes reflected
-- [ ] Toggle available → status flips
-- [ ] Delete menu item → deleted from DB + Cloudinary
+**Phase C (Menu + Cloudinary)** — ✅ Complete
+- [x] Upload image → returns { url, public_id }
+- [x] Create menu item → inserted in DB
+- [x] Get all menu (admin) → includes hidden items
+- [x] Get public menu → excludes hidden items
+- [x] Update menu item → changes reflected
+- [x] Toggle available → status flips
+- [x] Delete menu item → deleted from DB + Cloudinary
+- [x] **Tests:** 8/8 passing (`npm run test:phase-c`)
 
 **Phase D (QR + Tables)** — Upcoming
 - [ ] Get QR code PNG → returns image
