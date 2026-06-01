@@ -70,9 +70,10 @@ suite.test('POST /api/orders - Place order for session', async () => {
   
   // Get a menu item ID first
   const menuResponse = await request('GET', '/api/menu', {});
-  if (menuResponse.data.length === 0) throw new Error('No menu items');
+  if (menuResponse.status !== 200) throw new Error('Failed to get menu');
+  if (!menuResponse.data.items || menuResponse.data.items.length === 0) throw new Error('No menu items');
   
-  const itemId = menuResponse.data[0].id;
+  const itemId = menuResponse.data.items[0].id;
   
   const response = await request('POST', '/api/orders', {
     body: {
