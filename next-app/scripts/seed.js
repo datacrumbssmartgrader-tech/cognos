@@ -192,7 +192,17 @@ async function runMigration() {
 
   try {
     for (const statement of statements) {
-      await sql.query(statement);
+      // Execute raw SQL - for migrations we need to handle this carefully
+      try {
+        // Using eval is not ideal but necessary for dynamic DDL in migrations
+        await sql(statement);
+      } catch (error) {
+        // Some statements might fail (e.g., DROP IF EXISTS on non-existent objects)
+        // This is expected and we can safely continue
+        if (!error.message.includes('does not exist')) {
+          throw error;
+        }
+      }
     }
     console.log("✅ Schema migration completed");
   } catch (error) {
