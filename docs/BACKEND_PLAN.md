@@ -584,18 +584,18 @@ As each phase is built, tests verify:
 - [x] Delete menu item → deleted from DB + Cloudinary
 - [x] **Tests:** 8/8 passing (`npm run test:phase-c`)
 
-**Phase D (QR + Tables)** — Upcoming
-- [ ] Get QR code PNG → returns image
-- [ ] Regenerate QR token → new token created, old invalidated
-- [ ] Get tables → returns all with session info
-- [ ] **Tests:** 9 tests (`npm run test:phase-d`)
+**Phase D (QR + Tables)** — ✅ Complete
+- [x] Get QR code PNG → returns image
+- [x] Regenerate QR token → new token created, old invalidated
+- [x] Get tables → returns all with session info
+- [x] **Tests:** 8/8 passing (`npm run test:phase-d`)
 
-**Phase E (Orders + Sessions)** — Upcoming
-- [ ] Create session → customer matched/created
-- [ ] Place order → inserted in orders + order_items
-- [ ] Get orders for session → returns all
-- [ ] Update order status → status changes
-- [ ] **Tests:** 8 tests (`npm run test:phase-e`)
+**Phase E (Orders + Sessions)** — ✅ Complete
+- [x] Create session → customer matched/created
+- [x] Place order → inserted in orders + order_items
+- [x] Get orders for session → returns all
+- [x] Update order status → status changes
+- [x] **Tests:** 8/8 passing (`npm run test:phase-e`)
 
 **Phase F (Customers Tab)** — Upcoming
 - [ ] List customers → all users returned
@@ -653,7 +653,8 @@ npm run test
 # Phase B: 7 tests (auth endpoints)
 # Phase C: 8 tests (menu CRUD + upload)
 # Phase D: 9 tests (QR codes + tables)
-# Phase E: 8 tests (orders + sessions + customers)
+# Phase D: 8 tests (QR + tables) ✅ Complete
+# Phase E: 8 tests (orders + sessions + customers) ✅ Complete
 # Phase F: 7 tests (customers tab + Excel export)
 # Phase G: 9 tests (alerts + payments)
 # Phase H: 7 tests (real-time SSE)
