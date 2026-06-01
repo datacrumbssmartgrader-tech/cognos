@@ -19,7 +19,12 @@
 
 const { request, login, TestSuite, waitForServer } = require('./utils.js');
 
-const suite = new TestSuite('Phase I — Polish & Deployment');
+async function runTests() {
+  try {
+    // Wait for server to be ready
+    await waitForServer();
+
+    const suite = new TestSuite('Phase I — Polish & Deployment');
 
 let adminCookies, adminToken;
 
@@ -230,5 +235,12 @@ suite.test('Deployment readiness - All critical endpoints accessible', async () 
   }
 });
 
-// Run all tests
-suite.run();
+    // Run all tests
+    await suite.run();
+  } catch (error) {
+    console.error('Fatal error:', error);
+    process.exit(1);
+  }
+}
+
+runTests();

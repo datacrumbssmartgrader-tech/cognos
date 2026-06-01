@@ -11,7 +11,12 @@
 
 const { request, login, TestSuite, waitForServer } = require('./utils.js');
 
-const suite = new TestSuite('Phase E — Orders & Sessions');
+async function runTests() {
+  try {
+    // Wait for server to be ready
+    await waitForServer();
+
+    const suite = new TestSuite('Phase E — Orders & Sessions');
 
 let adminCookies, adminToken, sessionId, orderId, tableId, qrToken, customerId;
 
@@ -141,5 +146,12 @@ suite.test('GET /api/admin/customers - List all customers', async () => {
   if (!Array.isArray(response.data)) throw new Error('Should return array');
 });
 
-// Run all tests
-suite.run();
+    // Run all tests
+    await suite.run();
+  } catch (error) {
+    console.error('Fatal error:', error);
+    process.exit(1);
+  }
+}
+
+runTests();

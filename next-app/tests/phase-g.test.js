@@ -11,7 +11,12 @@
 
 const { request, login, TestSuite, waitForServer } = require('./utils.js');
 
-const suite = new TestSuite('Phase G — Alerts & Payments');
+async function runTests() {
+  try {
+    // Wait for server to be ready
+    await waitForServer();
+
+    const suite = new TestSuite('Phase G — Alerts & Payments');
 
 let adminCookies, adminToken, sessionId, orderId, alertId, paymentId;
 
@@ -170,5 +175,12 @@ suite.test('PATCH /api/admin/payments/:id - Update payment status', async () => 
   if (response.data.status !== 'confirmed') throw new Error('Status should be confirmed');
 });
 
-// Run all tests
-suite.run();
+    // Run all tests
+    await suite.run();
+  } catch (error) {
+    console.error('Fatal error:', error);
+    process.exit(1);
+  }
+}
+
+runTests();

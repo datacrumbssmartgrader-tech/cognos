@@ -10,7 +10,12 @@
 
 const { request, login, TestSuite, waitForServer } = require('./utils.js');
 
-const suite = new TestSuite('Phase D — QR Codes & Tables');
+async function runTests() {
+  try {
+    // Wait for server to be ready
+    await waitForServer();
+
+    const suite = new TestSuite('Phase D — QR Codes & Tables');
 
 let adminCookies, adminToken, tableId;
 
@@ -92,11 +97,19 @@ suite.test('PATCH /api/admin/tables/:id - Toggle table disabled', async () => {
 
 // Public QR endpoint (no auth required)
 suite.test('GET /api/tables/:qr_token - Get table by QR token (public)', async () => {
-  // First get a valid token
-  let response = await request('GET', '/api/admin/tables', {
+  // First reset table to empty status
+  let response = await request('PATCH', `/api/admin/tables/${tableId}`, {
+    body: { status: 'empty' },
     cookies: adminCookies,
   });
-  const token = response.data[0]?.qr_token;
+  if (response.status !== 200) throw new Error('Failed to reset table status');
+  
+  // Get the table's QR token again (in case it changed)
+  response = await request('GET', '/api/admin/tables', {
+    cookies: adminCookies,
+  });
+  const validTable = response.data.find(t => t.id === tableId);
+  const token = validTable?.qr_token;
   if (!token) throw new Error('No QR token found');
   
   // Access via public endpoint
@@ -111,5 +124,12 @@ suite.test('GET /api/tables/:qr_token - Invalid token returns 404', async () => 
   if (response.status !== 404) throw new Error(`Expected 404, got ${response.status}`);
 });
 
-// Run all tests
-suite.run();
+  // Run all tests
+  await suite.run();
+  } catch (error) {
+    console.error('Fatal error:', error);
+    process.exit(1);
+  }
+}
+
+runTests();

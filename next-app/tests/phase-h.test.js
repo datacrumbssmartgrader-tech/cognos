@@ -16,7 +16,12 @@
 
 const { request, login, TestSuite, waitForServer } = require('./utils.js');
 
-const suite = new TestSuite('Phase H — Real-Time SSE');
+async function runTests() {
+  try {
+    // Wait for server to be ready
+    await waitForServer();
+
+    const suite = new TestSuite('Phase H — Real-Time SSE');
 
 let adminCookies, adminToken, sessionId, orderId;
 
@@ -153,5 +158,12 @@ suite.test('Verify all event types are defined', async () => {
   if (eventTypes.length < 8) throw new Error('Should have 8+ event types defined');
 });
 
-// Run all tests
-suite.run();
+    // Run all tests
+    await suite.run();
+  } catch (error) {
+    console.error('Fatal error:', error);
+    process.exit(1);
+  }
+}
+
+runTests();
