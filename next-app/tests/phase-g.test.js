@@ -48,7 +48,7 @@ suite.test('Setup: Create session and order', async () => {
   
   // Create order
   const menuResponse = await request('GET', '/api/menu', {});
-  const itemId = menuResponse.data[0].id;
+  const itemId = menuResponse.data.items[0].id;
   
   response = await request('POST', '/api/orders', {
     body: {
@@ -66,7 +66,7 @@ suite.test('POST /api/admin/alerts - Create waiter alert', async () => {
   const response = await request('POST', '/api/admin/alerts', {
     body: {
       session_id: sessionId,
-      alert_type: 'waiter_needed',
+      alert_type: 'waiter',
       message: 'Customer needs assistance',
     },
     cookies: adminCookies,
@@ -108,7 +108,7 @@ suite.test('DELETE /api/admin/alerts/:id - Delete alert', async () => {
   const createResponse = await request('POST', '/api/admin/alerts', {
     body: {
       session_id: sessionId,
-      alert_type: 'waiter_needed',
+      alert_type: 'bill',
       message: 'To be deleted',
     },
     cookies: adminCookies,
