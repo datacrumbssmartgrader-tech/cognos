@@ -5,6 +5,7 @@ import { verifyTokenEdge } from '@/lib/auth';
 /**
  * GET /api/admin/customers
  * List all customers with visit and spending stats (admin only)
+ * Query params: search=name (searches by name)
  */
 export async function GET(request: NextRequest) {
   try {
@@ -25,21 +26,42 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get all customers with stats
-    const customers = await sql`
-      SELECT 
-        id,
-        name,
-        email,
-        phone,
-        total_sessions,
-        total_spent,
-        first_visit,
-        last_visit,
-        created_at
-      FROM customers
-      ORDER BY last_visit DESC NULLS LAST
-    `;
+    // Get search query if provided
+    const url = new URL(request.url);
+    const searchQuery = url.searchParams.get('search');
+
+    // Get all customers with stats (or filtered by search)
+    const searchPattern = `%${searchQuery}%`;
+    const customers = searchQuery
+      ? await sql`
+          SELECT 
+            id,
+            name,
+            email,
+            phone,
+            total_sessions,
+            total_spent,
+            first_visit,
+            last_visit,
+            created_at
+          FROM customers
+          WHERE name ILIKE ${searchPattern} OR phone ILIKE ${searchPattern} OR email ILIKE ${searchPattern}
+          ORDER BY last_visit DESC NULLS LAST
+        `
+      : await sql`
+          SELECT 
+            id,
+            name,
+            email,
+            phone,
+            total_sessions,
+            total_spent,
+            first_visit,
+            last_visit,
+            created_at
+          FROM customers
+          ORDER BY last_visit DESC NULLS LAST
+        `;
 
     return NextResponse.json(
       customers.map((customer) => ({
@@ -47,6 +69,7 @@ export async function GET(request: NextRequest) {
         name: customer.name,
         email: customer.email,
         phone: customer.phone,
+        visit_count: customer.total_sessions,
         total_sessions: customer.total_sessions,
         total_spent: customer.total_spent,
         first_visit: customer.first_visit,
