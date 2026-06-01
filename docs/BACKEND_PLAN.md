@@ -548,10 +548,13 @@ NEXT_PUBLIC_BASE_URL=https://yourapp.vercel.app   # used for QR code URL generat
 **Status: ✅ COMPLETE** — Database migrated, tables created, admin account ready, 34 menu items + 12 tables seeded
 
 ### Phase B — Auth
-- [ ] `npm install bcryptjs jsonwebtoken`
-- [ ] Build `POST /api/auth/login` + `GET /api/auth/me` + `POST /api/auth/logout`
-- [ ] Write `src/middleware.ts`
-- [ ] Wire admin login screen to real API
+- [x] Install `bcryptjs` + `jsonwebtoken` + `jose` packages
+- [x] Build `POST /api/auth/login` (PIN verification, JWT creation, HTTP-only cookie)
+- [x] Build `GET /api/auth/me` (Token validation, return user)
+- [x] Build `POST /api/auth/logout` (Clear session cookie)
+- [x] Create `src/middleware.ts` (JWT verification, protect /api/admin routes)
+- [x] Create `src/lib/auth.ts` (Token signing/verification helpers)
+**Status: ✅ COMPLETE** — Auth system ready. Login with PIN: 1234, JWT cookies, role-based access control
 
 ### Phase C — Menu + Cloudinary
 - [ ] `npm install cloudinary`
