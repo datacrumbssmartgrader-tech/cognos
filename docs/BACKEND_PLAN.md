@@ -561,17 +561,18 @@ Helper functions in `tests/utils.js`:
 As each phase is built, tests verify:
 
 **Phase A (Database)** — ✅ Complete
-- [ ] Database connects (no errors)
-- [ ] Admin user created with PIN 1234
-- [ ] 12 tables seeded (T01-T12)
-- [ ] 34 menu items seeded
+- [x] Database connects (no errors)
+- [x] Admin user created with PIN 1234
+- [x] 12 tables seeded (T01-T12)
+- [x] 34 menu items seeded
 
 **Phase B (Auth)** — ✅ Complete  
-- [ ] Login with correct PIN → returns user + JWT
-- [ ] Login with wrong PIN → 401 error
-- [ ] Me endpoint with valid token → returns user
-- [ ] Me endpoint without token → 401 error
-- [ ] Logout clears cookie
+- [x] Login with correct PIN → returns user + JWT
+- [x] Login with wrong PIN → 401 error
+- [x] Me endpoint with valid token → returns user
+- [x] Me endpoint without token → 401 error
+- [x] Logout clears cookie
+- [x] **Tests:** 7/7 passing (`npm run test:phase-b`)
 
 **Phase C (Menu + Cloudinary)** — In Progress
 - [ ] Upload image → returns { url, public_id }
