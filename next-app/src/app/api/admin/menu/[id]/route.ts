@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sql } from '@/lib/db';
 import { v2 as cloudinary } from 'cloudinary';
+import { eventManager } from '@/lib/events';
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -53,9 +54,19 @@ export async function PUT(
       RETURNING id, name, category, price, description, image_url, image_public_id, available, hidden, created_at
     `;
 
+    const item = result[0];
+
+    // Emit event to admin stream
+    eventManager.emitToAdmin('menu:item_updated', {
+      item_id: item.id,
+      name: item.name,
+      category: item.category,
+      price: item.price,
+    });
+
     return NextResponse.json({
       success: true,
-      item: result[0],
+      item: item,
     });
   } catch (error) {
     console.error('Error updating menu item:', error);

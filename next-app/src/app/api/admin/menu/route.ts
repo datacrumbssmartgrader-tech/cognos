@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sql } from '@/lib/db';
+import { eventManager } from '@/lib/events';
 
 export async function GET(req: NextRequest) {
   try {
@@ -41,10 +42,21 @@ export async function POST(req: NextRequest) {
       RETURNING id, name, category, price, description, image_url, image_public_id, available, hidden, created_at
     `;
 
+    const item = result[0];
+
+    // Emit event to admin stream
+    eventManager.emitToAdmin('menu:item_added', {
+      item_id: item.id,
+      name: item.name,
+      category: item.category,
+      price: item.price,
+      created_at: item.created_at,
+    });
+
     return NextResponse.json(
       {
         success: true,
-        item: result[0],
+        item: item,
       },
       { status: 201 }
     );

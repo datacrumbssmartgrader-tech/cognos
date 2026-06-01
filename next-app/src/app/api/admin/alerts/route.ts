@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sql } from '@/lib/db';
 import { verifyTokenEdge } from '@/lib/auth';
+import { eventManager } from '@/lib/events';
 
 /**
  * POST /api/admin/alerts
@@ -54,6 +55,17 @@ export async function POST(request: NextRequest) {
     `;
 
     const alert = alertResult[0];
+
+    // Emit event to admin stream
+    eventManager.emitToAdmin('alert:created', {
+      alert_id: alert.id,
+      table_id: alert.table_id,
+      session_id: alert.session_id,
+      type: alert.type,
+      status: alert.dismissed ? 'resolved' : 'pending',
+      message: alert.message,
+      created_at: alert.created_at,
+    });
 
     return NextResponse.json(
       {

@@ -50,7 +50,7 @@ suite.test('Setup: Create session and order for SSE', async () => {
   sessionId = sessionResponse.data.session_id;
   
   const menuResponse = await request('GET', '/api/menu', {});
-  const itemId = menuResponse.data[0].id;
+  const itemId = menuResponse.data.items[0].id;
   
   const orderResponse = await request('POST', '/api/orders', {
     body: {

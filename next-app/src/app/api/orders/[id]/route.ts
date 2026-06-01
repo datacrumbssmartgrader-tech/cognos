@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sql } from '@/lib/db';
 import { verifyTokenEdge } from '@/lib/auth';
+import { eventManager } from '@/lib/events';
 
 /**
  * PATCH /api/orders/:id
@@ -84,6 +85,22 @@ export async function PATCH(
     }
 
     const order = updatedOrder[0];
+
+    // Emit event to admin stream
+    eventManager.emitToAdmin('order:status_changed', {
+      order_id: order.id,
+      session_id: order.session_id,
+      status: order.status,
+      total: order.total,
+      updated_at: order.updated_at,
+    });
+
+    // Emit event to dine stream for this session
+    eventManager.emitToDine(order.session_id, 'order:status_changed', {
+      order_id: order.id,
+      status: order.status,
+      updated_at: order.updated_at,
+    });
 
     return NextResponse.json(
       {

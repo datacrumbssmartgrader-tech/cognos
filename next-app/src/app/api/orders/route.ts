@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sql } from '@/lib/db';
+import { eventManager } from '@/lib/events';
 
 /**
  * POST /api/orders
@@ -107,7 +108,25 @@ export async function POST(request: NextRequest) {
         VALUES (${order.id}::uuid, ${item.id}::uuid, ${item.name}, ${item.price}::numeric, ${item.quantity}, ${item.note})
       `;
     }
+    // Emit event to admin stream
+    eventManager.emitToAdmin('order:created', {
+      order_id: order.id,
+      session_id: order.session_id,
+      table_id: order.table_id,
+      status: order.status,
+      total: order.total,
+      items: menuItems,
+      placed_at: order.placed_at,
+    });
 
+    // Emit event to dine stream for this session
+    eventManager.emitToDine(order.session_id, 'order:created', {
+      order_id: order.id,
+      status: order.status,
+      total: order.total,
+      items: menuItems,
+      placed_at: order.placed_at,
+    });
     return NextResponse.json(
       {
         order_id: order.id,

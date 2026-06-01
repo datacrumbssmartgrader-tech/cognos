@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sql } from '@/lib/db';
+import { eventManager } from '@/lib/events';
 
 /**
  * POST /api/sessions/:session_id/payment
@@ -68,6 +69,15 @@ export async function POST(
       SET total_paid = total_paid + ${amount}::numeric
       WHERE id = ${sessionId}::uuid
     `;
+
+    // Emit event to admin stream
+    eventManager.emitToAdmin('payment:received', {
+      payment_id: payment.id,
+      session_id: payment.session_id,
+      amount: Number(payment.amount),
+      payment_method: payment.method,
+      paid_at: payment.paid_at,
+    });
 
     return NextResponse.json(
       {

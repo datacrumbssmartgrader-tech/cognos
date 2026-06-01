@@ -67,6 +67,13 @@ async function request(method, path, { body = null, headers = {}, cookies = {} }
       data = await response.json();
     } else if (contentType && contentType.includes("image/")) {
       data = await response.arrayBuffer();
+    } else if (contentType && contentType.includes("text/event-stream")) {
+      // For SSE streams, just read the first event and close
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      const chunk = await reader.read();
+      data = decoder.decode(chunk.value);
+      reader.cancel(); // Cancel the stream
     } else {
       data = await response.text();
     }
