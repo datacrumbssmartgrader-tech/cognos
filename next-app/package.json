@@ -8,10 +8,16 @@
     "start": "next start",
     "lint": "eslint",
     "seed": "node scripts/seed.js",
-    "test": "npm run test:phase-b && npm run test:phase-c",
+    "test": "npm run test:phase-b && npm run test:phase-c && npm run test:phase-d && npm run test:phase-e && npm run test:phase-f && npm run test:phase-g && npm run test:phase-h && npm run test:phase-i",
     "test:phase-a": "node tests/phase-a.test.js",
     "test:phase-b": "node tests/phase-b.test.js",
-    "test:phase-c": "node tests/phase-c.test.js"
+    "test:phase-c": "node tests/phase-c.test.js",
+    "test:phase-d": "node tests/phase-d.test.js",
+    "test:phase-e": "node tests/phase-e.test.js",
+    "test:phase-f": "node tests/phase-f.test.js",
+    "test:phase-g": "node tests/phase-g.test.js",
+    "test:phase-h": "node tests/phase-h.test.js",
+    "test:phase-i": "node tests/phase-i.test.js"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
@@ -22,8 +28,10 @@
     "jose": "^6.2.3",
     "jsonwebtoken": "^9.0.3",
     "next": "16.2.6",
+    "qrcode": "^1.5.3",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

@@ -588,41 +588,116 @@ As each phase is built, tests verify:
 - [ ] Get QR code PNG → returns image
 - [ ] Regenerate QR token → new token created, old invalidated
 - [ ] Get tables → returns all with session info
+- [ ] **Tests:** 9 tests (`npm run test:phase-d`)
 
 **Phase E (Orders + Sessions)** — Upcoming
 - [ ] Create session → customer matched/created
 - [ ] Place order → inserted in orders + order_items
 - [ ] Get orders for session → returns all
 - [ ] Update order status → status changes
+- [ ] **Tests:** 8 tests (`npm run test:phase-e`)
 
 **Phase F (Customers Tab)** — Upcoming
 - [ ] List customers → all users returned
 - [ ] Export to Excel → .xlsx file generated
+- [ ] Export orders to Excel → .xlsx file generated
+- [ ] Export payments to Excel → .xlsx file generated
+- [ ] **Tests:** 7 tests (`npm run test:phase-f`)
 
 **Phase G (Alerts + Payments)** — Upcoming
 - [ ] Create alert → alert saved
 - [ ] Record payment → payment + session updated
+- [ ] Mark alert as resolved → status changes
+- [ ] Update payment status → changes reflected
+- [ ] **Tests:** 9 tests (`npm run test:phase-g`)
 
 **Phase H (Real-Time SSE)** — Upcoming
 - [ ] Admin stream → emits events on changes
 - [ ] Dine stream → emits order updates
+- [ ] Event persistence → clients receive all events
+- [ ] **Tests:** 7 tests (`npm run test:phase-h`)
 
 **Phase I (Polish & Deploy)** — Upcoming
 - [ ] All endpoints secured behind auth
 - [ ] Error handling consistent
+- [ ] Input validation on all endpoints
+- [ ] Security headers present
 - [ ] Performance benchmarks met
+- [ ] **Tests:** 13 tests (`npm run test:phase-i`)
 
-### 14.5 Test Output Example
+### 14.5 Testing Framework Overview
+
+**Test Structure:**
+- Location: `next-app/tests/phase-*.test.js`
+- Test Utility: `next-app/tests/utils.js` (HTTP client, assertions, login helper)
+- All tests verify endpoints at runtime (not mocked)
+- Each phase has dedicated test file with comprehensive coverage
+
+**Running Tests:**
+
+```bash
+# Run all tests for a specific phase
+npm run test:phase-b
+npm run test:phase-c
+npm run test:phase-d
+npm run test:phase-e
+npm run test:phase-f
+npm run test:phase-g
+npm run test:phase-h
+npm run test:phase-i
+
+# Run all completed phases
+npm run test
+
+# Individual phase test count:
+# Phase B: 7 tests (auth endpoints)
+# Phase C: 8 tests (menu CRUD + upload)
+# Phase D: 9 tests (QR codes + tables)
+# Phase E: 8 tests (orders + sessions + customers)
+# Phase F: 7 tests (customers tab + Excel export)
+# Phase G: 9 tests (alerts + payments)
+# Phase H: 7 tests (real-time SSE)
+# Phase I: 13 tests (error handling + security + performance)
+```
+
+**Test Output Example:**
 
 ```
 ✅ Phase B — Auth Tests
+  ✓ Setup: Admin Login
   ✓ Login with PIN 1234 → user returned
   ✓ Login with wrong PIN → 401 error
   ✓ Me endpoint with token → user data
   ✓ Me endpoint without token → 401 error
   ✓ Logout → session cleared
+  ✓ JWT token contains expiry information
 
-Summary: 5/5 passed
+Summary: 7/7 PASSED ✅
+```
+
+**Test Pattern (Same for all phases):**
+1. Setup: Login as admin to get auth cookies
+2. Setup: Create test data (tables, menu items, sessions)
+3. Main tests: Verify endpoint behavior, status codes, response structure
+4. Assertions: Check data persistence, validation, error handling
+5. Summary: Color-coded output (green ✓ = pass, red ✗ = fail)
+
+**Test Utilities** (`next-app/tests/utils.js`):
+```javascript
+// HTTP request with cookie handling
+await request(method, path, { body, headers, cookies })
+
+// Quick admin login
+const { user, cookies, token } = await login('1234')
+
+// Simple test suite management
+const suite = new TestSuite('Phase X — Feature')
+suite.test('Test name', async () => { ... })
+suite.run()
+
+// Basic assertions
+expect(actual, expected)  // throws if not equal
+expectIn(actual, array)   // throws if not in array
 ```
 
 ---
