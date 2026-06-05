@@ -39,19 +39,32 @@ export async function GET(request: NextRequest) {
               controller.enqueue(data);
             } catch (error) {
               console.error('SSE send error:', error);
+              unsubscribe();
             }
           },
           close: () => {
-            controller.close();
+            try {
+              controller.close();
+            } catch (e) {}
           },
         });
 
-        // Handle client disconnect
+        // Store unsubscribe function on the controller context for fallback access
+        (controller as any)._unsubscribe = unsubscribe;
+
+        // Handle explicit client disconnect signal
         request.signal.addEventListener('abort', () => {
           unsubscribe();
-          controller.close();
+          try { controller.close(); } catch (e) {}
         });
       },
+      // 💎 CRITICAL FIX: The ultimate fallback catch for severed client pipelines
+      cancel(reason) {
+        console.log('🔌 Stream read pipeline canceled by client:', reason);
+        if ((this as any)._unsubscribe) {
+          (this as any)._unsubscribe();
+        }
+      }
     });
 
     return new NextResponse(stream, {

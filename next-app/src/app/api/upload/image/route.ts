@@ -4,9 +4,9 @@ import { verifyTokenEdge } from '@/lib/auth';
 
 // Configure Cloudinary
 cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET,
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 export async function POST(req: NextRequest) {
@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Check if Cloudinary is configured
-    if (!process.env.CLOUD_NAME || !process.env.API_KEY || !process.env.API_SECRET) {
+    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
       return NextResponse.json(
         { error: 'Cloudinary not configured' },
         { status: 400 }

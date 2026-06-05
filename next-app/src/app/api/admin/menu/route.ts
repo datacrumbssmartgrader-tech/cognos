@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
     }
 
     const items = await sql`
-      SELECT id, name, category, price, description, image_url, image_public_id, available, hidden, created_at
+      SELECT id, name, category, price, description, image_url, image_public_id, available, hidden, type, components, created_at
       FROM menu_items ORDER BY category, name
     `;
 
@@ -61,12 +61,12 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { name, category, price, description, image_url, image_public_id } = body;
+    const { name, category, price, description, image_url, image_public_id, type, components } = body;
 
     // Validate required fields
-    if (!name || !category || price === undefined || !image_url || !image_public_id) {
+    if (!name || !category || price === undefined) {
       return NextResponse.json(
-        { error: 'Missing required fields: name, category, price, image_url, image_public_id' },
+        { error: 'Missing required fields: name, category, price' },
         { status: 400 }
       );
     }
@@ -81,9 +81,9 @@ export async function POST(req: NextRequest) {
     }
 
     const result = await sql`
-      INSERT INTO menu_items (name, category, price, description, image_url, image_public_id, available, hidden)
-      VALUES (${name}, ${category}, ${priceNum}::numeric, ${description || null}, ${image_url}, ${image_public_id}, true, false)
-      RETURNING id, name, category, price, description, image_url, image_public_id, available, hidden, created_at
+      INSERT INTO menu_items (name, category, price, description, image_url, image_public_id, type, components, available, hidden)
+      VALUES (${name}, ${category}, ${priceNum}::numeric, ${description || null}, ${image_url || null}, ${image_public_id || null}, ${type || 'single'}, ${components || []}, true, false)
+      RETURNING id, name, category, price, description, image_url, image_public_id, type, components, available, hidden, created_at
     `;
 
     const item = result[0];

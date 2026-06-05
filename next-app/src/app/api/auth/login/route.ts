@@ -4,6 +4,7 @@ import { signToken } from "@/lib/auth";
 import bcrypt from "bcryptjs";
 
 export async function POST(req: NextRequest) {
+  console.log("LOGIN ROUTE HIT");
   try {
     const { pin } = await req.json();
 

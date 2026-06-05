@@ -1,11 +1,23 @@
-"use client"
-import React from "react"
+"use client";
+import React from "react";
 
-export default function AdminTopbar() {
+interface AdminTopbarProps {
+  title: string;
+  onMenuOpen: () => void;
+  user: { name: string } | null;
+}
+
+export default function AdminTopbar({ title, onMenuOpen, user }: AdminTopbarProps) {
+  const initial = user?.name?.[0]?.toUpperCase() ?? "A";
   return (
     <header id="topbar">
-      <div className="topbar-title">Welcome, Admin</div>
-      <div className="topbar-avatar">A</div>
+      <button id="btn-hamburger" aria-label="Open menu" onClick={onMenuOpen}>
+        <i className="ri-menu-line"></i>
+      </button>
+      <span className="topbar-title" id="topbar-title">{title}</span>
+      <div className="topbar-user">
+        <div className="topbar-avatar" id="topbar-avatar">{initial}</div>
+      </div>
     </header>
-  )
+  );
 }

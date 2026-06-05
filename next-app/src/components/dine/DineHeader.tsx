@@ -6,7 +6,8 @@ interface DineHeaderProps {
   searchValue: string;
   onSearchChange: (value: string) => void;
   onClearSearch: () => void;
-  showSearch?: boolean; // New optional property configuration flag
+  showSearch?: boolean; 
+  headerHeight: number; // 💎 Pull prop here
 }
 
 export default function DineHeader({
@@ -15,49 +16,61 @@ export default function DineHeader({
   searchValue,
   onSearchChange,
   onClearSearch,
-  showSearch = true, // Defaults to true if left unprovided
+  showSearch = true, 
+  headerHeight,
 }: DineHeaderProps) {
-  return (
-    <div className="menu-top">
-      <div style={{ height: "15dvh" }} />
+  const maxHeight = typeof window !== "undefined" ? window.innerHeight * 0.5 : 380;
+  
+  // Calculate a proportional mix factor value between 0.00 and 1.00
+  const factor = Math.max(0, Math.min(1, (headerHeight - 64) / (maxHeight - 64)));
 
-      <div>
+  return (
+    <div 
+      className="menu-top" 
+      style={{ 
+        height: `${headerHeight}px`,
+        minHeight: `${headerHeight}px`,
+        maxHeight: `${headerHeight}px`
+      }}
+    >
+      {/* Spacer fades down proportionally */}
+      <div style={{ height: `${factor * 12}dvh` }} />
+
+      <div className="w-full">
         <header className="app-header">
           <div className="header-left">
             <span className="header-logo">ROOSTER&apos;S DEN</span>
             <span className="header-table">{tableNumber}</span>
           </div>
-
           <div className="header-right">
-            <button
-              className="icon-btn btn-call-waiter-header"
-              aria-label="Call Waiter"
-              onClick={onCallWaiter}
-            >
+            <button className="icon-btn btn-call-waiter-header" onClick={onCallWaiter}>
               <i className="ri-service-line" />
             </button>
           </div>
         </header>
 
-        {/* Conditionally reveal or hide search inputs securely based on active tab view context */}
         {showSearch && (
-          <div className="search-wrap">
-            <i className="ri-search-line search-icon" />
-            <input
-              type="text"
-              className="search-input"
-              placeholder="Search dishes…"
-              autoComplete="off"
-              value={searchValue}
-              onChange={(e) => onSearchChange(e.target.value)}
-            />
-            <button
-              className="search-clear"
-              hidden={!searchValue}
-              onClick={onClearSearch}
-            >
-              <i className="ri-close-line" />
-            </button>
+          /* Smoothly transitions opacity, scaling and height parameters with your finger */
+          <div 
+            style={{
+              opacity: factor,
+              maxHeight: `${factor * 60}px`,
+              transform: `scaleY(${factor})`,
+              transformOrigin: "bottom",
+              pointerEvents: factor < 0.15 ? "none" : "auto",
+              overflow: "hidden"
+            }}
+          >
+            <div className="search-wrap">
+              <i className="ri-search-line search-icon" />
+              <input
+                type="text"
+                className="search-input"
+                placeholder="Search dishes…"
+                value={searchValue}
+                onChange={(e) => onSearchChange(e.target.value)}
+              />
+            </div>
           </div>
         )}
       </div>

@@ -396,6 +396,15 @@
   @apply text-[.75rem] text-[#c0392b] font-ui mt-[.4rem] pt-[.4rem] border-t border-[var(--clr-border-l)] flex items-center gap-[.3rem];
 }
 
+.dynamic-search {
+  width: 100%;
+}
+
+@media (min-width: 600px) {
+  .dynamic-search {
+    width: 240px; /* Aligns comfortably alongside the table/status selects on desktop */
+  }
+}
 /* ═══════════════════════════════════════════════
    PAYMENTS
 ════════════════════════════════════════════════ */
@@ -461,3 +470,81 @@
 [hidden] { @apply hidden!; }
 .owner-only { @apply hidden; }
 .owner-only.visible { @apply flex; }
+
+
+/* ═══════════════════════════════════════════════
+   UNIFIED CONTROLS GRID (SEARCH, DROPDOWNS, DATES)
+════════════════════════════════════════════════ */
+
+.order-history-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end; /* Keeps dates text labels and inputs perfectly level */
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+/* Individual Filter Framework Core */
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 100%; /* Default mobile behavior: Stack full-width */
+}
+
+/* Standard styling variables across inputs */
+.filter-input, .filter-select, .filter-date {
+  height: 40px;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Date Layout System */
+.date-picker-group {
+  display: flex;
+  flex-direction: row !important; /* Forces Start and End dates side-by-side */
+  gap: 8px;
+}
+
+.date-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.date-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+}
+
+/* Desktop Sizing Layout Tweaks */
+@media (min-width: 768px) {
+  .filter-group {
+    flex: initial; /* Un-forces mobile full-width scaling */
+  }
+
+  /* Search input scales a bit wider than dropdowns for readability */
+  .filter-search-group {
+    width: 260px;
+  }
+
+  /* Tables and Status values remain perfectly uniform */
+  .order-history-filters .filter-group:nth-child(2),
+  .order-history-filters .filter-group:nth-child(3) {
+    width: 160px;
+  }
+
+  /* Date selector box container width layout */
+  .date-picker-group {
+    width: 320px;
+  }
+}

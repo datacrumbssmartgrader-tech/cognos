@@ -29,16 +29,18 @@ export async function GET(request: NextRequest) {
     // Get all tables with session info
     const tables = await sql`
       SELECT 
-        id,
-        label,
-        status,
-        qr_token,
-        active_session_id,
-        alert_active,
-        qr_regenerated_at,
-        created_at
-      FROM restaurant_tables
-      ORDER BY id ASC
+        rt.id,
+        rt.label,
+        rt.status,
+        rt.qr_token,
+        rt.active_session_id,
+        rt.alert_active,
+        rt.qr_regenerated_at,
+        rt.created_at,
+        COALESCE(s.total_paid, 0) as session_total_paid
+      FROM restaurant_tables rt
+      LEFT JOIN sessions s ON rt.active_session_id = s.id
+      ORDER BY rt.id ASC
     `;
 
     // Transform table IDs to numbers for response
@@ -52,6 +54,7 @@ export async function GET(request: NextRequest) {
       alert_active: table.alert_active,
       qr_regenerated_at: table.qr_regenerated_at,
       created_at: table.created_at,
+      session_total_paid: Number(table.session_total_paid || 0),
     }));
 
     return NextResponse.json(formattedTables, { status: 200 });

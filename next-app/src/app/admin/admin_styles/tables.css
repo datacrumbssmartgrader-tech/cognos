@@ -2,7 +2,7 @@
    TABLES
 ════════════════════════════════════════════════ */
 .tables-grid {
-  @apply grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-4 content-start;
+  @apply grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4 content-start;
 }
 .table-card {
   @apply bg-white rounded-2xl border-2 border-[var(--clr-border-l)] py-[1.1rem] px-4 cursor-pointer relative;

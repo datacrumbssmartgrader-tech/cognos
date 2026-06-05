@@ -131,7 +131,7 @@
 .cart-item-price {
   @apply font-ui text-[.83rem] font-bold text-primary shrink-0 self-center;
 }
-.cart-divider { @apply h-[1px] bg-border; }
+.cart-divider { @apply h-[1px] bg-border my-4; }
 .cart-subtotal-row {
   @apply flex justify-between font-ui text-[.92rem] font-bold text-text;
 }
@@ -250,8 +250,7 @@
 .cart-screen-empty i { @apply text-[3rem] block mb-[.75rem]; }
 .cart-screen-empty p { @apply mb-[1.25rem] text-[.9rem]; }
 #cartScreenBody {
-  @apply flex flex-col gap-[.75rem];
-}
+@apply flex flex-col gap-[1.25rem];}
 
 /* ═══════════════════════════════════════════════
    BILL ROUNDS

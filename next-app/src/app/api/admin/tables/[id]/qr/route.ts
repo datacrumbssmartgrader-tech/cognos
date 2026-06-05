@@ -48,19 +48,17 @@ export async function GET(
 
     const table = tables[0];
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    const qrUrl = `${baseUrl}/dine?table=${table.qr_token}`;
-
+const qrUrl = `${baseUrl}/dine?table=${tableId}&token=${table.qr_token}`;
     // Generate QR code as PNG buffer
     const qrCodeBuffer = await QRCode.toBuffer(qrUrl, {
-      type: 'image/png',
-      quality: 0.95,
+      type: 'png',
       width: 300,
       margin: 1,
       errorCorrectionLevel: 'H',
     });
 
-    // Return PNG image
-    return new NextResponse(qrCodeBuffer, {
+// Return PNG image
+    return new NextResponse(new Uint8Array(qrCodeBuffer), {
       status: 200,
       headers: {
         'Content-Type': 'image/png',

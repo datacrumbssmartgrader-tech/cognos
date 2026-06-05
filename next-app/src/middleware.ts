@@ -4,7 +4,18 @@ import { verifyTokenEdge } from "@/lib/auth";
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  // Protect /api/admin/* routes
+  if (pathname === '/') {
+    console.log('🕵️‍♂️ Root hit! User-Agent:', request.headers.get('user-agent'));
+  }
+
+  // ✅ Allow dine app to POST alerts without admin auth.
+  // The dine user has no admin cookie — their session_id is used for DB-level auth instead.
+  if (pathname === "/api/admin/alerts" && request.method === "POST") {
+    console.log('[middleware] Allowing unauthenticated POST /api/admin/alerts (dine app)');
+    return NextResponse.next();
+  }
+
+  // Protect all other /api/admin/* routes
   if (pathname.startsWith("/api/admin")) {
     const token = request.cookies.get("rw_session")?.value;
 
@@ -24,8 +35,6 @@ export async function middleware(request: NextRequest) {
       );
     }
 
-    // Optional: Check role for specific routes
-    // For now, just verify admin role exists (we can extend this later)
     if (payload.role !== "admin" && payload.role !== "user") {
       return NextResponse.json(
         { error: "Unauthorized - Invalid role" },
@@ -33,16 +42,13 @@ export async function middleware(request: NextRequest) {
       );
     }
 
-    // Attach user info to request headers (can be accessed in route handlers)
     const requestHeaders = new Headers(request.headers);
     requestHeaders.set("x-user-id", payload.id);
     requestHeaders.set("x-user-name", payload.name);
     requestHeaders.set("x-user-role", payload.role);
 
     return NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
+      request: { headers: requestHeaders },
     });
   }
 

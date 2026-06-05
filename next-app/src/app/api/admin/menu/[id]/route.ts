@@ -34,12 +34,12 @@ export async function PUT(
 
     const { id: itemId } = await params;
     const body = await req.json();
-    const { name, category, price, description, image_url, image_public_id } = body;
+    const { name, category, price, description, image_url, image_public_id, type, components } = body;
 
     // Validate required fields
-    if (!name || !category || price === undefined || !image_url || !image_public_id) {
+    if (!name || !category || price === undefined) {
       return NextResponse.json(
-        { error: 'Missing required fields: name, category, price, image_url, image_public_id' },
+        { error: 'Missing required fields: name, category, price' },
         { status: 400 }
       );
     }
@@ -65,8 +65,8 @@ export async function PUT(
       );
     }
 
-    // Delete old image if image_public_id changed
-    if (current[0].image_public_id !== image_public_id) {
+    // Delete old image if image_public_id changed and a new one was provided
+    if (image_public_id && current[0].image_public_id && current[0].image_public_id !== image_public_id) {
       try {
         await cloudinary.api.delete_resources([current[0].image_public_id]);
       } catch (err) {
@@ -76,9 +76,9 @@ export async function PUT(
 
     const result = await sql`
       UPDATE menu_items 
-      SET name = ${name}, category = ${category}, price = ${priceNum}::numeric, description = ${description || null}, image_url = ${image_url}, image_public_id = ${image_public_id}
+      SET name = ${name}, category = ${category}, price = ${priceNum}::numeric, description = ${description || null}, image_url = ${image_url || null}, image_public_id = ${image_public_id || null}, type = ${type || 'single'}, components = ${components || []}::text[]
       WHERE id = ${itemId}
-      RETURNING id, name, category, price, description, image_url, image_public_id, available, hidden, created_at
+      RETURNING id, name, category, price, description, image_url, image_public_id, type, components, available, hidden, created_at
     `;
 
     const item = result[0];

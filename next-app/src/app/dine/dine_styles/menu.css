@@ -5,6 +5,8 @@
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
+  position: relative;
+  z-index: 10;
 }
 
 /* ═══════════════════════════════════════════════
@@ -16,15 +18,36 @@
   background-color: #1C1018;
   background-image: url('/bg.jpeg');
   background-size: cover;
-  background-position: center;
+  background-position: center 35%;
   overflow: hidden;
-  height: 75vh;
-  min-height: 200px;
-  max-height: 350px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   z-index: 2;
+  /* 💎 REMOVED transition rules so height modifications follow touch tracks instantly */
+}
+
+/* Remove old snap helper class targets entirely since inline math handles states natively */
+.menu-top.menu-top-shrunk { display: none; }
+.search-container-anim { display: none; }
+
+/* Collapses and fades out the search bar inputs during the scroll action */
+.search-container-anim.search-shrunk {
+  opacity: 0;
+  max-height: 0px !important;
+  padding: 0 !important;
+  overflow: hidden;
+  transform: scaleY(0);
+  pointer-events: none;
+}
+
+/* Realigns header spacing alignments uniformly in compressed layout */
+.menu-top.menu-top-shrunk .app-header {
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+  height: 64px;
+  display: flex;
+  align-items: center;
 }
 
 /* Header overrides inside dark section */

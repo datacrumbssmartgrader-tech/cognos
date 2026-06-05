@@ -108,4 +108,12 @@ class EventManager {
   }
 }
 
-export const eventManager = new EventManager();
+declare global {
+  var __eventManager: EventManager | undefined;
+}
+
+export const eventManager = global.__eventManager || new EventManager();
+
+if (process.env.NODE_ENV !== 'production') {
+  global.__eventManager = eventManager;
+}

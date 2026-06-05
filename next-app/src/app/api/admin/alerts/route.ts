@@ -5,77 +5,69 @@ import { eventManager } from '@/lib/events';
 
 /**
  * POST /api/admin/alerts
- * Create a waiter alert (admin only)
+ * Create a waiter alert (called by dine app — no admin auth needed)
  */
 export async function POST(request: NextRequest) {
   try {
-    // Verify authentication
-    const token = request.headers.get('cookie')?.split('rw_session=')[1]?.split(';')[0];
-    if (!token) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
-
-    const payload = await verifyTokenEdge(token);
-    if (!payload) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
-
     const body = await request.json();
-    const { session_id, alert_type, message } = body;
+    // Support both field naming conventions:
+    // - dine app sends:  { table_id, session_id, type, message }
+    const table_id   = body.table_id   || null;
+    const session_id = body.session_id || null;
+    const alert_type = (body.alert_type || body.type) as string | undefined;
+    const message    = body.message    || null;
 
-    if (!session_id || !alert_type) {
-      return NextResponse.json(
-        { error: 'Missing required fields: session_id, alert_type' },
-        { status: 400 }
-      );
+    if (!table_id) {
+      return NextResponse.json({ error: 'Missing required field: table_id' }, { status: 400 });
+    }
+    if (!alert_type) {
+      return NextResponse.json({ error: 'Missing required field: type' }, { status: 400 });
+    }
+    if (!session_id) {
+      return NextResponse.json({ error: 'Missing required field: session_id' }, { status: 400 });
     }
 
-    // Get session and table info
-    const sessionResult = await sql`
-      SELECT id, table_id FROM sessions WHERE id = ${session_id}::uuid
+    // Fetch table label for display (restaurant_tables.id is TEXT, no cast needed)
+    const tableResult = await sql`
+      SELECT label FROM restaurant_tables WHERE id = ${table_id}
     `;
+    const tableLabel = tableResult[0]?.label || table_id;
 
-    if (sessionResult.length === 0) {
-      return NextResponse.json({ error: 'Session not found' }, { status: 404 });
-    }
-
-    const session = sessionResult[0];
-
-    // Create alert
+    // Insert alert — table_id is TEXT, session_id is UUID (both NOT NULL)
     const alertResult = await sql`
       INSERT INTO waiter_alerts (table_id, session_id, type, message, dismissed)
-      VALUES (${session.table_id}, ${session_id}::uuid, ${alert_type}::alert_type, ${message || null}, false)
-      RETURNING id, table_id, session_id, type, message, dismissed, created_at
+      VALUES (
+        ${table_id},
+        ${session_id}::uuid,
+        ${alert_type}::alert_type,
+        ${message},
+        false
+      )
+      RETURNING id, table_id, type, message, dismissed, created_at
     `;
 
     const alert = alertResult[0];
 
-    // Emit event to admin stream
+    // Emit SSE event to admin dashboard
     eventManager.emitToAdmin('alert:created', {
-      alert_id: alert.id,
-      table_id: alert.table_id,
-      session_id: alert.session_id,
-      type: alert.type,
-      status: alert.dismissed ? 'resolved' : 'pending',
-      message: alert.message,
-      created_at: alert.created_at,
+      id:          alert.id,
+      table_id:    alert.table_id,
+      table_label: tableLabel,
+      type:        alert.type,
+      status:      'pending',
+      message:     alert.message,
+      created_at:  alert.created_at,
     });
 
     return NextResponse.json(
       {
-        alert_id: alert.id,
-        table_id: alert.table_id,
-        session_id: alert.session_id,
-        type: alert.type,
-        status: alert.dismissed ? 'resolved' : 'pending',
-        message: alert.message,
-        created_at: alert.created_at,
+        id:          alert.id,
+        table_id:    alert.table_id,
+        table_label: tableLabel,
+        type:        alert.type,
+        status:      'pending',
+        message:     alert.message,
+        created_at:  alert.created_at,
       },
       { status: 201 }
     );
@@ -87,6 +79,7 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
 
 /**
  * GET /api/admin/alerts
@@ -111,30 +104,32 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get active alerts
+    // Get active alerts joined with table label
     const alerts = await sql`
       SELECT 
-        id, 
-        table_id, 
-        session_id, 
-        type, 
-        message, 
-        dismissed, 
-        created_at
-      FROM waiter_alerts
-      WHERE dismissed = false
-      ORDER BY created_at DESC
+        wa.id,
+        wa.table_id,
+        rt.label as table_label,
+        wa.type,
+        wa.message,
+        wa.dismissed,
+        wa.created_at
+      FROM waiter_alerts wa
+      LEFT JOIN restaurant_tables rt ON wa.table_id = rt.id
+      WHERE wa.dismissed = false
+      ORDER BY wa.created_at DESC
     `;
 
     return NextResponse.json(
       alerts.map((alert: any) => ({
-        alert_id: alert.id,
-        table_id: alert.table_id,
-        session_id: alert.session_id,
-        type: alert.type,
-        status: alert.dismissed ? 'resolved' : 'pending',
-        message: alert.message,
-        created_at: alert.created_at,
+        id:          alert.id,
+        table_id:    alert.table_id,
+        table_label: alert.table_label || alert.table_id,
+        type:        alert.type,
+        status:      alert.dismissed ? 'resolved' : 'pending',
+        resolved:    alert.dismissed,
+        message:     alert.message,
+        created_at:  alert.created_at,
       })),
       { status: 200 }
     );
