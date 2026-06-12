@@ -7,18 +7,40 @@ interface UserDetailsScreenProps {
   onSubmit: (details: { name: string; email: string; phone: string }) => void;
 }
 
+const NAME_RE = /^[a-zA-Z\s'\-]{2,50}$/;
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const PHONE_RE = /^\+?[\d\s\-()+]{7,20}$/;
+
 export default function UserDetailsScreen({ onSubmit }: UserDetailsScreenProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState<{ name?: string; email?: string; phone?: string }>({});
 
   const handleSubmit = () => {
-    if (!name.trim() || !phone.trim()) {
-      setError("Name and Phone are required.");
+    const errs: { name?: string; email?: string; phone?: string } = {};
+
+    if (!name.trim()) {
+      errs.name = "Name is required.";
+    } else if (!NAME_RE.test(name.trim())) {
+      errs.name = "Enter a valid name (letters only, 2–50 characters).";
+    }
+
+    if (email.trim() && !EMAIL_RE.test(email.trim())) {
+      errs.email = "Enter a valid email address.";
+    }
+
+    if (!phone.trim()) {
+      errs.phone = "Phone number is required.";
+    } else if (!PHONE_RE.test(phone.trim())) {
+      errs.phone = "Enter a valid phone number (digits, spaces, +, -, parentheses).";
+    }
+
+    if (Object.keys(errs).length > 0) {
+      setErrors(errs);
       return;
     }
-    setError("");
+    setErrors({});
     onSubmit({ name: name.trim(), email: email.trim(), phone: phone.trim() });
   };
 
@@ -39,6 +61,7 @@ export default function UserDetailsScreen({ onSubmit }: UserDetailsScreenProps) 
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
+            {errors.name && <div className={styles.error}>{errors.name}</div>}
           </div>
 
           <div className={styles.inputGroup}>
@@ -51,6 +74,7 @@ export default function UserDetailsScreen({ onSubmit }: UserDetailsScreenProps) 
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
+            {errors.email && <div className={styles.error}>{errors.email}</div>}
           </div>
 
           <div className={styles.inputGroup}>
@@ -63,9 +87,8 @@ export default function UserDetailsScreen({ onSubmit }: UserDetailsScreenProps) 
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
             />
+            {errors.phone && <div className={styles.error}>{errors.phone}</div>}
           </div>
-
-          {error && <div className={styles.error}>{error}</div>}
 
           <button onClick={handleSubmit} className={styles.button}>
             Continue
