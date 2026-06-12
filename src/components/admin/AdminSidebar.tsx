@@ -36,7 +36,7 @@ export default function AdminSidebar({
   return (
     <aside id="sidebar" className={sidebarOpen ? "open" : ""}>
       <div className="sidebar-brand">
-        <span className="sb-logo-en">AI-RESTAURANT</span>
+        <span className="sb-logo-en">COGNOS</span>
       </div>
 
       <nav className="sidebar-nav" id="sidebar-nav">

@@ -1,4 +1,4 @@
-# AI-Restaurant — Integration Status
+# COGNOS — Integration Status
 
 **Backend:** 74/74 tests passing ✅  
 **Frontend:** All integration gaps resolved ✅

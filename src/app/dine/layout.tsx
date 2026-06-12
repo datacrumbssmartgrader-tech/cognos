@@ -1,7 +1,7 @@
 import "./dine.css";
 
 export const metadata = {
-  title: "Dine — AI-Restaurant",
+  title: "Dine — COGNOS",
 };
 
 export default function DineLayout({ children }: { children: React.ReactNode }) {

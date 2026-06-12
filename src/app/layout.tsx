@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "AI-Restaurant",
-  description: "AI-Restaurant — Smart QR-based in-restaurant ordering system.",
+  title: "COGNOS",
+  description: "COGNOS — Smart QR-based in-restaurant ordering system.",
 };
 
 export default function RootLayout({

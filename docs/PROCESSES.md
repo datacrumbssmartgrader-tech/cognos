@@ -1,4 +1,4 @@
-# AI-Restaurant — Process Documentation
+# COGNOS — Process Documentation
 
 Detailed step-by-step breakdown of every major flow in the system.
 

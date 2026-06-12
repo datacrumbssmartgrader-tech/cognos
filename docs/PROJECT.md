@@ -1,4 +1,4 @@
-# AI-Restaurant — Project Overview
+# COGNOS — Project Overview
 
 ## What It Is
 
@@ -27,7 +27,7 @@ A full-stack QR-based in-restaurant ordering system. Customers scan a QR code at
 next-app/
 ├── src/
 │   ├── app/
-│   │   ├── layout.tsx              Root layout (title: AI-Restaurant, fonts, CSS)
+│   │   ├── layout.tsx              Root layout (title: COGNOS, fonts, CSS)
 │   │   ├── page.tsx                Root → redirects to /admin
 │   │   ├── admin/
 │   │   │   ├── layout.tsx          Admin layout (imports admin.css)

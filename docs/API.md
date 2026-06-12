@@ -1,4 +1,4 @@
-# AI-Restaurant — API Reference
+# COGNOS — API Reference
 
 All routes are under `/api/`. Public routes require no auth. Protected routes require a valid `rw_session` JWT cookie (set by `/api/auth/login`).
 

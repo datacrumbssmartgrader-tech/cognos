@@ -1,4 +1,4 @@
-# AI-Restaurant — Bug Fixes & UI Improvements (Round 2)
+# COGNOS — Bug Fixes & UI Improvements (Round 2)
 
 > **Context for fresh sessions:** This project is a Next.js 16 full-stack QR ordering app. Admin dashboard at `/admin`, customer dine page at `/dine`. Real-time via SSE. All previous refactoring is complete (74/74 tests pass). This document covers issues found during manual testing plus per-order payment tracking work.
 
