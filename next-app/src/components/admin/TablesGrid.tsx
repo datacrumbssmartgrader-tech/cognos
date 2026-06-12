@@ -193,7 +193,7 @@ export default function TablesGrid({ orders = [], refreshTick = 0 }: TablesGridP
                       style={{
                         position: "absolute",
                         top: "8px",
-                        left: "8px",
+                        right: "8px",
                         width: "22px",
                         height: "22px",
                         borderRadius: "50%",

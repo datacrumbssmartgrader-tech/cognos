@@ -62,7 +62,7 @@ const qrUrl = `${baseUrl}/api/scan/${table.qr_token}`;
       status: 200,
       headers: {
         'Content-Type': 'image/png',
-        'Cache-Control': 'public, max-age=3600',
+        'Cache-Control': 'no-store',
         'Content-Disposition': `inline; filename="qr-${tableId}.png"`,
       },
     });
