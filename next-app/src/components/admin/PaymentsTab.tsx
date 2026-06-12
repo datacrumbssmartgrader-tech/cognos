@@ -6,6 +6,7 @@ import type { LiveOrder } from "./LiveOrders";
 
 interface PaymentsTabProps {
   orders?: LiveOrder[];
+  refreshTick?: number;
 }
 
 function formatDateTime(iso: string) {
@@ -118,7 +119,7 @@ function PayGraphChart({ orders, dateFrom, dateTo }: { orders: LiveOrder[], date
   );
 }
 
-export default function PaymentsTab({ orders = [] }: PaymentsTabProps) {
+export default function PaymentsTab({ orders = [], refreshTick = 0 }: PaymentsTabProps) {
   const [payments, setPayments] = useState<Payment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [dateFrom, setDateFrom] = useState("");
@@ -137,7 +138,7 @@ export default function PaymentsTab({ orders = [] }: PaymentsTabProps) {
         status: p.status === 'confirmed' ? 'received' : p.status,
       })));
     }).finally(() => setIsLoading(false));
-  }, []);
+  }, [refreshTick]);
 
   const displayedPayments = filterByDate(payments, dateFrom, dateTo);
   const received = displayedPayments.filter((p) => p.status === "received");
@@ -176,8 +177,11 @@ export default function PaymentsTab({ orders = [] }: PaymentsTabProps) {
     }
   };
 
-  const handleExport = async () => {
-    await api.exportPayments();
+  const handleExport = () => {
+    const params = new URLSearchParams();
+    if (dateFrom) params.set('from', dateFrom);
+    if (dateTo) params.set('to', dateTo);
+    window.location.href = `/api/admin/payments/export/excel${params.toString() ? `?${params}` : ''}`;
   };
 
   return (
@@ -217,6 +221,19 @@ export default function PaymentsTab({ orders = [] }: PaymentsTabProps) {
         <div>
           <h1 className="section-title">Items Sold</h1>
           <p className="section-sub">Top 3 sold items this period</p>
+        </div>
+        <div className="section-actions">
+          <button
+            className="btn-primary"
+            onClick={() => {
+              const params = new URLSearchParams();
+              if (dateFrom) params.set('from', dateFrom);
+              if (dateTo) params.set('to', dateTo);
+              window.location.href = `/api/admin/orders/items-sold/export/excel${params.toString() ? `?${params}` : ''}`;
+            }}
+          >
+            <i className="ri-file-excel-line"></i> Export
+          </button>
         </div>
       </div>
 

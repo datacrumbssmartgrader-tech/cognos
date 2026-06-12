@@ -1,7 +1,7 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import * as api from "@/lib/api";
-import type { Table } from "@/lib/api";
+import type { Table, SessionPayment } from "@/lib/api";
 import type { LiveOrder } from "./LiveOrders";
 
 function formatTimeAgo(isoStr: string) {
@@ -24,17 +24,28 @@ function sessionDuration(isoStr: string) {
 
 interface TablesGridProps {
   orders?: LiveOrder[];
+  refreshTick?: number;
 }
 
-export default function TablesGrid({ orders = [] }: TablesGridProps) {
-  const [tables, setTables]           = useState<Table[]>([]);
-  const [isLoading, setIsLoading]     = useState(true);
-  const [billTable, setBillTable]     = useState<Table | null>(null);
-  const [qrTable,   setQrTable]       = useState<Table | null>(null);
+export default function TablesGrid({ orders = [], refreshTick = 0 }: TablesGridProps) {
+  const [tables, setTables]             = useState<Table[]>([]);
+  const [isLoading, setIsLoading]       = useState(true);
+  const [billTable, setBillTable]       = useState<Table | null>(null);
+  const [qrTable,   setQrTable]         = useState<Table | null>(null);
   const [processingId, setProcessingId] = useState<string | null>(null);
-  const [qrLoading, setQrLoading]     = useState(false);
-  // Cache-bust key: increment to force <img> reload after regeneration
-  const [qrBust, setQrBust]           = useState(0);
+  const [qrLoading, setQrLoading]       = useState(false);
+  const [qrBust, setQrBust]             = useState(0);
+  const [billPayments, setBillPayments] = useState<SessionPayment[]>([]);
+  const [addLoading, setAddLoading]     = useState(false);
+  const [removeLoading, setRemoveLoading] = useState(false);
+  const [countError, setCountError]     = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!billTable?.active_session_id) { setBillPayments([]); return; }
+    api.getSessionPayments(billTable.active_session_id).then((res) => {
+      setBillPayments(res.status === 200 && res.data ? res.data : []);
+    });
+  }, [billTable?.active_session_id]);
 
   useEffect(() => {
     api.fetchAdminTables().then((res) => {
@@ -42,7 +53,14 @@ export default function TablesGrid({ orders = [] }: TablesGridProps) {
       const list: Table[] = Array.isArray(data) ? data : (data?.tables ?? data?.items ?? []);
       setTables(list);
     }).finally(() => setIsLoading(false));
-  }, []);
+  }, [refreshTick]);
+
+  const refreshTables = async () => {
+    const r = await api.fetchAdminTables();
+    const data = r.data as any;
+    const list: Table[] = Array.isArray(data) ? data : (data?.tables ?? data?.items ?? []);
+    setTables(list);
+  };
 
   const updateStatus = async (id: string, status: string) => {
     setProcessingId(id);
@@ -56,18 +74,28 @@ export default function TablesGrid({ orders = [] }: TablesGridProps) {
     }
   };
 
+  const handleReset = async (id: string) => {
+    setProcessingId(id);
+    try {
+      const res = await api.resetAdminTable(id);
+      if (res.status === 200) {
+        setTables((prev) => prev.map((t) => t.id === id ? { ...t, status: "empty", active_session_id: undefined } : t));
+        setBillTable(null);
+      }
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
   const handleRegenerateQR = async (tableId: string) => {
     if (!window.confirm("Regenerating the QR code will invalidate the current one. Customers with the old QR won't be able to scan in. Continue?")) return;
     setQrLoading(true);
     try {
       const res = await api.regenerateAdminTableQR(tableId);
       if (res.status === 200) {
-        // Update qr_token in local state
         const newToken = (res.data as any).qr_token;
         setTables((prev) => prev.map((t) => t.id === tableId ? { ...t, qr_token: newToken } : t));
-        // Also update qrTable so modal reflects new token
         setQrTable((prev) => prev?.id === tableId ? { ...prev, qr_token: newToken } : prev);
-        // Force <img> reload by bumping bust key
         setQrBust((n) => n + 1);
       }
     } finally {
@@ -75,14 +103,46 @@ export default function TablesGrid({ orders = [] }: TablesGridProps) {
     }
   };
 
-  const tableOrders = (tableId: string) =>
-    orders.filter((o) => o.table_number === tableId && o.status !== "cancelled");
+  const handleAddTable = async () => {
+    setAddLoading(true);
+    setCountError(null);
+    try {
+      const res = await api.setTableCount(tables.length + 1);
+      if (res.status === 200) {
+        await refreshTables();
+      } else {
+        setCountError((res as any).error || 'Failed to add table');
+      }
+    } finally {
+      setAddLoading(false);
+    }
+  };
 
-  const tableTotal = (tableId: string) =>
-    tableOrders(tableId).reduce((sum, o) => sum + o.total, 0);
+  const handleRemoveTable = async () => {
+    setRemoveLoading(true);
+    setCountError(null);
+    try {
+      const res = await api.setTableCount(tables.length - 1);
+      if (res.status === 200) {
+        await refreshTables();
+      } else {
+        setCountError((res as any).error || 'Failed to remove table');
+      }
+    } finally {
+      setRemoveLoading(false);
+    }
+  };
 
-  const firstOrderTime = (tableId: string) => {
-    const os = tableOrders(tableId);
+  const tableOrders = (tableId: string, sessionId: string | null) =>
+    sessionId
+      ? orders.filter((o) => o.table_number === tableId && o.session_id === sessionId && o.status !== "cancelled")
+      : [];
+
+  const tableTotal = (tableId: string, sessionId: string | null) =>
+    tableOrders(tableId, sessionId).reduce((sum, o) => sum + o.total, 0);
+
+  const firstOrderTime = (tableId: string, sessionId: string | null) => {
+    const os = tableOrders(tableId, sessionId);
     if (!os.length) return null;
     return os.reduce((earliest, o) =>
       new Date(o.created_at) < new Date(earliest.created_at) ? o : earliest
@@ -105,115 +165,193 @@ export default function TablesGrid({ orders = [] }: TablesGridProps) {
           Loading tables…
         </div>
       ) : (
-        <div className="tables-grid" id="tables-grid">
-          {tables.length === 0 ? (
-            <div style={{ color: "var(--clr-muted)", padding: "2rem" }}>No tables found</div>
-          ) : tables.map((t) => {
-            const isActive   = t.status === "active";
-            const isDisabled = t.status === "disabled";
-            const orderCount = tableOrders(t.label).length;
-            const total      = tableTotal(t.label);
-            const startTime  = firstOrderTime(t.label);
-            const isPaid     = isActive && total > 0 && (t.session_total_paid || 0) >= total;
+        <>
+          <div className="tables-grid" id="tables-grid">
+            {tables.length === 0 ? null : tables.map((t, idx) => {
+              const isActive   = t.status === "active";
+              const isDisabled = t.status === "disabled";
+              const isLast     = idx === tables.length - 1;
+              const orderCount = tableOrders(t.label, t.active_session_id ?? null).length;
+              const total      = tableTotal(t.label, t.active_session_id ?? null);
+              const startTime  = firstOrderTime(t.label, t.active_session_id ?? null);
+              const isPaid     = isActive && total > 0 && (t.session_total_paid || 0) >= total;
 
-            return (
-              <div
-                key={t.id}
-                className={`table-card ${isActive ? "active-table" : ""} ${isDisabled ? "disabled-table" : ""}`}
-              >
-                {t.alert_active && <div className="table-alert-dot"></div>}
-                {/* ── Header row: table ID + QR button ───────── */}
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: ".4rem" }}>
-                  <div className="table-id">{t.id}</div>
-                  <button
-                    title="View QR Code"
-                    onClick={() => { setQrTable(t); setQrBust((n) => n + 1); }}
-                    style={{
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                      padding: "2px 4px",
-                      borderRadius: "6px",
-                      color: "var(--clr-muted)",
-                      fontSize: "1rem",
-                      lineHeight: 1,
-                      transition: "color var(--trans)",
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = "var(--clr-primary)")}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = "var(--clr-muted)")}
-                  >
-                    <i className="ri-qr-code-line"></i>
-                  </button>
-                </div>
+              return (
+                <div
+                  key={t.id}
+                  className={`table-card ${isActive ? "active-table" : ""} ${isDisabled ? "disabled-table" : ""}`}
+                  style={{ position: "relative" }}
+                >
+                  {t.alert_active && <div className="table-alert-dot"></div>}
 
-                <div className="table-status-row">
-                  <span className={`badge badge-table-${t.status}`}>
-                    {t.status.charAt(0).toUpperCase() + t.status.slice(1)}
-                  </span>
-                  {isPaid && <span className="badge badge-paid">Paid</span>}
-                </div>
-
-                <div className="table-meta">
-                  {isActive && startTime ? (
-                    <>
-                      <div className="table-meta-row">
-                        <i className="ri-time-line"></i>
-                        {sessionDuration(startTime)}
-                      </div>
-                      <div className="table-meta-row">
-                        <i className="ri-receipt-line"></i>
-                        {orderCount} order{orderCount !== 1 ? "s" : ""} · PKR {total.toLocaleString()}
-                      </div>
-                    </>
-                  ) : (
-                    <div className="table-meta-row">—</div>
-                  )}
-                </div>
-
-                <div className="table-card-actions">
-                  {isActive && (
+                  {/* ── Remove button — top-left badge (last card only) ── */}
+                  {isLast && tables.length > 1 && (
                     <button
-                      data-action="view-bill"
-                      onClick={() => setBillTable(t)}
-                      disabled={processingId === t.id}
+                      title={isActive ? "Cannot remove an active table" : "Remove this table"}
+                      onClick={handleRemoveTable}
+                      disabled={removeLoading || isActive}
+                      style={{
+                        position: "absolute",
+                        top: "8px",
+                        left: "8px",
+                        width: "22px",
+                        height: "22px",
+                        borderRadius: "50%",
+                        background: isActive ? "var(--clr-border-l)" : "#e74c3c",
+                        border: "none",
+                        cursor: removeLoading || isActive ? "not-allowed" : "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "#fff",
+                        fontSize: ".8rem",
+                        lineHeight: 1,
+                        zIndex: 2,
+                        opacity: isActive ? 0.45 : 1,
+                        transition: "opacity var(--trans), background var(--trans)",
+                      }}
                     >
-                      View Bill
+                      {removeLoading
+                        ? <i className="ri-loader-4-line"></i>
+                        : <i className="ri-subtract-line"></i>}
                     </button>
                   )}
-                  {isActive && (
+
+                  {/* ── Header row: table ID + QR button ── */}
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: ".4rem" }}>
+                    <div className="table-id">{t.id}</div>
                     <button
-                      data-action="reset-table"
-                      className="danger"
-                      onClick={() => updateStatus(t.id, "empty")}
-                      disabled={processingId === t.id}
+                      title="View QR Code"
+                      onClick={() => { setQrTable(t); setQrBust((n) => n + 1); }}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        padding: "2px 4px",
+                        borderRadius: "6px",
+                        color: "var(--clr-muted)",
+                        fontSize: "1rem",
+                        lineHeight: 1,
+                        transition: "color var(--trans)",
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.color = "var(--clr-primary)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.color = "var(--clr-muted)")}
                     >
-                      Reset
+                      <i className="ri-qr-code-line"></i>
                     </button>
-                  )}
-                  {!isDisabled && !isActive && (
-                    <button
-                      data-action="disable-table"
-                      className="danger"
-                      onClick={() => updateStatus(t.id, "disabled")}
-                      disabled={processingId === t.id}
-                    >
-                      Disable
-                    </button>
-                  )}
-                  {isDisabled && (
-                    <button
-                      data-action="enable-table"
-                      onClick={() => updateStatus(t.id, "empty")}
-                      disabled={processingId === t.id}
-                    >
-                      Enable
-                    </button>
-                  )}
+                  </div>
+
+                  <div className="table-status-row">
+                    <span className={`badge badge-table-${t.status}`}>
+                      {t.status.charAt(0).toUpperCase() + t.status.slice(1)}
+                    </span>
+                    {isPaid && <span className="badge badge-paid">Paid</span>}
+                  </div>
+
+                  <div className="table-meta">
+                    {isActive && startTime ? (
+                      <>
+                        <div className="table-meta-row">
+                          <i className="ri-time-line"></i>
+                          {sessionDuration(startTime)}
+                        </div>
+                        <div className="table-meta-row">
+                          <i className="ri-receipt-line"></i>
+                          {orderCount} order{orderCount !== 1 ? "s" : ""} · PKR {total.toLocaleString()}
+                        </div>
+                      </>
+                    ) : (
+                      <div className="table-meta-row">—</div>
+                    )}
+                  </div>
+
+                  <div className="table-card-actions">
+                    {isActive && (
+                      <button
+                        data-action="view-bill"
+                        onClick={() => setBillTable(t)}
+                        disabled={processingId === t.id}
+                      >
+                        View Bill
+                      </button>
+                    )}
+                    {isActive && (
+                      <button
+                        data-action="reset-table"
+                        className="danger"
+                        onClick={() => handleReset(t.id)}
+                        disabled={processingId === t.id}
+                      >
+                        Reset
+                      </button>
+                    )}
+                    {!isDisabled && !isActive && (
+                      <button
+                        data-action="disable-table"
+                        className="danger"
+                        onClick={() => updateStatus(t.id, "disabled")}
+                        disabled={processingId === t.id}
+                      >
+                        Disable
+                      </button>
+                    )}
+                    {isDisabled && (
+                      <button
+                        data-action="enable-table"
+                        onClick={() => updateStatus(t.id, "empty")}
+                        disabled={processingId === t.id}
+                      >
+                        Enable
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+
+            {/* ── Add table card ── */}
+            <button
+              className="table-card"
+              onClick={handleAddTable}
+              disabled={addLoading}
+              title="Add a table"
+              style={{
+                background: "none",
+                border: "2px dashed var(--clr-border-l)",
+                cursor: addLoading ? "wait" : "pointer",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "0.5rem",
+                color: "var(--clr-muted)",
+                transition: "border-color var(--trans), color var(--trans)",
+                minHeight: "140px",
+              }}
+              onMouseEnter={(e) => {
+                if (!addLoading) {
+                  e.currentTarget.style.borderColor = "var(--clr-primary)";
+                  e.currentTarget.style.color = "var(--clr-primary)";
+                }
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = "var(--clr-border-l)";
+                e.currentTarget.style.color = "var(--clr-muted)";
+              }}
+            >
+              {addLoading
+                ? <i className="ri-loader-4-line" style={{ fontSize: "1.5rem" }}></i>
+                : <i className="ri-add-line" style={{ fontSize: "1.5rem" }}></i>}
+              <span style={{ fontSize: ".78rem" }}>Add Table</span>
+            </button>
+          </div>
+
+          {countError && (
+            <div style={{ marginTop: ".75rem", fontSize: ".82rem", color: "var(--clr-danger, #e74c3c)" }}>
+              <i className="ri-error-warning-line"></i> {countError}
+            </div>
+          )}
+        </>
       )}
 
       {/* ═══ QR Code Modal ═══════════════════════════════════════════ */}
@@ -243,7 +381,6 @@ export default function TablesGrid({ orders = [] }: TablesGridProps) {
                 Customers scan this code to start a session at this table.
               </p>
 
-              {/* QR image — fetched as PNG from API */}
               <div style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -276,12 +413,23 @@ export default function TablesGrid({ orders = [] }: TablesGridProps) {
                 onClick={() => handleRegenerateQR(qrTable.id)}
                 disabled={qrLoading}
                 title="Invalidates old QR — active sessions are unaffected"
+                style={{ fontSize: ".78rem", padding: "5px 10px" }}
               >
                 {qrLoading
                   ? <><i className="ri-loader-4-line"></i> Regenerating…</>
-                  : <><i className="ri-refresh-line"></i> Regenerate QR</>}
+                  : <><i className="ri-refresh-line"></i> Regenerate</>}
               </button>
-              <button className="btn-ghost" onClick={() => setQrTable(null)}>Close</button>
+              <div style={{ display: "flex", gap: "8px" }}>
+                <a
+                  href={`${api.getTableQRImageUrl(qrTable.id)}?v=${qrBust}`}
+                  download={`qr-${qrTable.id}.png`}
+                  className="btn-primary"
+                  style={{ textDecoration: "none", fontSize: ".78rem", padding: "5px 10px" }}
+                >
+                  <i className="ri-download-2-line"></i> Download
+                </a>
+                <button className="btn-ghost" onClick={() => setQrTable(null)} style={{ fontSize: ".78rem", padding: "5px 10px" }}>Close</button>
+              </div>
             </div>
           </div>
         </div>
@@ -304,76 +452,91 @@ export default function TablesGrid({ orders = [] }: TablesGridProps) {
             </div>
 
             <div className="modal-body" id="table-bill-body">
-              {tableOrders(billTable.label).length === 0 ? (
-                <div style={{ color: "var(--clr-muted)", textAlign: "center", padding: "2rem" }}>
-                  No active orders for this table
-                </div>
-              ) : (
-                <>
-                  {tableOrders(billTable.label).map((o) => (
-                    <div key={o.id} className="bill-batch">
-                      <div className="bill-batch-head">
-                        <span>#{o.id.slice(0, 8)} · {formatTimeAgo(o.created_at)}</span>
-                        <span className={`badge badge-${o.status}`}>{o.status}</span>
-                      </div>
-                      {o.items.map((it, i) => (
-                        <div key={i} className="bill-item-row">
-                          <span>{it.quantity}× {it.name}</span>
-                          <span>PKR {(Number(it.price || 0) * Number(it.quantity || 1)).toLocaleString()}</span>
-                        </div>
-                      ))}
-                    </div>
-                  ))}
-                  <div className="bill-grand-total">
-                    <span>Grand Total</span>
-                    <span>PKR {tableTotal(billTable.label).toLocaleString()}</span>
+              {(() => {
+                const billOrders = tableOrders(billTable.label, billTable.active_session_id ?? null);
+                const paidOrderIds = new Set(billPayments.flatMap((p) => p.order_ids));
+                const grandTotal = tableTotal(billTable.label, billTable.active_session_id ?? null);
+                const unpaid = grandTotal - (billTable.session_total_paid || 0);
+
+                if (billOrders.length === 0) return (
+                  <div style={{ color: "var(--clr-muted)", textAlign: "center", padding: "2rem" }}>
+                    No active orders for this table
                   </div>
-                </>
-              )}
+                );
+
+                return (
+                  <>
+                    {billOrders.map((o, idx) => (
+                      <div key={o.id} className="bill-batch">
+                        <div className="bill-batch-head">
+                          <span>Order #{idx + 1} · {formatTimeAgo(o.created_at)}</span>
+                          <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
+                            {paidOrderIds.has(o.id) && <span className="badge badge-paid">Paid</span>}
+                            <span className={`badge badge-${o.status}`}>{o.status}</span>
+                          </div>
+                        </div>
+                        {o.items.map((it, i) => (
+                          <div key={i} className="bill-item-row">
+                            <span>{it.quantity}× {it.name}</span>
+                            <span>PKR {(Number(it.price || 0) * Number(it.quantity || 1)).toLocaleString()}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                    <div className="bill-grand-total">
+                      <span>Grand Total</span>
+                      <span>PKR {grandTotal.toLocaleString()}</span>
+                    </div>
+                    {(billTable.session_total_paid || 0) > 0 && unpaid > 0 && (
+                      <div className="bill-grand-total" style={{ opacity: 0.7 }}>
+                        <span>Paid so far</span>
+                        <span>PKR {(billTable.session_total_paid || 0).toLocaleString()}</span>
+                      </div>
+                    )}
+                  </>
+                );
+              })()}
             </div>
 
             <div className="modal-footer">
-              <button className="btn-ghost" onClick={() => setBillTable(null)}>Close</button>
-              {billTable.session_total_paid && billTable.session_total_paid >= tableTotal(billTable.label) && tableTotal(billTable.label) > 0 ? (
-                <button className="btn-primary btn-paid-done" disabled>
-                  <i className="ri-check-line"></i> Paid
-                </button>
-              ) : (
-                <button 
-                  id="btn-mark-paid" 
-                  className="btn-primary" 
-                  onClick={async () => {
-                    if (billTable.active_session_id) {
-                      try {
-                        await api.recordPayment(billTable.active_session_id, tableTotal(billTable.label), 'cash');
-                        alert("Payment recorded successfully");
-                        // Optimistically update local state so the modal re-renders
-                        setTables(prev => prev.map(tb => tb.id === billTable.id ? { ...tb, session_total_paid: tableTotal(billTable.label) } : tb));
-                        setBillTable(prev => prev ? { ...prev, session_total_paid: tableTotal(billTable.label) } : null);
-                      } catch (e) {
-                        console.error("Payment failed", e);
-                        alert("Failed to record payment");
-                      }
-                    } else {
-                      alert("No active session for this table to record payment.");
-                    }
-                  }}
-                >
-                  <i className="ri-secure-payment-line"></i> Mark as Paid
-                </button>
-              )}
-              {billTable.session_total_paid && billTable.session_total_paid >= tableTotal(billTable.label) && tableTotal(billTable.label) > 0 ? (
-                <button
-                  id="btn-reset-table"
-                  className="btn-danger"
-                  onClick={() => {
-                    updateStatus(billTable.id, "empty");
-                    setBillTable(null);
-                  }}
-                >
-                  Reset Table
-                </button>
-              ) : null}
+              {(() => {
+                const grandTotal = tableTotal(billTable.label, billTable.active_session_id ?? null);
+                const unpaid = grandTotal - (billTable.session_total_paid || 0);
+                return (
+                  <>
+                    <button className="btn-ghost" onClick={() => setBillTable(null)}>Close</button>
+                    {unpaid <= 0 && grandTotal > 0 ? (
+                      <>
+                        <button className="btn-primary btn-paid-done" disabled>
+                          <i className="ri-check-line"></i> Paid
+                        </button>
+                        <button id="btn-reset-table" className="btn-danger" onClick={() => handleReset(billTable.id)}>
+                          Reset Table
+                        </button>
+                      </>
+                    ) : unpaid > 0 ? (
+                      <button
+                        id="btn-mark-paid"
+                        className="btn-primary"
+                        onClick={async () => {
+                          if (!billTable.active_session_id) return;
+                          try {
+                            await api.recordPayment(billTable.active_session_id, unpaid, 'cash');
+                            const newPaid = (billTable.session_total_paid || 0) + unpaid;
+                            setTables((prev) => prev.map((tb) => tb.id === billTable.id ? { ...tb, session_total_paid: newPaid } : tb));
+                            setBillTable((prev) => prev ? { ...prev, session_total_paid: newPaid } : null);
+                          } catch {
+                            // payment failed — leave state unchanged so admin can retry
+                          }
+                        }}
+                      >
+                        <i className="ri-secure-payment-line"></i> Mark as Paid
+                        {(billTable.session_total_paid || 0) > 0 && ` (PKR ${unpaid.toLocaleString()})`}
+                      </button>
+                    ) : null}
+                  </>
+                );
+              })()}
             </div>
           </div>
         </div>
