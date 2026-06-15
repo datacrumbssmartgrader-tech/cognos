@@ -24,7 +24,7 @@ type Screen = "loading" | "user-details" | "welcome" | "menu" | "cart" | "tracke
 export default function DinePage() {
   // ── Session & navigation state ──────────────────────────────────
   const [activeScreen, setActiveScreen] = useState<Screen>("loading");
-  const [tableNumber, setTableNumber] = useState("T01");
+  const [tableNumber, setTableNumber] = useState("");
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [tableId, setTableId] = useState<string | null>(null);
   const [qrToken, setQrToken] = useState<string | null>(null);
@@ -60,6 +60,7 @@ export default function DinePage() {
       } else if (event.type === "session:closed") {
         sessionStorage.removeItem("riwayat_session_id");
         sessionStorage.removeItem("riwayat_table_id");
+        sessionStorage.removeItem("riwayat_table_label");
         sessionStorage.removeItem("riwayat_user");
         setActiveScreen("session-error");
       }
@@ -94,12 +95,21 @@ export default function DinePage() {
           setActiveScreen("session-error");
           return;
         }
-        if (tableCheck.data?.label) setTableNumber(tableCheck.data.label);
+        if (tableCheck.data?.label) {
+          setTableNumber(tableCheck.data.label);
+          sessionStorage.setItem("riwayat_table_label", tableCheck.data.label);
+        }
       }
 
       const storedSessionId = sessionStorage.getItem("riwayat_session_id");
       const storedTableId = sessionStorage.getItem("riwayat_table_id");
       const storedUser = sessionStorage.getItem("riwayat_user");
+
+      // No QR and no session — nothing to do here, user must re-scan
+      if (!qr && !storedSessionId) {
+        setActiveScreen("session-error");
+        return;
+      }
 
       if (storedSessionId) {
         setSessionId(storedSessionId);
@@ -115,8 +125,15 @@ export default function DinePage() {
         if (sessionRes.status === 200 && sessionRes.data?.closed_at) {
           sessionStorage.removeItem("riwayat_session_id");
           sessionStorage.removeItem("riwayat_table_id");
+          sessionStorage.removeItem("riwayat_table_label");
           setActiveScreen("session-ended");
           return;
+        }
+
+        // Restore table label from DB (covers old sessions without cached label)
+        if (sessionRes.data?.table_label) {
+          setTableNumber(sessionRes.data.table_label);
+          sessionStorage.setItem("riwayat_table_label", sessionRes.data.table_label);
         }
 
         if (sessionRes.status === 200 && sessionRes.data?.orders.length) {
@@ -244,8 +261,9 @@ export default function DinePage() {
             Your session has expired or is invalid. Please re-scan the QR code on your table.
           </p>
           <button className="btn-primary" style={{ marginTop: "0.5rem", display: "flex", alignItems: "center", gap: "8px" }} onClick={() => {
-            sessionStorage.removeItem("riwayat_session_id");
+          sessionStorage.removeItem("riwayat_session_id");
             sessionStorage.removeItem("riwayat_table_id");
+            sessionStorage.removeItem("riwayat_table_label");
             sessionStorage.removeItem("riwayat_user");
             window.location.reload();
           }}>

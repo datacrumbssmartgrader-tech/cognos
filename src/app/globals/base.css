@@ -163,3 +163,8 @@ p:last-child { margin-bottom: 0; }
   @apply bg-primary-d border-primary-d -translate-y-[2px] shadow-[0_8px_28px_rgba(107,26,42,.3)];
 }
 
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}

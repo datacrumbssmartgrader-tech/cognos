@@ -113,6 +113,10 @@ export async function deleteMenuItem(id: string) {
   return request<void>('DELETE', `/api/admin/menu/${id}`);
 }
 
+export async function patchMenuItemField(id: string, field: 'available' | 'hidden', value: boolean) {
+  return request<MenuItem>('PATCH', `/api/admin/menu/${id}`, { field, value });
+}
+
 // ============ TABLES & QR ============
 
 export interface Table {
@@ -189,6 +193,7 @@ export interface SessionOrder {
 
 export interface SessionOrdersResponse {
   closed_at: string | null;
+  table_label: string | null;
   orders: SessionOrder[];
 }
 

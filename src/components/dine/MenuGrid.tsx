@@ -12,19 +12,19 @@ interface MenuGridProps {
 }
 
 export default function MenuGrid({ activeCategory, searchQuery, onItemClick, onQuickAdd, menuData, isLoading }: MenuGridProps) {
-  // Use API menu data if provided, otherwise fallback to hardcoded MENU
-  const sourceMenu = menuData && menuData.length > 0 ? menuData : MENU;
+  // Use API menu data if provided (even if empty), otherwise fallback to hardcoded MENU
+  const sourceMenu = menuData !== undefined ? menuData : MENU;
 
   // Map API menu items to local MenuItem format
   const mappedItems = sourceMenu.map((item: any) => ({
     id: item.id,
     name: item.name,
-    cat: item.category || 'Other',
+    cat: item.category || item.cat || 'Other',
     price: typeof item.price === 'string' ? parseInt(item.price) : item.price,
-    desc: item.description || '',
-    img: item.image_url || 'https://via.placeholder.com/300',
+    desc: item.description || item.desc || '',
+    img: item.image_url || item.img || 'https://via.placeholder.com/300',
     hidden: item.hidden === true,
-    prepTime: 15, // Default prep time
+    prepTime: item.prepTime || item.prep_time || 15, // Default prep time
   }));
 
   let items = activeCategory === "all" ? mappedItems : mappedItems.filter(m => m.cat === activeCategory);

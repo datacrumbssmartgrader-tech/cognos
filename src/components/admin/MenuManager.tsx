@@ -46,6 +46,7 @@ export default function MenuManager({ refreshTick = 0 }: { refreshTick?: number 
   const [isSaving,    setIsSaving]    = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [previewUrl,  setPreviewUrl]  = useState("");
+  const [togglingId,  setTogglingId]  = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -88,6 +89,20 @@ export default function MenuManager({ refreshTick = 0 }: { refreshTick?: number 
     if (!window.confirm(`Delete "${item.name}"?`)) return;
     await api.deleteMenuItem(item.id);
     setItems((prev) => prev.filter((i) => i.id !== item.id));
+  };
+
+  const handleToggleAvailable = async (item: MenuItem) => {
+    if (togglingId) return;
+    setTogglingId(item.id);
+    const newVal = !item.available;
+    // Optimistic update
+    setItems((prev) => prev.map((i) => i.id === item.id ? { ...i, available: newVal } : i));
+    const res = await api.patchMenuItemField(item.id, 'available', newVal);
+    if (res.status !== 200) {
+      // Revert on failure
+      setItems((prev) => prev.map((i) => i.id === item.id ? { ...i, available: !newVal } : i));
+    }
+    setTogglingId(null);
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -227,9 +242,34 @@ export default function MenuManager({ refreshTick = 0 }: { refreshTick?: number 
                 <td>{CAT_LABELS[item.category] ?? item.category}</td>
                 <td className="text-right">PKR {Number(item.price).toLocaleString()}</td>
                 <td className="text-center">
-                  <span className={`badge ${item.hidden ? "badge-cancelled" : "badge-served"}`}>
-                    {item.hidden ? "Hidden" : "Available"}
-                  </span>
+                  <button
+                    onClick={() => handleToggleAvailable(item)}
+                    disabled={togglingId === item.id}
+                    title={item.available ? "Click to mark Unavailable" : "Click to mark Available"}
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "5px",
+                      padding: "3px 10px",
+                      borderRadius: "999px",
+                      border: "none",
+                      cursor: togglingId === item.id ? "wait" : "pointer",
+                      fontFamily: "var(--ff-ui, sans-serif)",
+                      fontSize: "0.72rem",
+                      fontWeight: 600,
+                      letterSpacing: "0.04em",
+                      transition: "opacity 0.15s",
+                      opacity: togglingId === item.id ? 0.6 : 1,
+                      background: item.available ? "rgba(16,185,129,0.12)" : "rgba(220,38,38,0.1)",
+                      color: item.available ? "#059669" : "#dc2626",
+                    }}
+                  >
+                    {togglingId === item.id
+                      ? <i className="ri-loader-4-line" style={{ animation: "spin 0.8s linear infinite" }} />
+                      : <i className={item.available ? "ri-checkbox-circle-line" : "ri-close-circle-line"} />
+                    }
+                    {item.available ? "Available" : "Unavailable"}
+                  </button>
                 </td>
                 <td className="text-center">
                   <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center" }}>

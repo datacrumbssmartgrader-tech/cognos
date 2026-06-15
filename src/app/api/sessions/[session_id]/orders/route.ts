@@ -14,7 +14,10 @@ export async function GET(
     const { session_id: sessionId } = await params;
 
     const sessionRows = await sql`
-      SELECT closed_at FROM sessions WHERE id = ${sessionId}::uuid
+      SELECT s.closed_at, rt.label AS table_label
+      FROM sessions s
+      LEFT JOIN restaurant_tables rt ON rt.id = s.table_id
+      WHERE s.id = ${sessionId}::uuid
     `;
 
     if (sessionRows.length === 0) {
@@ -47,6 +50,7 @@ export async function GET(
 
     return NextResponse.json({
       closed_at: sessionRows[0].closed_at ?? null,
+      table_label: sessionRows[0].table_label ?? null,
       orders: orders.map((o: any) => ({
         ...o,
         total: Number(o.total),
